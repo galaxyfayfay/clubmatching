@@ -819,42 +819,23 @@ def page_quiz():
         for i, (col, opt) in enumerate(zip(all_cols, q["opts"])):
             with col:
                 is_sel = (cur == i)
+                css_cls = "quiz-card-sel" if is_sel else "quiz-card"
+                icon = opt["icon"]
+                title = opt["title"]
+                sub = opt["sub"]
+                check = "  ✓" if is_sel else ""
 
-                # 安全转义所有文本内容
-                title_s = _html.escape(opt["title"])
-                sub_s   = _html.escape(opt["sub"])
-                icon    = opt["icon"]  # emoji 无需转义
-
-                card_bg     = "rgba(99,102,241,0.08)"  if is_sel else "rgba(255,255,255,0.75)"
-                card_border = "2px solid #6366F1"      if is_sel else "1.5px solid rgba(99,102,241,0.14)"
-                card_shadow = "0 0 0 4px rgba(99,102,241,0.09),0 4px 16px rgba(99,102,241,0.12)" if is_sel else "0 2px 8px rgba(99,102,241,0.05)"
-                title_color = "#3730a3" if is_sel else "#1a1a2e"
-                check_html  = '<span style="color:#6366F1;font-weight:900;font-size:14px;flex-shrink:0;">✓</span>' if is_sel else '<span style="width:16px;display:inline-block;"></span>'
-
-                # 卡片：纯展示，所有文本已转义
-                st.markdown(
-                    f'<div style="background:{card_bg};border:{card_border};border-radius:16px;'
-                    f'padding:14px 16px 12px 16px;box-shadow:{card_shadow};'
-                    f'transition:all 0.2s;margin-bottom:6px;">'
-                    f'<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;">'
-                    f'<div style="display:flex;align-items:center;gap:8px;overflow:hidden;">'
-                    f'<span style="font-size:20px;line-height:1;flex-shrink:0;">{icon}</span>'
-                    f'<span style="font-size:14px;font-weight:700;color:{title_color};white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{title_s}</span>'
-                    f'</div>{check_html}</div>'
-                    f'<div style="font-size:12px;color:rgba(26,26,46,0.45);padding-left:28px;line-height:1.4;">{sub_s}</div>'
-                    f'</div>',
-                    unsafe_allow_html=True
-                )
-
-                # 按钮：只用极短纯文字，绝对不含 HTML
-                css_cls    = "quiz-opt-btn-sel" if is_sel else "quiz-opt-btn"
-                btn_label  = "✓ 已选择" if is_sel else "选这个"
-
+                # 整个卡片就是一个按钮，label 里写图标+标题+副文本
+                # 用 CSS class 控制样式，白空格分隔各行内容
                 st.markdown(f'<div class="{css_cls}">', unsafe_allow_html=True)
-                if st.button(btn_label, key=f"q{step}_o{i}", use_container_width=True):
+                if st.button(
+                    f"{icon}  {title}{check}<br />{sub}",
+                    key=f"q{step}_o{i}",
+                    use_container_width=True
+                ):
                     st.session_state.quiz_answers[step] = i
                     st.rerun()
-                st.markdown("</div>", unsafe_allow_html=True)
+                st.markdown('</div>', unsafe_allow_html=True)
 
         st.markdown("<br>", unsafe_allow_html=True)
         nav_l, nav_r = st.columns(2, gap="small")
