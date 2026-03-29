@@ -529,7 +529,7 @@ def page_home():
             go("quiz")
 
 # ══════════════════════════════════════════════════════════════
-# 测评页 ── 纯原生 Streamlit，无 iframe，选项即按钮
+# 测评页 ── 修复版：纯原生 st.button，无 iframe，无重复渲染
 # ══════════════════════════════════════════════════════════════
 def page_quiz():
     render_nav()
@@ -565,88 +565,83 @@ def page_quiz():
         else:
             st.markdown('<div style="height:14px;"></div>', unsafe_allow_html=True)
 
-        # ── 为每个选项按钮注入样式 ──────────────────────────
         opts = q["opts"]
-        for i, opt in enumerate(opts):
-            is_sel = (cur == i)
-            if is_sel:
-                bg     = "linear-gradient(135deg,#6366F1 0%,#8B5CF6 60%,#A78BFA 100%)"
-                border = "2px solid transparent"
-                shadow = "0 0 0 3px rgba(99,102,241,0.35),0 8px 24px rgba(99,102,241,0.35)"
-                color  = "#ffffff"
-            else:
-                bg     = "#ffffff"
-                border = "2px solid #e0e0f0"
-                shadow = "0 2px 8px rgba(99,102,241,0.06)"
-                color  = "#1a1a2e"
-            st.markdown(
-                f"""
-                <style>
-                div[data-testid="stButton"]:has(button[data-testid="baseButton-secondary"][key="opt_{step}_{i}"]) > button,
-                button[key="opt_{step}_{i}"] {{
-                    background: {bg} !important;
-                    border: {border} !important;
-                    box-shadow: {shadow} !important;
-                    color: {color} !important;
-                    border-radius: 18px !important;
-                    padding: 18px 16px !important;
-                    height: auto !important;
-                    min-height: 80px !important;
-                    text-align: left !important;
-                    white-space: pre-wrap !important;
-                    font-weight: 600 !important;
-                    width: 100% !important;
-                    transition: all 0.2s ease !important;
-                }}
-                </style>
-                """,
-                unsafe_allow_html=True
-            )
 
-        # ── 2×2 网格渲染选项按钮 ──────────────────────────
+        # ── 用 HTML 渲染 4 个选项卡片（纯视觉，不负责交互）──
         col_a, col_b = st.columns(2, gap="small")
-        grid = [col_a, col_b, col_a, col_b]
+        cols_grid = [col_a, col_b, col_a, col_b]
 
         for i, opt in enumerate(opts):
             is_sel = (cur == i)
-            check  = " ✓" if is_sel else ""
-            label  = f"{opt['icon']}  {opt['title']}{check}<br />{opt['sub']}"
-            with grid[i]:
-                if st.button(label, key=f"opt_{step}_{i}", use_container_width=True):
-                    st.session_state.quiz_answers[step] = i
-                    st.rerun()
 
-        st.markdown('<div style="height:20px;"></div>', unsafe_allow_html=True)
+            if is_sel:
+                card_style = (
+                    "background:linear-gradient(135deg,#6366F1 0%,#8B5CF6 60%,#A78BFA 100%);"
+                    "border:2px solid transparent;"
+                    "box-shadow:0 0 0 3px rgba(99,102,241,0.35),0 8px 24px rgba(99,102,241,0.35);"
+                )
+                title_color = "#ffffff"
+                sub_color   = "rgba(255,255,255,0.85)"
+                check       = '<span style="margin-left:auto;padding-left:8px;font-size:1rem;color:#fff;font-weight:900;">✓</span>'
+            else:
+                card_style  = (
+                    "background:#ffffff;"
+                    "border:2px solid #e0e0f0;"
+                    "box-shadow:0 2px 8px rgba(99,102,241,0.06);"
+                )
+                title_color = "#1a1a2e"
+                sub_color   = "#6b7280"
+                check       = ""
 
-        # ── 导航按钮 ──────────────────────────────────────
-        nav_l, nav_r = st.columns(2, gap="small")
-        with nav_l:
-            back_lbl = "← 返回首页" if step == 0 else "← 上一题"
-            if st.button(back_lbl, key="q_back", use_container_width=True):
-                if step == 0:
-                    go("home")
-                else:
-                    st.session_state.quiz_step -= 1
-                    st.rerun()
-        with nav_r:
-            done     = step in st.session_state.quiz_answers
-            next_lbl = "查看匹配结果 →" if step == total - 1 else "下一题 →"
-            if st.button(
-                next_lbl,
-                key="q_next",
-                type="primary",
-                use_container_width=True,
-                disabled=not done,
-            ):
-                if step == total - 1:
-                    with st.spinner("🤖 AI 正在分析你的性格与偏好..."):
-                        res, reason = ai_match(st.session_state.quiz_answers)
-                        st.session_state.results   = res
-                        st.session_state.ai_reason = reason
-                    go("results")
-                else:
-                    st.session_state.quiz_step += 1
-                    st.rerun()
+            with cols_grid[i]:
+                # 渲染卡片 HTML
+                st.markdown(
+                    f'<div style="{card_style}border-radius:18px;padding:18px 16px 14px;'
+                    f'margin-bottom:4px;">'
+                    f'<div style="display:flex;align-items:flex-start;gap:12px;">'
+                    f'<span style="font-size:1.8rem;line-height:1.1;flex-shrink:0;">{opt["icon"]}</span>'
+                    f'<div style="flex:1;min-width:0;">'
+                    f'<div style="font-size:0.97rem;font-weight:700;color:{title_color};'
+                    f'margin-bottom:3px;line-height:1.3;">{opt["title"]}</div>'
+                    f'<div style="font-size:0.80rem;color:{sub_color};line-height:1.4;">'
+                    f'{opt["sub"]}</div>'
+                    f'</div>{check}'
+                    f'</div></div>',
+                    unsafe_allow_html=True
+                )
+                # 紧接卡片下方放一个透明按钮，上移覆盖卡片，负责捕捉点击
+                st.markdown(
+                    f'<style>'
+                    f'div[data-testid="stButton"]:has(> button[kind="secondary"]:nth-child(1))'
+                    f'{{margin-top:0;}}'
+                    f'</style>',
+                    unsafe_allow_html=True
+                )
+                # 用容器包裹，通过负 margin-top 让按钮上移覆盖卡片
+                btn_container = st.container()
+                with btn_container:
+                    st.markdown(
+                        f'<style>'
+                        f'/* 让 opt_{step}_{i} 按钮透明并上移覆盖卡片 */'
+                        f'div[data-testid="stVerticalBlock"] div[data-testid="stButton"]:has(> button[kind="secondary"]) button[aria-label="opt_{step}_{i}"] {{'
+                        f'  opacity: 0 !important;'
+                        f'  position: relative !important;'
+                        f'  margin-top: -80px !important;'
+                        f'  height: 84px !important;'
+                        f'  z-index: 999 !important;'
+                        f'  cursor: pointer !important;'
+                        f'}}'
+                        f'</style>',
+                        unsafe_allow_html=True
+                    )
+                    if st.button(
+                        f"opt_{step}_{i}",          # label 作为 aria-label
+                        key=f"opt_{step}_{i}",
+                        use_container_width=True,
+                        help=opt["title"],
+                    ):
+                        st.session_state.quiz_answers[step] = i
+                        st.rerun()
 
         st.markdown('<div style="height:20px;"></div>', unsafe_allow_html=True)
 
