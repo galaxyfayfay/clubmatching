@@ -565,132 +565,87 @@ def page_quiz():
         else:
             st.markdown('<div style="height:14px;"></div>', unsafe_allow_html=True)
 
-        # ── 注入选项卡片样式 ──────────────────────────────
-        # 为每个选项按钮单独注入样式，selected 用紫色渐变，unselected 用白色边框
+        # ── 为每个选项按钮注入样式 ──────────────────────────
         opts = q["opts"]
-        style_blocks = ""
-        for i in range(len(opts)):
+        for i, opt in enumerate(opts):
             is_sel = (cur == i)
-            key = f"opt_{step}_{i}"
             if is_sel:
-                style_blocks += f"""
-                div[data-testid="stButton"]:has(> button[data-testid="baseButton-secondary"][aria-label="{key}"]) > button,
-                div[data-testid="stButton"] > button[key="{key}"] {{
-                    background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 60%, #A78BFA 100%) !important;
-                    border: 2px solid transparent !important;
-                    box-shadow: 0 0 0 3px rgba(99,102,241,0.35), 0 8px 24px rgba(99,102,241,0.35) !important;
-                    color: #ffffff !important;
-                    border-radius: 18px !important;
-                }}
-                """
-        # 通用选项按钮样式（全部先设为未选中基础样式）
-        st.markdown(
-            f"""
-            <style>
-            {''.join(
-                f'''
-                div[data-testid="stButton"]:has(> button[kind="secondary"]) > button {{
+                bg     = "linear-gradient(135deg,#6366F1 0%,#8B5CF6 60%,#A78BFA 100%)"
+                border = "2px solid transparent"
+                shadow = "0 0 0 3px rgba(99,102,241,0.35),0 8px 24px rgba(99,102,241,0.35)"
+                color  = "#ffffff"
+            else:
+                bg     = "#ffffff"
+                border = "2px solid #e0e0f0"
+                shadow = "0 2px 8px rgba(99,102,241,0.06)"
+                color  = "#1a1a2e"
+            st.markdown(
+                f"""
+                <style>
+                div[data-testid="stButton"]:has(button[data-testid="baseButton-secondary"][key="opt_{step}_{i}"]) > button,
+                button[key="opt_{step}_{i}"] {{
+                    background: {bg} !important;
+                    border: {border} !important;
+                    box-shadow: {shadow} !important;
+                    color: {color} !important;
                     border-radius: 18px !important;
                     padding: 18px 16px !important;
                     height: auto !important;
                     min-height: 80px !important;
                     text-align: left !important;
                     white-space: pre-wrap !important;
-                    font-size: 0.95rem !important;
                     font-weight: 600 !important;
+                    width: 100% !important;
                     transition: all 0.2s ease !important;
                 }}
-                '''
-            )}
-            </style>
-            """,
-            unsafe_allow_html=True
-        )
+                </style>
+                """,
+                unsafe_allow_html=True
+            )
 
-        # ── 渲染 2×2 选项按钮网格 ──────────────────────────
+        # ── 2×2 网格渲染选项按钮 ──────────────────────────
         col_a, col_b = st.columns(2, gap="small")
         grid = [col_a, col_b, col_a, col_b]
 
         for i, opt in enumerate(opts):
             is_sel = (cur == i)
-
-            # 用 HTML 构建按钮内容（富文本标签）
-            if is_sel:
-                btn_html = (
-                    f'<div style="display:flex;align-items:flex-start;gap:12px;">'
-                    f'<span style="font-size:1.8rem;line-height:1;flex-shrink:0;">{opt["icon"]}</span>'
-                    f'<div><div style="font-size:0.97rem;font-weight:700;margin-bottom:3px;">{opt["title"]}</div>'
-                    f'<div style="font-size:0.80rem;opacity:0.88;line-height:1.4;">{opt["sub"]}</div></div>'
-                    f'<span style="margin-left:auto;font-size:0.85rem;">✓</span>'
-                    f'</div>'
-                )
-            else:
-                btn_html = (
-                    f'<div style="display:flex;align-items:flex-start;gap:12px;">'
-                    f'<span style="font-size:1.8rem;line-height:1;flex-shrink:0;">{opt["icon"]}</span>'
-                    f'<div><div style="font-size:0.97rem;font-weight:700;color:#1a1a2e;margin-bottom:3px;">{opt["title"]}</div>'
-                    f'<div style="font-size:0.80rem;color:#6b7280;line-height:1.4;">{opt["sub"]}</div></div>'
-                    f'</div>'
-                )
-
-            # 用 st.markdown 渲染卡片，紧接着用一个透明度为0高度压缩的按钮触发交互
-            # ── 正确做法：直接用 st.button，label 用纯文本，卡片用 markdown 紧贴在上方 ──
+            check  = " ✓" if is_sel else ""
+            label  = f"{opt['icon']}  {opt['title']}{check}<br />{opt['sub']}"
             with grid[i]:
-                # 卡片视觉层
-                if is_sel:
-                    card_style = (
-                        "background:linear-gradient(135deg,#6366F1 0%,#8B5CF6 60%,#A78BFA 100%);"
-                        "border:2px solid transparent;"
-                        "box-shadow:0 0 0 3px rgba(99,102,241,0.35),0 8px 24px rgba(99,102,241,0.35);"
-                        "color:#fff;"
-                    )
-                    icon_color  = "#fff"
-                    title_color = "#fff"
-                    sub_color   = "rgba(255,255,255,0.85)"
-                    check       = '<span style="margin-left:auto;font-size:0.9rem;font-weight:800;color:#fff;">✓</span>'
-                else:
-                    card_style  = "background:#fff;border:2px solid #e0e0f0;box-shadow:0 2px 8px rgba(99,102,241,0.06);"
-                    icon_color  = "#6366F1"
-                    title_color = "#1a1a2e"
-                    sub_color   = "#6b7280"
-                    check       = ""
-
-                st.markdown(
-                    f'<div style="{card_style}border-radius:18px;padding:18px 16px;'
-                    f'margin-bottom:2px;cursor:pointer;">'
-                    f'<div style="display:flex;align-items:flex-start;gap:12px;">'
-                    f'<span style="font-size:1.8rem;line-height:1;flex-shrink:0;color:{icon_color};">{opt["icon"]}</span>'
-                    f'<div style="flex:1;">'
-                    f'<div style="font-size:0.97rem;font-weight:700;color:{title_color};margin-bottom:3px;">{opt["title"]}</div>'
-                    f'<div style="font-size:0.80rem;color:{sub_color};line-height:1.4;">{opt["sub"]}</div>'
-                    f'</div>{check}'
-                    f'</div></div>',
-                    unsafe_allow_html=True
-                )
-
-                # 交互层：透明按钮紧贴卡片下方，通过负 margin 上移覆盖卡片
-                st.markdown(
-                    f"""
-                    <style>
-                    div[data-testid="stButton"]:has(button[kind="secondary"][data-key="opt_{step}_{i}"]) > button {{
-                        margin-top: -72px !important;
-                        height: 76px !important;
-                        opacity: 0 !important;
-                        width: 100% !important;
-                        cursor: pointer !important;
-                        position: relative !important;
-                        z-index: 10 !important;
-                    }}
-                    </style>
-                    """,
-                    unsafe_allow_html=True
-                )
-                if st.button(
-                    opt["title"],
-                    key=f"opt_{step}_{i}",
-                    use_container_width=True,
-                ):
+                if st.button(label, key=f"opt_{step}_{i}", use_container_width=True):
                     st.session_state.quiz_answers[step] = i
+                    st.rerun()
+
+        st.markdown('<div style="height:20px;"></div>', unsafe_allow_html=True)
+
+        # ── 导航按钮 ──────────────────────────────────────
+        nav_l, nav_r = st.columns(2, gap="small")
+        with nav_l:
+            back_lbl = "← 返回首页" if step == 0 else "← 上一题"
+            if st.button(back_lbl, key="q_back", use_container_width=True):
+                if step == 0:
+                    go("home")
+                else:
+                    st.session_state.quiz_step -= 1
+                    st.rerun()
+        with nav_r:
+            done     = step in st.session_state.quiz_answers
+            next_lbl = "查看匹配结果 →" if step == total - 1 else "下一题 →"
+            if st.button(
+                next_lbl,
+                key="q_next",
+                type="primary",
+                use_container_width=True,
+                disabled=not done,
+            ):
+                if step == total - 1:
+                    with st.spinner("🤖 AI 正在分析你的性格与偏好..."):
+                        res, reason = ai_match(st.session_state.quiz_answers)
+                        st.session_state.results   = res
+                        st.session_state.ai_reason = reason
+                    go("results")
+                else:
+                    st.session_state.quiz_step += 1
                     st.rerun()
 
         st.markdown('<div style="height:20px;"></div>', unsafe_allow_html=True)
