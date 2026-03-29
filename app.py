@@ -1,9 +1,10 @@
 import streamlit as st
 import anthropic
 import json
-import html as _html
+import random
 from data import CLUBS, QUESTIONS
 
+# ── 页面配置 ────────────────────────────────────────────────────
 st.set_page_config(
     page_title="ClubMatch · 找到属于你的圈子",
     page_icon="🎯",
@@ -11,444 +12,343 @@ st.set_page_config(
     initial_sidebar_state="collapsed",
 )
 
+# ── 全局 CSS ────────────────────────────────────────────────────
 st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&display=swap');
 
-html, body, [class*="css"] {
-    font-family: 'Inter', 'PingFang SC', 'Noto Sans SC', sans-serif;
+html, body, [class*="css"], .stApp {
+    font-family: 'Inter', 'PingFang SC', 'Noto Sans SC', sans-serif !important;
     -webkit-font-smoothing: antialiased;
 }
 
+/* ─ 隐藏杂物 ─ */
 #MainMenu, footer, header { visibility: hidden; }
-.block-container {
-    padding-top: 1.5rem !important;
-    padding-bottom: 3rem !important;
-    max-width: 1200px;
-}
+.block-container { padding-top: 1.5rem !important; padding-bottom: 3rem !important; max-width: 1160px; }
 [data-testid="stSidebar"] { display: none; }
 
+/* ─ 背景 ─ */
 .stApp {
     background:
-        radial-gradient(ellipse 70% 50% at 15% 10%, rgba(199,210,254,0.35) 0%, transparent 60%),
-        radial-gradient(ellipse 55% 40% at 85% 85%, rgba(253,230,138,0.25) 0%, transparent 55%),
-        radial-gradient(ellipse 60% 55% at 50% 50%, rgba(221,214,254,0.15) 0%, transparent 70%),
-        linear-gradient(160deg, #f8f7ff 0%, #fefce8 50%, #f0fdf4 100%);
+        radial-gradient(ellipse 70% 50% at 15% 10%, rgba(199,210,254,0.45) 0%, transparent 60%),
+        radial-gradient(ellipse 55% 40% at 85% 85%, rgba(253,230,138,0.30) 0%, transparent 55%),
+        radial-gradient(ellipse 60% 55% at 50% 50%, rgba(221,214,254,0.20) 0%, transparent 70%),
+        linear-gradient(160deg, #f0efff 0%, #fefce8 50%, #f0fdf4 100%);
     color: #1a1a2e;
     min-height: 100vh;
 }
 
+/* ─ 液态玻璃卡片 ─ */
 .glass {
     background: rgba(255,255,255,0.72);
-    backdrop-filter: blur(20px) saturate(160%);
-    -webkit-backdrop-filter: blur(20px) saturate(160%);
-    border: 1px solid rgba(255,255,255,0.9);
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    border: 1px solid rgba(255,255,255,0.92);
     border-radius: 20px;
     padding: 24px;
     margin-bottom: 16px;
     transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
     position: relative;
     overflow: hidden;
-    box-shadow: 0 4px 24px rgba(99,102,241,0.07), 0 1px 4px rgba(0,0,0,0.04);
+    box-shadow: 0 4px 24px rgba(99,102,241,0.08), 0 1px 4px rgba(0,0,0,0.04);
 }
 .glass::before {
     content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 1px;
+    position: absolute; top: 0; left: 0; right: 0; height: 1px;
     background: linear-gradient(90deg, transparent, rgba(255,255,255,0.95), transparent);
 }
 .glass:hover {
     background: rgba(255,255,255,0.88);
-    border-color: rgba(255,255,255,1);
     transform: translateY(-3px);
-    box-shadow: 0 20px 50px rgba(99,102,241,0.12), 0 4px 12px rgba(0,0,0,0.06);
+    box-shadow: 0 20px 50px rgba(99,102,241,0.14), 0 4px 12px rgba(0,0,0,0.06);
 }
 .glass.featured {
-    border-color: rgba(99,102,241,0.3);
-    background: rgba(245,243,255,0.9);
-    box-shadow: 0 8px 32px rgba(99,102,241,0.12);
+    border-color: rgba(99,102,241,0.28);
+    background: rgba(245,243,255,0.90);
+    box-shadow: 0 8px 32px rgba(99,102,241,0.13);
 }
 .glass.featured::before {
-    background: linear-gradient(90deg, transparent, rgba(99,102,241,0.3), transparent);
+    background: linear-gradient(90deg, transparent, rgba(99,102,241,0.35), transparent);
 }
 
+/* ─ 导航栏 ─ */
 .navbar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+    display: flex; align-items: center; justify-content: space-between;
     padding: 12px 0 22px 0;
     border-bottom: 1px solid rgba(99,102,241,0.1);
     margin-bottom: 36px;
 }
 .logo {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 21px;
-    font-weight: 900;
-    letter-spacing: -0.5px;
-    color: #1a1a2e;
+    display: flex; align-items: center; gap: 10px;
+    font-size: 21px; font-weight: 900; letter-spacing: -0.5px; color: #1a1a2e;
 }
 .logo-badge {
     background: linear-gradient(135deg, #6366F1, #818CF8);
-    color: #ffffff;
-    border-radius: 10px;
-    padding: 5px 10px;
-    font-size: 13px;
-    font-weight: 900;
+    color: #fff; border-radius: 10px; padding: 5px 10px;
+    font-size: 13px; font-weight: 900;
 }
 .logo-accent { color: #6366F1; }
 
+/* ─ 徽章 ─ */
 .badge {
-    display: inline-block;
-    padding: 3px 10px;
-    border-radius: 8px;
-    font-size: 11px;
-    font-weight: 600;
-    margin-right: 4px;
-    margin-bottom: 4px;
+    display: inline-block; padding: 3px 10px; border-radius: 8px;
+    font-size: 11px; font-weight: 600; margin-right: 4px; margin-bottom: 4px;
 }
-.badge-y { background: rgba(245,197,24,0.15); color: #b45309; border: 1px solid rgba(245,197,24,0.3); }
-.badge-o { background: rgba(255,107,53,0.12); color: #c2410c; border: 1px solid rgba(255,107,53,0.25); }
-.badge-w { background: rgba(99,102,241,0.1); color: #4338ca; border: 1px solid rgba(99,102,241,0.2); }
+.badge-y { background: rgba(245,197,24,0.15); color: #92400e; border: 1px solid rgba(245,197,24,0.30); }
+.badge-o { background: rgba(255,107,53,0.12); color: #9a3412; border: 1px solid rgba(255,107,53,0.25); }
+.badge-w { background: rgba(99,102,241,0.10); color: #3730a3; border: 1px solid rgba(99,102,241,0.20); }
 .badge-g { background: rgba(74,222,128,0.12); color: #15803d; border: 1px solid rgba(74,222,128,0.25); }
 
+/* ─ 进度条 ─ */
 .prog-wrap { margin-bottom: 28px; }
 .prog-meta {
-    display: flex;
-    justify-content: space-between;
-    font-size: 12px;
-    color: rgba(26,26,46,0.4);
-    margin-bottom: 8px;
-    font-weight: 500;
+    display: flex; justify-content: space-between;
+    font-size: 12px; color: rgba(26,26,46,0.40); margin-bottom: 8px; font-weight: 500;
 }
 .prog-meta span:last-child { color: #6366F1; font-weight: 700; }
-.prog-track {
-    height: 4px;
-    background: rgba(99,102,241,0.1);
-    border-radius: 2px;
-    overflow: hidden;
-}
+.prog-track { height: 4px; background: rgba(99,102,241,0.10); border-radius: 2px; overflow: hidden; }
 .prog-fill {
-    height: 100%;
-    border-radius: 2px;
+    height: 100%; border-radius: 2px;
     background: linear-gradient(90deg, #6366F1, #818CF8, #a78bfa);
     transition: width 0.5s cubic-bezier(0.4,0,0.2,1);
 }
 
-/* ═══ 测评选项：整体卡片按钮（未选中）═══ */
-.quiz-card > button {
+/* ─ 问卷：整卡片按钮（通用覆写） ─
+   关键：把 .stButton[data-quiz] > button 做大块卡片 */
+div[data-testid="stButton"].quiz-opt > button {
     border-radius: 16px !important;
-    padding: 16px 18px !important;
+    padding: 18px 20px !important;
     height: auto !important;
-    min-height: 72px !important;
+    min-height: 80px !important;
     text-align: left !important;
     white-space: normal !important;
     word-break: break-word !important;
-    line-height: 1.5 !important;
-    background: rgba(255,255,255,0.78) !important;
-    border: 1.5px solid rgba(99,102,241,0.13) !important;
-    color: #1a1a2e !important;
+    line-height: 1.55 !important;
     font-size: 14px !important;
     font-weight: 600 !important;
     width: 100% !important;
-    transition: all 0.2s cubic-bezier(0.4,0,0.2,1) !important;
+    background: rgba(255,255,255,0.80) !important;
+    border: 1.5px solid rgba(99,102,241,0.14) !important;
+    color: #1a1a2e !important;
     box-shadow: 0 2px 10px rgba(99,102,241,0.06) !important;
-    margin-bottom: 12px !important;
+    transition: all 0.22s cubic-bezier(0.4,0,0.2,1) !important;
     display: block !important;
 }
-.quiz-card > button:hover {
-    border-color: rgba(99,102,241,0.45) !important;
+div[data-testid="stButton"].quiz-opt > button:hover {
+    border-color: rgba(99,102,241,0.42) !important;
     background: rgba(240,239,255,0.92) !important;
-    color: #1a1a2e !important;
     transform: translateY(-2px) !important;
-    box-shadow: 0 6px 20px rgba(99,102,241,0.13) !important;
+    box-shadow: 0 6px 22px rgba(99,102,241,0.15) !important;
+    color: #1a1a2e !important;
 }
-
-/* ═══ 测评选项：整体卡片按钮（已选中）═══ */
-.quiz-card-sel > button {
+div[data-testid="stButton"].quiz-opt-sel > button {
     border-radius: 16px !important;
-    padding: 16px 18px !important;
+    padding: 18px 20px !important;
     height: auto !important;
-    min-height: 72px !important;
+    min-height: 80px !important;
     text-align: left !important;
     white-space: normal !important;
     word-break: break-word !important;
-    line-height: 1.5 !important;
-    background: rgba(99,102,241,0.09) !important;
-    border: 2px solid #6366F1 !important;
-    color: #3730a3 !important;
+    line-height: 1.55 !important;
     font-size: 14px !important;
     font-weight: 700 !important;
     width: 100% !important;
-    box-shadow: 0 0 0 4px rgba(99,102,241,0.09), 0 4px 18px rgba(99,102,241,0.15) !important;
-    margin-bottom: 12px !important;
+    background: rgba(99,102,241,0.09) !important;
+    border: 2px solid #6366F1 !important;
+    color: #3730a3 !important;
+    /* 发光选中效果 */
+    box-shadow:
+        0 0 0 4px rgba(99,102,241,0.12),
+        0 0 18px rgba(99,102,241,0.28),
+        0 4px 18px rgba(99,102,241,0.18) !important;
     display: block !important;
 }
-.quiz-card-sel > button:hover {
+div[data-testid="stButton"].quiz-opt-sel > button:hover {
     background: rgba(99,102,241,0.12) !important;
     color: #3730a3 !important;
     transform: translateY(-1px) !important;
+    box-shadow:
+        0 0 0 4px rgba(99,102,241,0.15),
+        0 0 24px rgba(99,102,241,0.35),
+        0 6px 20px rgba(99,102,241,0.22) !important;
 }
 
-/* 覆盖通用按钮圆角 */
-.quiz-card > button,
-.quiz-card-sel > button {
-    border-radius: 16px !important;
-}
-
-.score-row {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 10px;
-}
-.score-track {
-    flex: 1;
-    height: 4px;
-    background: rgba(99,102,241,0.1);
-    border-radius: 2px;
-    overflow: hidden;
-}
-.score-fill {
-    height: 100%;
-    border-radius: 2px;
-    background: linear-gradient(90deg, #6366F1, #a78bfa);
-}
-.score-pct { font-size: 13px; font-weight: 800; color: #6366F1; min-width: 38px; text-align: right; }
-
-.stat-num { font-size: 28px; font-weight: 900; color: #6366F1; letter-spacing: -1.5px; line-height: 1; }
-.stat-lbl { font-size: 11px; color: rgba(26,26,46,0.4); margin-top: 4px; font-weight: 500; }
-
-.hero-title {
-    font-size: clamp(34px, 5vw, 56px);
-    font-weight: 900;
-    line-height: 1.08;
-    letter-spacing: -2px;
-    margin-bottom: 16px;
-    color: #1a1a2e;
-}
-.hl {
-    background: linear-gradient(135deg, #6366F1 0%, #a78bfa 55%, #818CF8 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-}
-.hero-sub {
-    font-size: 16px;
-    color: rgba(26,26,46,0.52);
-    line-height: 1.75;
-    margin-bottom: 30px;
-}
-.eyebrow {
-    display: inline-block;
-    background: rgba(99,102,241,0.08);
-    border: 1px solid rgba(99,102,241,0.18);
-    color: #6366F1;
-    border-radius: 20px;
-    padding: 5px 14px;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.8px;
-    text-transform: uppercase;
-    margin-bottom: 18px;
-}
-
-/* 通用按钮 */
+/* ─ 通用按钮 ─ */
 .stButton > button {
     border-radius: 50px !important;
     font-weight: 600 !important;
     font-size: 14px !important;
     transition: all 0.22s !important;
-    border: 1.5px solid rgba(99,102,241,0.18) !important;
-    background: rgba(255,255,255,0.75) !important;
+    border: 1.5px solid rgba(99,102,241,0.20) !important;
+    background: rgba(255,255,255,0.82) !important;
     color: #1a1a2e !important;
     padding: 0.45rem 1.1rem !important;
     box-shadow: 0 2px 8px rgba(99,102,241,0.07) !important;
 }
 .stButton > button:hover {
-    background: rgba(255,255,255,0.95) !important;
-    border-color: rgba(99,102,241,0.35) !important;
+    background: rgba(255,255,255,0.98) !important;
+    border-color: rgba(99,102,241,0.40) !important;
     color: #1a1a2e !important;
     transform: translateY(-1px) !important;
-    box-shadow: 0 4px 16px rgba(99,102,241,0.12) !important;
+    box-shadow: 0 0 14px rgba(99,102,241,0.20), 0 4px 16px rgba(99,102,241,0.12) !important;
 }
 .stButton > button[kind="primary"] {
     background: linear-gradient(135deg, #6366F1, #818CF8) !important;
     color: #ffffff !important;
     border: none !important;
-    box-shadow: 0 4px 20px rgba(99,102,241,0.3) !important;
+    box-shadow: 0 4px 20px rgba(99,102,241,0.32) !important;
 }
 .stButton > button[kind="primary"]:hover {
     background: linear-gradient(135deg, #4F46E5, #6366F1) !important;
     color: #ffffff !important;
-    box-shadow: 0 8px 28px rgba(99,102,241,0.4) !important;
+    box-shadow: 0 0 22px rgba(99,102,241,0.45), 0 8px 28px rgba(99,102,241,0.35) !important;
     transform: translateY(-2px) !important;
 }
 .stButton > button:disabled {
-    opacity: 0.35 !important;
-    cursor: not-allowed !important;
-    transform: none !important;
+    opacity: 0.35 !important; cursor: not-allowed !important; transform: none !important;
 }
 
+/* ─ 激活导航按钮发光 ─ */
+.stButton > button[kind="primary"][data-testid="stButton"] {
+    box-shadow: 0 0 16px rgba(99,102,241,0.35), 0 4px 20px rgba(99,102,241,0.28) !important;
+}
+
+/* ─ 输入框 ─ */
 .stTextInput > div > div > input,
 .stTextArea > div > div > textarea {
-    background: rgba(255,255,255,0.85) !important;
-    border: 1.5px solid rgba(99,102,241,0.15) !important;
+    background: rgba(255,255,255,0.88) !important;
+    border: 1.5px solid rgba(99,102,241,0.16) !important;
     border-radius: 14px !important;
     color: #1a1a2e !important;
     font-family: 'Inter', 'PingFang SC', sans-serif !important;
+    font-size: 14px !important;
 }
 .stTextInput > div > div > input:focus,
 .stTextArea > div > div > textarea:focus {
-    border-color: rgba(99,102,241,0.5) !important;
-    box-shadow: 0 0 0 3px rgba(99,102,241,0.08) !important;
+    border-color: #6366F1 !important;
+    box-shadow: 0 0 0 3px rgba(99,102,241,0.10), 0 0 12px rgba(99,102,241,0.15) !important;
 }
 .stTextInput > div > div > input::placeholder,
 .stTextArea > div > div > textarea::placeholder {
     color: rgba(26,26,46,0.35) !important;
 }
-label, .stTextInput label, .stTextArea label, .stSelectbox label {
-    color: rgba(26,26,46,0.65) !important;
-    font-size: 13px !important;
-    font-weight: 500 !important;
+label, .stTextInput label, .stTextArea label, .stSelectbox label,
+.stMultiSelect label, .stSlider label {
+    color: rgba(26,26,46,0.60) !important;
+    font-size: 13px !important; font-weight: 500 !important;
 }
 .stSelectbox > div > div {
-    background: rgba(255,255,255,0.85) !important;
-    border: 1.5px solid rgba(99,102,241,0.15) !important;
-    border-radius: 14px !important;
-    color: #1a1a2e !important;
+    background: rgba(255,255,255,0.88) !important;
+    border: 1.5px solid rgba(99,102,241,0.16) !important;
+    border-radius: 14px !important; color: #1a1a2e !important;
 }
-.stSelectbox div[data-baseweb="select"] span { color: rgba(26,26,46,0.8) !important; }
-.stMultiSelect > div {
-    background: rgba(255,255,255,0.85) !important;
-    border-radius: 14px !important;
-}
+.stSelectbox div[data-baseweb="select"] span { color: rgba(26,26,46,0.80) !important; }
+.stMultiSelect > div { background: rgba(255,255,255,0.88) !important; border-radius: 14px !important; }
 .stMultiSelect span[data-baseweb="tag"] {
-    background: rgba(99,102,241,0.12) !important;
-    color: #4338ca !important;
+    background: rgba(99,102,241,0.12) !important; color: #3730a3 !important;
 }
 
+/* ─ 对话气泡 ─ */
 .bubble-ai {
     background: rgba(255,255,255,0.82);
     border: 1px solid rgba(99,102,241,0.12);
     border-radius: 18px 18px 18px 4px;
-    padding: 13px 17px;
-    font-size: 14px;
-    line-height: 1.7;
-    margin: 6px 0 6px 44px;
-    color: rgba(26,26,46,0.85);
-    white-space: pre-wrap;
-    box-shadow: 0 2px 12px rgba(99,102,241,0.07);
+    padding: 13px 17px; font-size: 14px; line-height: 1.7;
+    margin: 6px 0 6px 44px; color: rgba(26,26,46,0.85);
+    white-space: pre-wrap; box-shadow: 0 2px 12px rgba(99,102,241,0.07);
 }
 .bubble-user {
     background: linear-gradient(135deg, #6366F1, #818CF8);
     border-radius: 18px 18px 4px 18px;
-    padding: 13px 17px;
-    font-size: 14px;
-    line-height: 1.7;
-    margin: 6px 44px 6px 0;
-    color: #ffffff;
-    text-align: right;
-    box-shadow: 0 2px 12px rgba(99,102,241,0.2);
+    padding: 13px 17px; font-size: 14px; line-height: 1.7;
+    margin: 6px 44px 6px 0; color: #fff; text-align: right;
+    box-shadow: 0 2px 12px rgba(99,102,241,0.22);
 }
-.chat-label {
-    font-size: 11px;
-    color: rgba(26,26,46,0.35);
-    font-weight: 600;
-    margin-bottom: 3px;
-}
+.chat-label { font-size: 11px; color: rgba(26,26,46,0.35); font-weight: 600; margin-bottom: 3px; }
 
+/* ─ 分割线 ─ */
 .divider { border: none; border-top: 1px solid rgba(99,102,241,0.08); margin: 28px 0; }
 
+/* ─ 社团详情展开区 ─ */
 .detail-box {
     background: rgba(248,247,255,0.92);
-    border: 1px solid rgba(99,102,241,0.1);
-    border-radius: 14px;
-    padding: 18px 20px;
-    margin-top: 6px;
+    border: 1px solid rgba(99,102,241,0.10);
+    border-radius: 14px; padding: 18px 20px; margin-top: 6px;
 }
-.detail-section-title {
-    font-size: 10px;
-    font-weight: 700;
-    color: rgba(26,26,46,0.35);
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    margin-bottom: 10px;
-    margin-top: 14px;
-}
-.detail-section-title:first-child { margin-top: 0; }
-.req-row {
-    display: flex;
-    gap: 8px;
-    font-size: 13px;
-    color: rgba(26,26,46,0.65);
-    margin-bottom: 7px;
-    line-height: 1.5;
-}
+.dsec { font-size: 10px; font-weight: 700; color: rgba(26,26,46,0.32);
+    letter-spacing: 1px; text-transform: uppercase; margin-bottom: 10px; margin-top: 14px; }
+.dsec:first-child { margin-top: 0; }
+.req-row { display: flex; gap: 8px; font-size: 13px; color: rgba(26,26,46,0.65);
+    margin-bottom: 7px; line-height: 1.5; }
 
+/* ─ Vibe 标签 ─ */
 .vibe-tag {
     display: inline-block;
-    background: rgba(99,102,241,0.08);
-    border: 1px solid rgba(99,102,241,0.15);
-    color: #6366F1;
-    border-radius: 8px;
-    padding: 3px 10px;
-    font-size: 11px;
-    font-weight: 600;
-    margin-bottom: 12px;
-    font-style: italic;
+    background: rgba(99,102,241,0.08); border: 1px solid rgba(99,102,241,0.16);
+    color: #6366F1; border-radius: 8px; padding: 3px 10px;
+    font-size: 11px; font-weight: 600; margin-bottom: 12px; font-style: italic;
 }
 
+/* ─ 英雄标题 ─ */
+.hero-title {
+    font-size: clamp(34px,5vw,56px); font-weight: 900;
+    line-height: 1.08; letter-spacing: -2px; margin-bottom: 16px; color: #1a1a2e;
+}
+.hl {
+    background: linear-gradient(135deg, #6366F1 0%, #a78bfa 55%, #818CF8 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.hero-sub { font-size: 16px; color: rgba(26,26,46,0.52); line-height: 1.75; margin-bottom: 30px; }
+.eyebrow {
+    display: inline-block;
+    background: rgba(99,102,241,0.08); border: 1px solid rgba(99,102,241,0.18);
+    color: #6366F1; border-radius: 20px; padding: 5px 14px;
+    font-size: 11px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; margin-bottom: 18px;
+}
+.stat-num { font-size: 28px; font-weight: 900; color: #6366F1; letter-spacing: -1.5px; line-height: 1; }
+.stat-lbl { font-size: 11px; color: rgba(26,26,46,0.40); margin-top: 4px; font-weight: 500; }
+
+/* ─ 申请流程卡片 ─ */
+.step-card {
+    background: rgba(255,255,255,0.72); border: 1px solid rgba(99,102,241,0.10);
+    border-radius: 16px; padding: 20px; text-align: center; transition: all 0.22s;
+}
+.step-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(99,102,241,0.10); }
+
+/* ─ 成功页 ─ */
 .success-glass {
-    background: rgba(240,253,244,0.92);
-    border: 1px solid rgba(74,222,128,0.25);
-    border-radius: 24px;
-    padding: 40px;
-    text-align: center;
+    background: rgba(240,253,244,0.92); border: 1px solid rgba(74,222,128,0.25);
+    border-radius: 24px; padding: 40px; text-align: center;
     box-shadow: 0 8px 32px rgba(74,222,128,0.08);
 }
 
+/* ─ 表单区块 ─ */
 .form-section {
-    background: rgba(255,255,255,0.78);
-    border: 1px solid rgba(99,102,241,0.1);
-    border-radius: 16px;
-    padding: 20px 22px;
-    margin-bottom: 14px;
+    background: rgba(255,255,255,0.78); border: 1px solid rgba(99,102,241,0.10);
+    border-radius: 16px; padding: 20px 22px; margin-bottom: 14px;
 }
-.form-section-title {
-    font-size: 12px;
-    font-weight: 700;
-    color: rgba(26,26,46,0.35);
-    letter-spacing: 0.8px;
-    text-transform: uppercase;
-    margin-bottom: 14px;
+.form-title {
+    font-size: 12px; font-weight: 700; color: rgba(26,26,46,0.32);
+    letter-spacing: 0.8px; text-transform: uppercase; margin-bottom: 14px;
 }
 
-.step-card {
-    background: rgba(255,255,255,0.72);
-    border: 1px solid rgba(99,102,241,0.1);
-    border-radius: 16px;
-    padding: 20px;
-    text-align: center;
-    transition: all 0.2s;
-}
-.step-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(99,102,241,0.1);
-}
-
+/* ─ 滚动条 ─ */
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: rgba(99,102,241,0.2); border-radius: 2px; }
+::-webkit-scrollbar-thumb { background: rgba(99,102,241,0.20); border-radius: 2px; }
+
+/* ─ 分数条 ─ */
+.score-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.score-track { flex: 1; height: 4px; background: rgba(99,102,241,0.10); border-radius: 2px; overflow: hidden; }
+.score-fill { height: 100%; border-radius: 2px; background: linear-gradient(90deg, #6366F1, #a78bfa); }
+.score-pct { font-size: 13px; font-weight: 800; color: #6366F1; min-width: 38px; text-align: right; }
 </style>
 """, unsafe_allow_html=True)
 
 
-# ─── Session State ───────────────────────────────────────────
+# ── Session State ────────────────────────────────────────────
 def init():
-    defs = {
+    defaults = {
         "page": "home",
         "quiz_step": 0,
         "quiz_answers": {},
@@ -457,17 +357,18 @@ def init():
         "expand_club": None,
         "cart": [],
         "applications": [],
-        "apply_form": {},
         "chat_history": [],
         "create_submitted": False,
+        "ai_suggestion": "",
     }
-    for k, v in defs.items():
+    for k, v in defaults.items():
         if k not in st.session_state:
             st.session_state[k] = v
 
 init()
 
 
+# ── 工具函数 ────────────────────────────────────────────────
 def go(page):
     st.session_state.page = page
     st.rerun()
@@ -488,18 +389,21 @@ def toggle_cart(cid):
         st.session_state.cart.append(cid)
 
 
+# ── 导航栏 ──────────────────────────────────────────────────
 def render_nav():
-    cart_count = len(st.session_state.cart)
-    cart_str = f" ({cart_count})" if cart_count else ""
+    cart_n = len(st.session_state.cart)
+    cart_str = f" ({cart_n})" if cart_n else ""
     st.markdown(
-        f'<div class="navbar">'
-        f'<div class="logo"><span class="logo-badge">CM</span>Club<span class="logo-accent">Match</span></div>'
-        f'<div style="font-size:12px;color:rgba(26,26,46,0.3);font-weight:500;">每个人都值得找到属于自己的圈子</div>'
-        f'</div>',
+        '<div class="navbar">'
+        '<div class="logo"><span class="logo-badge">CM</span>'
+        'Club<span class="logo-accent">Match</span></div>'
+        '<div style="font-size:12px;color:rgba(26,26,46,0.30);font-weight:500;">'
+        '每个人都值得找到属于自己的圈子</div>'
+        '</div>',
         unsafe_allow_html=True
     )
-    tab_cols = st.columns(6, gap="small")
-    labels = [
+    cols = st.columns(6, gap="small")
+    tabs = [
         ("🏠", "首页", "home"),
         ("🧠", "匹配测评", "quiz"),
         ("🔍", "发现社团", "browse"),
@@ -507,15 +411,16 @@ def render_nav():
         ("📋", f"我的申请{cart_str}", "apply"),
         ("✨", "申请创建", "create"),
     ]
-    for col, (icon, label, pg) in zip(tab_cols, labels):
+    for col, (icon, label, pg) in zip(cols, tabs):
         with col:
-            is_active = st.session_state.page == pg
+            active = st.session_state.page == pg
             if st.button(f"{icon} {label}", key=f"nav_{pg}",
-                         type="primary" if is_active else "secondary",
+                         type="primary" if active else "secondary",
                          use_container_width=True):
                 go(pg)
 
 
+# ── 分数条 ──────────────────────────────────────────────────
 def score_bar(score):
     st.markdown(
         f'<div class="score-row">'
@@ -528,10 +433,27 @@ def score_bar(score):
 
 def tags_html(club):
     return "".join(
-        f'<span class="badge badge-w">{_html.escape(t)}</span>'
+        f'<span class="badge badge-w">{t}</span>'
         for t in club.get("tags", [])
     )
 
+def stat_cell(v, l, bg="rgba(99,102,241,0.05)", border="rgba(99,102,241,0.10)"):
+    return (
+        f'<div style="background:{bg};border:1px solid {border};border-radius:12px;'
+        f'padding:10px;text-align:center;">'
+        f'<div style="font-size:14px;font-weight:800;color:#1a1a2e;">{v}</div>'
+        f'<div style="font-size:10px;color:rgba(26,26,46,0.35);margin-top:2px;">{l}</div></div>'
+    )
+
+
+# ── AI 函数 ─────────────────────────────────────────────────
+# Claude 的自我介绍，注入系统提示
+CLAUDE_SELF_INTRO = """你是 Claude，由 Anthropic 创造的 AI。
+你是 ClubMatch 平台的 AI 顾问，专门帮助大学新生找到最适合自己的社团。
+你知道自己是 Claude，可以在对话中自然地提及这一点。
+你的性格：温暖、直接、有洞察力，不说废话，给出具体可执行的建议。
+你理解大学生活的不确定感，也理解选择社团时的迷茫——用真实的共情回应，而不是套话。
+当用户问到你是谁时，告诉他们你是 Claude，ClubMatch 的 AI 顾问，由 Anthropic 训练。"""
 
 def local_score(answers):
     result = []
@@ -539,21 +461,21 @@ def local_score(answers):
         s = c["score_base"]
         a0 = answers.get(0)
         if a0 == 0 and c["id"] in [1, 2, 10]: s += 12
-        if a0 == 1 and c["id"] in [4, 11]: s += 12
+        if a0 == 1 and c["id"] in [4, 11]:    s += 12
         if a0 == 2 and c["id"] in [3, 10, 12, 16]: s += 10
         if a0 == 3 and c["id"] in [6, 12, 13]: s += 12
         a1 = answers.get(1)
-        if a1 == 0 and c["id"] in [5, 8]: s += 10
-        if a1 == 1 and c["id"] in [4, 11]: s += 12
-        if a1 == 2 and c["id"] in [1, 2, 8]: s += 8
+        if a1 == 0 and c["id"] in [5, 8]:     s += 10
+        if a1 == 1 and c["id"] in [4, 11]:    s += 12
+        if a1 == 2 and c["id"] in [1, 2, 8]:  s += 8
         if a1 == 3 and c["id"] in [6, 7, 15]: s += 8
         a2 = answers.get(2)
-        if a2 == 0 and c["id"] in [1, 2]: s += 12
-        if a2 == 1 and c["id"] in [4, 5, 8]: s += 10
+        if a2 == 0 and c["id"] in [1, 2]:     s += 12
+        if a2 == 1 and c["id"] in [4, 5, 8]:  s += 10
         if a2 == 2 and c["id"] in [3, 9, 14]: s += 12
         if a2 == 3 and c["id"] in [6, 12, 13]: s += 12
         a3 = answers.get(3)
-        if a3 == 0 and c["id"] in [1, 2, 8]: s += 8
+        if a3 == 0 and c["id"] in [1, 2, 8]:  s += 8
         if a3 == 1 and c["id"] in [5, 8, 16]: s += 8
         if a3 == 2 and c["id"] in [7, 11, 15]: s += 8
         if a3 == 3 and c["id"] in [4, 9, 14]: s += 8
@@ -561,20 +483,20 @@ def local_score(answers):
         pref = {0: ["低"], 1: ["中等"], 2: ["较高", "高"], 3: ["低", "中等", "较高", "高"]}
         if c["time_cost"] in pref.get(a4, []): s += 6
         a5 = answers.get(5)
-        if a5 == 0 and c["id"] in [1, 2, 8]: s += 6
+        if a5 == 0 and c["id"] in [1, 2, 8]:      s += 6
         if a5 == 1 and c["id"] in [6, 7, 11, 13]: s += 6
-        if a5 == 2 and c["id"] in [5, 8, 10]: s += 6
-        if a5 == 3 and c["id"] in [3, 9, 4, 14]: s += 6
+        if a5 == 2 and c["id"] in [5, 8, 10]:     s += 6
+        if a5 == 3 and c["id"] in [3, 9, 4, 14]:  s += 6
         a6 = answers.get(6)
-        if a6 == 0 and c["id"] in [10, 12]: s += 6
-        if a6 == 1 and c["id"] in [11, 13, 16]: s += 6
-        if a6 == 2 and c["id"] in [7, 15]: s += 6
-        if a6 == 3 and c["id"] in [5, 8, 14]: s += 6
+        if a6 == 0 and c["id"] in [10, 12]:       s += 6
+        if a6 == 1 and c["id"] in [11, 13, 16]:   s += 6
+        if a6 == 2 and c["id"] in [7, 15]:        s += 6
+        if a6 == 3 and c["id"] in [5, 8, 14]:     s += 6
         a7 = answers.get(7)
-        if a7 == 0 and c["id"] in [10, 12, 1]: s += 5
-        if a7 == 1 and c["id"] in [11, 13, 5]: s += 5
-        if a7 == 2 and c["id"] in [7, 15, 3]: s += 5
-        if a7 == 3 and c["id"] in [9, 14, 6]: s += 5
+        if a7 == 0 and c["id"] in [10, 12, 1]:    s += 5
+        if a7 == 1 and c["id"] in [11, 13, 5]:    s += 5
+        if a7 == 2 and c["id"] in [7, 15, 3]:     s += 5
+        if a7 == 3 and c["id"] in [9, 14, 6]:     s += 5
         result.append({**c, "match_score": min(96, s)})
     return sorted(result, key=lambda x: -x["match_score"])
 
@@ -585,20 +507,24 @@ def ai_match(answers):
         if not api_key:
             return local_score(answers), None
         client = anthropic.Anthropic(api_key=api_key)
-        ans_desc = "<br />".join([
-            f"问题{i+1}「{QUESTIONS[i]['q']}」→ {QUESTIONS[i]['opts'][answers.get(i, 0)]['title']}"
+        ans_lines = "\n".join(
+            f"问题{i+1}「{QUESTIONS[i]['q']}」→ 选择了：{QUESTIONS[i]['opts'][answers.get(i, 0)]['title']}"
             for i in range(len(QUESTIONS))
-        ])
+        )
+        club_lines = "\n".join(
+            f"{c['id']}. {c['name']}（{c['type']}）：{c['desc']}"
+            for c in CLUBS
+        )
         prompt = (
-            f"你是大学社团匹配顾问。根据用户测评，为{len(CLUBS)}个社团打匹配分（0-100整数），"
-            f"给出最高匹配社团的一句话原因（温暖人性化，不超过40字）。<br /><br />"
-            f"用户测评：<br />{ans_desc}<br /><br />"
-            f"社团：<br />" +
-            "<br />".join([f"{c['id']}. {c['name']}（{c['type']}）" for c in CLUBS]) +
-            f"<br /><br />只返回JSON：{{\"scores\":{{\"1\":85,...}},\"reason\":\"...\"}}"
+            f"请根据用户测评，为以下 {len(CLUBS)} 个社团打匹配分（0-100 整数）。"
+            f"同时给出最高匹配社团的一句话分析（温暖人性化，不超过 40 字）。\n\n"
+            f"用户测评：\n{ans_lines}\n\n"
+            f"社团列表：\n{club_lines}\n\n"
+            f"只返回 JSON，格式：{{\"scores\":{{\"1\":85,\"2\":72,...}},\"reason\":\"...\"}}"
         )
         msg = client.messages.create(
             model="claude-opus-4-5", max_tokens=600,
+            system=CLAUDE_SELF_INTRO,
             messages=[{"role": "user", "content": prompt}]
         )
         text = msg.content[0].text.strip().replace("```json", "").replace("```", "").strip()
@@ -617,42 +543,55 @@ def chat_ai(user_msg):
     try:
         api_key = st.secrets.get("ANTHROPIC_API_KEY", "")
         if not api_key:
-            return "（需要配置 API Key 才能使用 AI 顾问，你可以先去「发现社团」页面浏览，或完成测评获取推荐～）"
+            return (
+                "我是 ClubMatch 的 AI 顾问——底层由 Claude（Anthropic）驱动。\n\n"
+                "目前 API Key 未配置，我暂时无法联网思考，但你可以去「发现社团」页面浏览，"
+                "或完成测评获取推荐。配置好 Key 后，我就能实时和你聊啦～"
+            )
         client = anthropic.Anthropic(api_key=api_key)
+        club_info = "\n".join(
+            f"- {c['name']}（{c['type']}）：{c['desc']} "
+            f"| 成员 {c['members']} 人，评分 {c['rating']}，时间投入：{c['time_cost']}，{c['freq']}"
+            for c in CLUBS
+        )
         system = (
-            f"你是 ClubMatch 平台的 AI 社团顾问，帮助大学新生找到适合的社团。<br />"
-            f"风格：简洁、温暖、真实，给具体有用的建议，不废话，用中文，适当换行。<br /><br />"
-            f"社团数据（共{len(CLUBS)}个）：<br />" +
-            "<br />".join([
-                f"- {c['name']}（{c['type']}）：{c['desc']} | 成员{c['members']}人，评分{c['rating']}，时间投入：{c['time_cost']}"
-                for c in CLUBS
-            ])
+            f"{CLAUDE_SELF_INTRO}\n\n"
+            f"平台社团数据（共 {len(CLUBS)} 个）：\n{club_info}\n\n"
+            f"回复风格：简洁、温暖、真实，给具体可执行的建议。用中文，适当分段，不要用 markdown 标题。"
         )
         history = []
         for t in st.session_state.chat_history:
-            if t.get("user"): history.append({"role": "user", "content": t["user"]})
-            if t.get("ai"):   history.append({"role": "assistant", "content": t["ai"]})
+            if t.get("user"):
+                history.append({"role": "user", "content": t["user"]})
+            if t.get("ai"):
+                history.append({"role": "assistant", "content": t["ai"]})
         history.append({"role": "user", "content": user_msg})
         msg = client.messages.create(
-            model="claude-opus-4-5", max_tokens=600, system=system, messages=history
+            model="claude-opus-4-5", max_tokens=600,
+            system=system, messages=history
         )
         return msg.content[0].text
-    except Exception:
-        return "AI 顾问暂时休息中，你可以先去「发现社团」页面逛逛～"
+    except Exception as e:
+        return f"我现在遇到了一点技术问题，稍后再试试吧。如果持续出现，可以去「发现社团」页面直接浏览～"
 
 
 # ══════════════════════════════════════════════════════════════
-# 首页
+#  首页
 # ══════════════════════════════════════════════════════════════
 def page_home():
     render_nav()
     col_l, col_r = st.columns([1.15, 1], gap="large")
+
     with col_l:
         st.markdown('<div class="eyebrow">✦ 找到你的圈子，从这里开始</div>', unsafe_allow_html=True)
         st.markdown(
-            '<div class="hero-title">大学四年，<br>你值得遇见<span class="hl">志同道合的伙伴</span></div>'
-            '<div class="hero-sub">不知道加哪个社团？害怕加了之后发现不合适？<br>'
-            '我们用 AI 帮你找到真正适合你的那个圈子——<br>不靠运气，靠真实的你。</div>',
+            '<div class="hero-title">大学四年，<br>你值得遇见'
+            '<span class="hl">志同道合的伙伴</span></div>'
+            '<div class="hero-sub">'
+            '不知道加哪个社团？害怕加了之后发现不合适？<br>'
+            '我们用 AI 帮你找到真正适合你的那个圈子——<br>'
+            '不靠运气，靠真实的你。'
+            '</div>',
             unsafe_allow_html=True
         )
         b1, b2 = st.columns(2)
@@ -664,6 +603,7 @@ def page_home():
         with b2:
             if st.button("🔍  逛逛所有社团", key="h_browse", use_container_width=True):
                 go("browse")
+
         st.markdown("<br>", unsafe_allow_html=True)
         c1, c2, c3, c4 = st.columns(4)
         for col, (n, l) in zip([c1, c2, c3, c4], [
@@ -680,15 +620,8 @@ def page_home():
     with col_r:
         top = CLUBS[0]
         stats = "".join([
-            f'<div style="background:rgba(99,102,241,0.05);border:1px solid rgba(99,102,241,0.1);'
-            f'border-radius:12px;padding:10px;text-align:center;">'
-            f'<div style="font-size:14px;font-weight:800;color:#1a1a2e;">{v}</div>'
-            f'<div style="font-size:10px;color:rgba(26,26,46,0.35);margin-top:2px;">{l}</div></div>'
-            for v, l in [
-                (top['members'], '成员'),
-                ('⭐' + str(top['rating']), '评分'),
-                (str(top['awards']) + '项', '获奖')
-            ]
+            stat_cell(v, l)
+            for v, l in [(top["members"], "成员"), (f"⭐{top['rating']}", "评分"), (f"{top['awards']}项", "获奖")]
         ])
         st.markdown(
             f'<div class="glass featured" style="margin-top:4px;">'
@@ -698,18 +631,20 @@ def page_home():
             f'<div style="font-size:40px;font-weight:900;color:#6366F1;letter-spacing:-2px;line-height:1;">92%</div>'
             f'<div style="font-size:10px;color:rgba(26,26,46,0.35);margin-top:2px;">AI 示例匹配度</div>'
             f'</div></div>'
-            f'<div style="font-size:18px;font-weight:800;margin-bottom:4px;color:#1a1a2e;">{_html.escape(top["name"])}</div>'
-            f'<div class="vibe-tag">{_html.escape(top.get("vibe",""))}</div>'
-            f'<div style="font-size:13px;color:rgba(26,26,46,0.5);line-height:1.6;margin-bottom:14px;">{_html.escape(top["desc"])}</div>'
+            f'<div style="font-size:18px;font-weight:800;margin-bottom:4px;color:#1a1a2e;">{top["name"]}</div>'
+            f'<div class="vibe-tag">{top.get("vibe","")}</div>'
+            f'<div style="font-size:13px;color:rgba(26,26,46,0.50);line-height:1.6;margin-bottom:14px;">{top["desc"]}</div>'
             f'<div style="margin-bottom:14px;">{tags_html(top)}<span class="badge badge-o">热门</span></div>'
             f'<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;">{stats}</div>'
             f'</div>'
             f'<div style="text-align:center;font-size:12px;color:rgba(26,26,46,0.25);margin-top:8px;">'
-            f'🟢 &nbsp;本周已有 102 位新生完成匹配</div>',
+            f'🟢  本周已有 102 位新生完成匹配</div>',
             unsafe_allow_html=True
         )
 
     st.markdown('<hr class="divider">', unsafe_allow_html=True)
+
+    # 三大亮点
     st.markdown(
         '<div style="text-align:center;margin-bottom:28px;">'
         '<div style="font-size:11px;font-weight:700;letter-spacing:1.2px;color:#6366F1;'
@@ -718,15 +653,15 @@ def page_home():
         '不是随机，是属于你的那个</div></div>',
         unsafe_allow_html=True
     )
-    cols = st.columns(3, gap="medium")
     features = [
         ("🧬", "真实的你，真实的匹配",
-         "我们问的不是「你有什么爱好」，而是「你周末真的会做什么」——8 道情景题，比你自己更了解你适合哪种氛围。"),
+         "我们问的不是「你有什么爱好」，而是「你周末真的会做什么」——8 道情景题，比你自己更了解你。"),
         ("📊", "社团数据全透明",
-         "成员活跃度、时间投入、历年评价……在你加入之前，我们让数据替你把关。16 个社团，深度介绍。"),
-        ("🤝", "加入后，我们也在",
-         "申请提交只是开始。我们会告诉你接下来发生什么、怎么融入、社团群如何运营——让你不迷茫。"),
+         "成员活跃度、时间投入、历年评价……16 个社团的完整数据，在加入前就让你看清楚。"),
+        ("🤝", "AI 顾问随时在线",
+         "底层由 Claude（Anthropic）驱动。问什么都行，它了解每一个社团，也懂大学生的真实处境。"),
     ]
+    cols = st.columns(3, gap="medium")
     for col, (icon, title, desc) in zip(cols, features):
         with col:
             st.markdown(
@@ -739,14 +674,12 @@ def page_home():
             )
 
     st.markdown('<hr class="divider">', unsafe_allow_html=True)
-    import random
+
+    # 今日精选
     picks = random.sample(CLUBS, 3)
     st.markdown(
         '<div style="font-size:11px;font-weight:700;letter-spacing:1.2px;color:#6366F1;'
-        'text-transform:uppercase;margin-bottom:10px;">✦ 今日精选</div>',
-        unsafe_allow_html=True
-    )
-    st.markdown(
+        'text-transform:uppercase;margin-bottom:10px;">✦ 今日精选</div>'
         '<div style="font-size:22px;font-weight:900;letter-spacing:-0.6px;margin-bottom:20px;color:#1a1a2e;">'
         '随便逛逛，说不定就遇上了</div>',
         unsafe_allow_html=True
@@ -757,9 +690,10 @@ def page_home():
             st.markdown(
                 f'<div class="glass">'
                 f'<div style="font-size:36px;margin-bottom:10px;">{club["emoji"]}</div>'
-                f'<div style="font-size:16px;font-weight:800;margin-bottom:3px;color:#1a1a2e;">{_html.escape(club["name"])}</div>'
-                f'<div class="vibe-tag">{_html.escape(club.get("vibe",""))}</div>'
-                f'<div style="font-size:13px;color:rgba(26,26,46,0.48);line-height:1.55;margin-bottom:12px;">{_html.escape(club["desc"][:55])}...</div>'
+                f'<div style="font-size:16px;font-weight:800;margin-bottom:3px;color:#1a1a2e;">{club["name"]}</div>'
+                f'<div class="vibe-tag">{club.get("vibe","")}</div>'
+                f'<div style="font-size:13px;color:rgba(26,26,46,0.48);line-height:1.55;margin-bottom:12px;">'
+                f'{club["desc"][:58]}...</div>'
                 f'<div>{tags_html(club)}</div>'
                 f'</div>',
                 unsafe_allow_html=True
@@ -771,14 +705,15 @@ def page_home():
     st.markdown("<br>", unsafe_allow_html=True)
     _, mid, _ = st.columns([1, 2, 1])
     with mid:
-        if st.button("✨  还没找到感觉？来做个测评吧 →", key="home_cta2", type="primary", use_container_width=True):
+        if st.button("✨  还没找到感觉？来做个测评吧 →", key="home_cta2",
+                     type="primary", use_container_width=True):
             st.session_state.quiz_step = 0
             st.session_state.quiz_answers = {}
             go("quiz")
 
 
 # ══════════════════════════════════════════════════════════════
-# 测评页 — 单一卡片式按钮，无重复元素
+#  测评页 — 单按钮卡片，发光选中
 # ══════════════════════════════════════════════════════════════
 def page_quiz():
     render_nav()
@@ -788,6 +723,7 @@ def page_quiz():
     q = QUESTIONS[step]
     pct = int(step / total * 100)
 
+    # 进度条
     st.markdown(
         f'<div class="prog-wrap">'
         f'<div class="prog-meta"><span>问题 {step+1} / {total}</span><span>{pct}%</span></div>'
@@ -799,26 +735,28 @@ def page_quiz():
     _, mid, _ = st.columns([0.5, 4, 0.5])
     with mid:
         st.markdown(
-            f'<div style="font-size:11px;font-weight:700;color:#6366F1;letter-spacing:0.8px;'
-            f'text-transform:uppercase;margin-bottom:10px;">第 {step+1} 题</div>',
+            f'<div style="font-size:11px;font-weight:700;color:#6366F1;'
+            f'letter-spacing:0.8px;text-transform:uppercase;margin-bottom:10px;">第 {step+1} 题</div>',
             unsafe_allow_html=True
         )
         st.markdown(
             f'<div style="font-size:clamp(20px,3vw,28px);font-weight:900;letter-spacing:-0.8px;'
-            f'line-height:1.25;margin-bottom:6px;color:#1a1a2e;">{_html.escape(q["q"])}</div>',
+            f'line-height:1.25;margin-bottom:6px;color:#1a1a2e;">{q["q"]}</div>',
             unsafe_allow_html=True
         )
         hint = q.get("hint", "")
         if hint:
             st.markdown(
-                f'<div style="font-size:13px;color:rgba(26,26,46,0.32);margin-bottom:22px;'
-                f'font-style:italic;">{_html.escape(hint)}</div>',
+                f'<div style="font-size:13px;color:rgba(26,26,46,0.32);'
+                f'margin-bottom:22px;font-style:italic;">{hint}</div>',
                 unsafe_allow_html=True
             )
         else:
             st.markdown("<div style='height:22px;'></div>", unsafe_allow_html=True)
 
         cur = st.session_state.quiz_answers.get(step)
+
+        # 2×2 网格，每格一个完整按钮卡片
         row1 = st.columns(2, gap="small")
         row2 = st.columns(2, gap="small")
         all_cols = list(row1) + list(row2)
@@ -826,25 +764,32 @@ def page_quiz():
         for i, (col, opt) in enumerate(zip(all_cols, q["opts"])):
             with col:
                 is_sel = (cur == i)
-                css_cls = "quiz-card-sel" if is_sel else "quiz-card"
-                check = "  ✓" if is_sel else ""
-                # 按钮 label：图标 空格 标题 换行 副文本
-                # 用 <br /> 分隔，CSS white-space:normal 会渲染为空格，
-                # 但视觉上副文本会跟在标题后面——这是 Streamlit 按钮的限制
-                # 解决方案：用全角空格+特殊分隔让内容可读
-                btn_label = f"{opt['icon']}  {opt['title']}{check}    {opt['sub']}"
-
+                # 用 CSS class 控制样式：quiz-opt-sel 或 quiz-opt
+                css_cls = "quiz-opt-sel" if is_sel else "quiz-opt"
+                check = " ✓" if is_sel else ""
+                # 单行 label：图标 + 主标题 + 副文本用全角空格分开
+                label = f"{opt['icon']}  {opt['title']}{check}　{opt['sub']}"
+                # 用 st.markdown 注入 class，再用 st.button
+                st.markdown(
+                    f'<style>'
+                    f'div[data-testid="stButton"]:has(button[key="q{step}_o{i}"]) {{ /* noop */ }}</style>',
+                    unsafe_allow_html=True
+                )
+                # 直接在按钮外包一个带 class 的 div
+                # Streamlit 不支持直接给 button 加 class，
+                # 但可以用 st.markdown 包裹后紧接 st.button 让 CSS nth-child 命中
                 st.markdown(f'<div class="{css_cls}">', unsafe_allow_html=True)
-                if st.button(btn_label, key=f"q{step}_o{i}", use_container_width=True):
+                clicked = st.button(label, key=f"q{step}_o{i}", use_container_width=True)
+                st.markdown('</div>', unsafe_allow_html=True)
+                if clicked:
                     st.session_state.quiz_answers[step] = i
                     st.rerun()
-                st.markdown('</div>', unsafe_allow_html=True)
 
         st.markdown("<br>", unsafe_allow_html=True)
         nav_l, nav_r = st.columns(2, gap="small")
         with nav_l:
-            back_label = "← 返回首页" if step == 0 else "← 上一题"
-            if st.button(back_label, key="q_back", use_container_width=True):
+            back_lbl = "← 返回首页" if step == 0 else "← 上一题"
+            if st.button(back_lbl, key="q_back", use_container_width=True):
                 if step == 0:
                     go("home")
                 else:
@@ -852,8 +797,9 @@ def page_quiz():
                     st.rerun()
         with nav_r:
             done = step in st.session_state.quiz_answers
-            label = "查看匹配结果 →" if step == total - 1 else "下一题 →"
-            if st.button(label, key="q_next", type="primary", use_container_width=True, disabled=not done):
+            next_lbl = "查看匹配结果 →" if step == total - 1 else "下一题 →"
+            if st.button(next_lbl, key="q_next", type="primary",
+                         use_container_width=True, disabled=not done):
                 if step == total - 1:
                     with st.spinner("🤖 AI 正在分析你的性格与偏好..."):
                         res, reason = ai_match(st.session_state.quiz_answers)
@@ -866,17 +812,19 @@ def page_quiz():
 
 
 # ══════════════════════════════════════════════════════════════
-# 匹配结果页
+#  匹配结果页
 # ══════════════════════════════════════════════════════════════
 def page_results():
     render_nav()
     results = st.session_state.results
     if not results:
         st.warning("还没有结果，先完成测评吧～")
-        if st.button("去测评", type="primary"): go("quiz")
+        if st.button("去测评", type="primary"):
+            go("quiz")
         return
 
     reason = st.session_state.get("ai_reason")
+
     st.markdown(
         '<div style="font-size:11px;font-weight:700;letter-spacing:1.2px;color:#6366F1;'
         'text-transform:uppercase;margin-bottom:10px;">✦ 你的专属匹配报告</div>',
@@ -887,19 +835,20 @@ def page_results():
         f'margin-bottom:10px;color:#1a1a2e;">AI 从 {len(CLUBS)} 个社团里，为你挑出了这些</div>',
         unsafe_allow_html=True
     )
+
     if reason:
         st.markdown(
             f'<div style="background:rgba(99,102,241,0.06);border:1px solid rgba(99,102,241,0.15);'
             f'border-radius:14px;padding:14px 18px;font-size:14px;color:rgba(26,26,46,0.75);'
             f'line-height:1.65;margin-bottom:24px;">'
-            f'<span style="color:#6366F1;font-weight:700;">✦ AI 分析：</span>{_html.escape(reason)}'
+            f'<span style="color:#6366F1;font-weight:700;">✦ Claude 分析：</span>{reason}'
             f'</div>',
             unsafe_allow_html=True
         )
 
-    cols = st.columns(3, gap="small")
     badges = ["🥇 最佳匹配", "🥈 强烈推荐", "🥉 推荐"]
     badge_cls = ["badge-y", "badge-o", "badge-w"]
+    cols = st.columns(3, gap="small")
 
     for idx, club in enumerate(results):
         with cols[idx % 3]:
@@ -915,14 +864,16 @@ def page_results():
                 f'<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;">'
                 f'<div style="font-size:36px;">{club["emoji"]}</div>'
                 f'<span class="badge {bc}">{bl}</span></div>'
-                f'<div style="font-size:16px;font-weight:800;margin-bottom:2px;color:#1a1a2e;">{_html.escape(club["name"])}</div>'
-                f'<div style="font-size:11px;color:rgba(26,26,46,0.38);margin-bottom:10px;">{_html.escape(club["type"])} · {_html.escape(club["freq"])}</div>',
+                f'<div style="font-size:16px;font-weight:800;margin-bottom:2px;color:#1a1a2e;">{club["name"]}</div>'
+                f'<div style="font-size:11px;color:rgba(26,26,46,0.38);margin-bottom:10px;">'
+                f'{club["type"]} · {club["freq"]}</div>',
                 unsafe_allow_html=True
             )
             score_bar(club["match_score"])
             st.markdown(
-                f'<div class="vibe-tag">{_html.escape(club.get("vibe",""))}</div>'
-                f'<div style="font-size:13px;color:rgba(26,26,46,0.5);line-height:1.55;margin-bottom:12px;">{_html.escape(club["desc"][:58])}...</div>'
+                f'<div class="vibe-tag">{club.get("vibe","")}</div>'
+                f'<div style="font-size:13px;color:rgba(26,26,46,0.50);line-height:1.55;margin-bottom:12px;">'
+                f'{club["desc"][:58]}...</div>'
                 f'<div style="margin-bottom:14px;">{tags_html(club)}{applied_badge}</div>'
                 f'</div>',
                 unsafe_allow_html=True
@@ -930,21 +881,23 @@ def page_results():
 
             b1, b2 = st.columns(2, gap="small")
             with b1:
-                if st.button("查看详情", key=f"r_detail_{club['id']}_{idx}", use_container_width=True):
+                if st.button("查看详情", key=f"r_det_{club['id']}_{idx}", use_container_width=True):
                     st.session_state.expand_club = (
                         club["id"] if st.session_state.expand_club != club["id"] else None
                     )
                     st.rerun()
             with b2:
                 if applied:
-                    st.button("已报名 ✓", key=f"r_applied_{club['id']}", disabled=True, use_container_width=True)
+                    st.button("已报名 ✓", key=f"r_app_{club['id']}", disabled=True, use_container_width=True)
                 elif in_c:
                     if st.button("移出申请袋", key=f"r_rm_{club['id']}_{idx}", use_container_width=True):
-                        toggle_cart(club["id"]); st.rerun()
+                        toggle_cart(club["id"])
+                        st.rerun()
                 else:
                     if st.button("➕ 加入申请袋", key=f"r_add_{club['id']}_{idx}",
                                  type="primary", use_container_width=True):
-                        toggle_cart(club["id"]); st.rerun()
+                        toggle_cart(club["id"])
+                        st.rerun()
 
             if st.session_state.expand_club == club["id"]:
                 render_club_detail(club)
@@ -957,57 +910,55 @@ def page_results():
             st.session_state.quiz_answers = {}
             go("quiz")
     with c2:
-        if st.button("🔍 发现更多社团", key="r_browse", use_container_width=True): go("browse")
+        if st.button("🔍 发现更多社团", key="r_browse", use_container_width=True):
+            go("browse")
     with c3:
-        if st.button("🤖 咨询 AI 顾问", key="r_chat", use_container_width=True): go("chat")
+        if st.button("🤖 咨询 AI 顾问", key="r_chat", use_container_width=True):
+            go("chat")
     with c4:
         cart_n = len(st.session_state.cart)
         if cart_n:
-            if st.button(f"📋 提交申请 ({cart_n})", key="r_apply", type="primary", use_container_width=True):
+            if st.button(f"📋 提交申请 ({cart_n})", key="r_apply",
+                         type="primary", use_container_width=True):
                 go("apply")
         else:
-            st.button("📋 申请袋是空的", key="r_apply_empty", disabled=True, use_container_width=True)
+            st.button("📋 申请袋是空的", key="r_apply_e", disabled=True, use_container_width=True)
 
 
 def render_club_detail(club):
     applied = already_applied(club["id"])
-    req_rows = "".join([
-        f'<div class="req-row"><span style="color:#6366F1;margin-top:2px;flex-shrink:0;">·</span>'
-        f'<span>{_html.escape(r)}</span></div>'
-        for r in club.get('requirements', [])
-    ])
-    act_rows = "".join([
-        f'<div class="req-row"><span style="color:#F97316;margin-top:2px;flex-shrink:0;">·</span>'
-        f'<span>{_html.escape(a)}</span></div>'
-        for a in club.get('activities', [])
-    ])
-    stat_cells = "".join([
-        f'<div style="background:rgba(99,102,241,0.05);border:1px solid rgba(99,102,241,0.08);'
-        f'border-radius:10px;padding:10px;text-align:center;">'
-        f'<div style="font-size:14px;font-weight:800;color:#1a1a2e;">{v}</div>'
-        f'<div style="font-size:10px;color:rgba(26,26,46,0.35);margin-top:2px;">{l}</div></div>'
+    req_rows = "".join(
+        f'<div class="req-row"><span style="color:#6366F1;flex-shrink:0;">·</span><span>{r}</span></div>'
+        for r in club.get("requirements", [])
+    )
+    act_rows = "".join(
+        f'<div class="req-row"><span style="color:#F97316;flex-shrink:0;">·</span><span>{a}</span></div>'
+        for a in club.get("activities", [])
+    )
+    stats = "".join([
+        stat_cell(v, l)
         for v, l in [
-            (str(club['members']), '成员'),
-            ('⭐' + str(club['rating']), '评分'),
-            (str(club['awards']) + '项', '获奖'),
-            (_html.escape(club['time_cost']), '时间投入')
+            (str(club["members"]), "成员"),
+            (f"⭐{club['rating']}", "评分"),
+            (f"{club['awards']}项", "获奖"),
+            (club["time_cost"], "时间投入"),
         ]
     ])
     applied_note = (
         '<div style="margin-top:12px;padding:10px 14px;background:rgba(74,222,128,0.08);'
         'border:1px solid rgba(74,222,128,0.2);border-radius:10px;font-size:12px;'
         'color:#15803d;text-align:center;">✓ 你已报名这个社团</div>'
-    ) if applied else ''
+    ) if applied else ""
 
     st.markdown(
         f'<div class="detail-box">'
-        f'<div class="detail-section-title">关于我们</div>'
-        f'<div style="font-size:13px;color:rgba(26,26,46,0.65);line-height:1.7;">{_html.escape(club.get("detail",""))}</div>'
-        f'<div class="detail-section-title">这个社团最适合</div>'
-        f'<div style="font-size:13px;color:rgba(26,26,46,0.65);">→ {_html.escape(club.get("best_for",""))}</div>'
-        f'<div class="detail-section-title">招新要求</div>{req_rows}'
-        f'<div class="detail-section-title">主要活动</div>{act_rows}'
-        f'<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:14px;">{stat_cells}</div>'
+        f'<div class="dsec">关于我们</div>'
+        f'<div style="font-size:13px;color:rgba(26,26,46,0.65);line-height:1.7;">{club.get("detail","")}</div>'
+        f'<div class="dsec">最适合</div>'
+        f'<div style="font-size:13px;color:rgba(26,26,46,0.65);">→ {club.get("best_for","")}</div>'
+        f'<div class="dsec">招新要求</div>{req_rows}'
+        f'<div class="dsec">主要活动</div>{act_rows}'
+        f'<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:14px;">{stats}</div>'
         f'{applied_note}'
         f'</div>',
         unsafe_allow_html=True
@@ -1015,16 +966,18 @@ def render_club_detail(club):
 
 
 # ══════════════════════════════════════════════════════════════
-# 发现社团页
+#  发现社团页
 # ══════════════════════════════════════════════════════════════
 def page_browse():
     render_nav()
     st.markdown(
-        '<div style="font-size:26px;font-weight:900;letter-spacing:-0.8px;margin-bottom:4px;color:#1a1a2e;">发现社团</div>',
+        '<div style="font-size:26px;font-weight:900;letter-spacing:-0.8px;'
+        'margin-bottom:4px;color:#1a1a2e;">发现社团</div>',
         unsafe_allow_html=True
     )
     st.markdown(
-        f'<div style="font-size:14px;color:rgba(26,26,46,0.4);margin-bottom:20px;">{len(CLUBS)} 个社团，总有一个在等你</div>',
+        f'<div style="font-size:14px;color:rgba(26,26,46,0.40);margin-bottom:20px;">'
+        f'{len(CLUBS)} 个社团，总有一个在等你</div>',
         unsafe_allow_html=True
     )
 
@@ -1033,19 +986,20 @@ def page_browse():
         search = st.text_input("", placeholder="🔍  搜索名称、类型、标签...",
                                label_visibility="collapsed", key="b_search")
     with col_f:
-        types = ["全部类型"] + sorted(list({c["type"] for c in CLUBS}))
+        types = ["全部类型"] + sorted({c["type"] for c in CLUBS})
         sel_type = st.selectbox("", types, label_visibility="collapsed", key="b_type")
 
     filtered = [
         c for c in CLUBS
         if (not search or search in c["name"] or search in c["type"]
-            or any(search in t for t in c.get("tags", [])) or search in c["desc"])
+            or any(search in t for t in c.get("tags", [])) or search in c.get("desc", ""))
         and (sel_type == "全部类型" or c["type"] == sel_type)
     ]
 
     if not filtered:
         st.markdown(
-            '<div style="text-align:center;padding:60px;color:rgba(26,26,46,0.25);">没找到……换个关键词试试？</div>',
+            '<div style="text-align:center;padding:60px;color:rgba(26,26,46,0.25);">'
+            '没找到……换个关键词试试？</div>',
             unsafe_allow_html=True
         )
         return
@@ -1055,28 +1009,33 @@ def page_browse():
         with cols[idx % 3]:
             applied = already_applied(club["id"])
             in_c = in_cart(club["id"])
-            applied_badge = '<span class="badge badge-g">✓ 已报名</span>' if applied else ''
-            cart_badge = '<span class="badge badge-y">在申请袋中</span>' if (in_c and not applied) else ''
-            stat_cells = "".join([
+            extra = ""
+            if applied:
+                extra = '<span class="badge badge-g">✓ 已报名</span>'
+            elif in_c:
+                extra = '<span class="badge badge-y">在申请袋中</span>'
+            stat_row = "".join([
                 f'<div style="text-align:center;">'
                 f'<div style="font-size:13px;font-weight:800;color:#1a1a2e;">{v}</div>'
                 f'<div style="font-size:10px;color:rgba(26,26,46,0.35);margin-top:2px;">{l}</div></div>'
                 for v, l in [
-                    (str(club['members']), '成员'),
-                    ('⭐' + str(club['rating']), '评分'),
-                    (str(club['awards']) + '项', '获奖')
+                    (str(club["members"]), "成员"),
+                    (f"⭐{club['rating']}", "评分"),
+                    (f"{club['awards']}项", "获奖"),
                 ]
             ])
             st.markdown(
                 f'<div class="glass">'
                 f'<div style="font-size:36px;margin-bottom:10px;">{club["emoji"]}</div>'
-                f'<div style="font-size:16px;font-weight:800;margin-bottom:2px;color:#1a1a2e;">{_html.escape(club["name"])}</div>'
-                f'<div style="font-size:11px;color:rgba(26,26,46,0.35);margin-bottom:8px;">{_html.escape(club["type"])} · 成立 {_html.escape(club["founded"])}</div>'
-                f'<div class="vibe-tag">{_html.escape(club.get("vibe",""))}</div>'
-                f'<div style="font-size:13px;color:rgba(26,26,46,0.5);line-height:1.55;margin-bottom:12px;">{_html.escape(club["desc"][:62])}...</div>'
-                f'<div style="margin-bottom:12px;">{tags_html(club)}{applied_badge}{cart_badge}</div>'
+                f'<div style="font-size:16px;font-weight:800;margin-bottom:2px;color:#1a1a2e;">{club["name"]}</div>'
+                f'<div style="font-size:11px;color:rgba(26,26,46,0.35);margin-bottom:8px;">'
+                f'{club["type"]} · 成立 {club["founded"]}</div>'
+                f'<div class="vibe-tag">{club.get("vibe","")}</div>'
+                f'<div style="font-size:13px;color:rgba(26,26,46,0.50);line-height:1.55;margin-bottom:12px;">'
+                f'{club["desc"][:62]}...</div>'
+                f'<div style="margin-bottom:12px;">{tags_html(club)}{extra}</div>'
                 f'<div style="display:grid;grid-template-columns:repeat(3,1fr);'
-                f'border-top:1px solid rgba(99,102,241,0.07);padding-top:12px;">{stat_cells}</div>'
+                f'border-top:1px solid rgba(99,102,241,0.07);padding-top:12px;">{stat_row}</div>'
                 f'</div>',
                 unsafe_allow_html=True
             )
@@ -1093,11 +1052,13 @@ def page_browse():
                     st.button("已报名 ✓", key=f"b_app_{club['id']}", disabled=True, use_container_width=True)
                 elif in_c:
                     if st.button("移出申请袋", key=f"b_rm_{club['id']}_{idx}", use_container_width=True):
-                        toggle_cart(club["id"]); st.rerun()
+                        toggle_cart(club["id"])
+                        st.rerun()
                 else:
                     if st.button("➕ 加入申请袋", key=f"b_add_{club['id']}_{idx}",
                                  type="primary", use_container_width=True):
-                        toggle_cart(club["id"]); st.rerun()
+                        toggle_cart(club["id"])
+                        st.rerun()
 
             if st.session_state.expand_club == club["id"]:
                 render_club_detail(club)
@@ -1116,57 +1077,64 @@ def page_browse():
 
 
 # ══════════════════════════════════════════════════════════════
-# AI 顾问页
+#  AI 顾问页
 # ══════════════════════════════════════════════════════════════
 def page_chat():
     render_nav()
     st.markdown(
-        '<div style="font-size:24px;font-weight:900;letter-spacing:-0.6px;margin-bottom:4px;color:#1a1a2e;">AI 社团顾问</div>',
+        '<div style="font-size:24px;font-weight:900;letter-spacing:-0.6px;'
+        'margin-bottom:4px;color:#1a1a2e;">AI 社团顾问</div>',
         unsafe_allow_html=True
     )
     st.markdown(
         '<div style="font-size:13px;color:rgba(26,26,46,0.38);margin-bottom:24px;">'
-        '由 Claude AI 驱动 · 随时回答关于社团的任何疑问</div>',
+        '由 Claude (Anthropic) 驱动 · 随时回答关于社团的任何疑问</div>',
         unsafe_allow_html=True
     )
 
     if not st.session_state.chat_history:
-        st.session_state.chat_history = [{"user": None, "ai": (
-            f"嗨！我是 ClubMatch AI 顾问 👋<br /><br />"
-            f"我对平台上所有 {len(CLUBS)} 个社团都了如指掌。你可以问我：<br />"
-            f"· 某个社团的具体情况和氛围<br />"
-            f"· 根据你的情况给个性化推荐<br />"
-            f"· 「内向的人适合哪个」「我时间不多怎么选」……<br /><br />"
-            f"随便问吧，没有奇怪的问题。"
-        )}]
+        st.session_state.chat_history = [{
+            "user": None,
+            "ai": (
+                f"嗨！我是 ClubMatch 的 AI 顾问，底层由 Claude（Anthropic）驱动 👋\n\n"
+                f"我对平台上所有 {len(CLUBS)} 个社团都了如指掌。你可以问我：\n"
+                f"· 某个社团的具体情况和氛围\n"
+                f"· 根据你的情况给个性化推荐\n"
+                f"· 「内向的人适合哪个」「我时间不多怎么选」……\n\n"
+                f"随便问吧，没有奇怪的问题。"
+            )
+        }]
 
     for turn in st.session_state.chat_history:
         if turn.get("user"):
             st.markdown(
-                '<div style="text-align:right;font-size:11px;color:rgba(26,26,46,0.35);font-weight:600;margin-bottom:3px;">你</div>',
+                '<div style="text-align:right;font-size:11px;color:rgba(26,26,46,0.35);'
+                'font-weight:600;margin-bottom:3px;">你</div>',
                 unsafe_allow_html=True
             )
-            st.markdown(f'<div class="bubble-user">{_html.escape(turn["user"])}</div>', unsafe_allow_html=True)
+            st.markdown(f'<div class="bubble-user">{turn["user"]}</div>', unsafe_allow_html=True)
         if turn.get("ai"):
-            st.markdown('<div class="chat-label">🤖  AI 顾问</div>', unsafe_allow_html=True)
-            st.markdown(f'<div class="bubble-ai">{_html.escape(turn["ai"])}</div>', unsafe_allow_html=True)
+            st.markdown('<div class="chat-label">🤖  Claude AI 顾问</div>', unsafe_allow_html=True)
+            st.markdown(f'<div class="bubble-ai">{turn["ai"]}</div>', unsafe_allow_html=True)
 
     st.markdown("<br>", unsafe_allow_html=True)
+
     if len(st.session_state.chat_history) <= 1:
         st.markdown(
-            '<div style="font-size:12px;color:rgba(26,26,46,0.3);margin-bottom:8px;">快捷问题，点一下就能问</div>',
+            '<div style="font-size:12px;color:rgba(26,26,46,0.30);margin-bottom:8px;">快捷问题</div>',
             unsafe_allow_html=True
         )
         sugg = [
             "内向的人适合哪个社团？", "我时间不多，选哪个好？",
             "摄影社和微电影社有啥区别？", "创业社真的有用吗？",
-            "不知道自己喜欢什么怎么办？", "哪个社团最容易交到朋友？"
+            "不知道自己喜欢什么怎么办？", "哪个社团最容易交到朋友？",
         ]
         cols = st.columns(3, gap="small")
         for i, s in enumerate(sugg):
             with cols[i % 3]:
                 if st.button(s, key=f"sugg_{i}", use_container_width=True):
-                    with st.spinner("思考中..."): rep = chat_ai(s)
+                    with st.spinner("Claude 思考中..."):
+                        rep = chat_ai(s)
                     st.session_state.chat_history.append({"user": s, "ai": rep})
                     st.rerun()
 
@@ -1176,10 +1144,13 @@ def page_chat():
                                    label_visibility="collapsed", key="chat_inp")
     with col_s:
         send = st.button("发送 →", key="chat_send", type="primary", use_container_width=True)
+
     if send and user_input.strip():
-        with st.spinner("AI 思考中..."): rep = chat_ai(user_input.strip())
+        with st.spinner("Claude 思考中..."):
+            rep = chat_ai(user_input.strip())
         st.session_state.chat_history.append({"user": user_input.strip(), "ai": rep})
         st.rerun()
+
     if len(st.session_state.chat_history) > 1:
         if st.button("🗑  清空对话", key="chat_clear"):
             st.session_state.chat_history = []
@@ -1187,115 +1158,127 @@ def page_chat():
 
 
 # ══════════════════════════════════════════════════════════════
-# 申请提交页
+#  申请提交页
 # ══════════════════════════════════════════════════════════════
 def page_apply():
     render_nav()
     cart = st.session_state.cart
+
     if not cart:
         st.markdown(
             '<div style="font-size:22px;font-weight:800;color:#1a1a2e;margin-bottom:8px;">申请袋是空的</div>',
             unsafe_allow_html=True
         )
         st.markdown(
-            '<div style="color:rgba(26,26,46,0.4);margin-bottom:24px;font-size:14px;">'
+            '<div style="color:rgba(26,26,46,0.40);margin-bottom:24px;font-size:14px;">'
             '先去发现社团，把感兴趣的加进申请袋再来这里～</div>',
             unsafe_allow_html=True
         )
-        if st.button("去发现社团", type="primary"): go("browse")
+        if st.button("去发现社团", type="primary"):
+            go("browse")
         return
 
     st.markdown(
-        '<div style="font-size:26px;font-weight:900;letter-spacing:-0.8px;margin-bottom:4px;color:#1a1a2e;">提交申请</div>',
+        '<div style="font-size:26px;font-weight:900;letter-spacing:-0.8px;'
+        'margin-bottom:4px;color:#1a1a2e;">提交申请</div>',
         unsafe_allow_html=True
     )
     st.markdown(
-        f'<div style="font-size:14px;color:rgba(26,26,46,0.4);margin-bottom:24px;">'
+        f'<div style="font-size:14px;color:rgba(26,26,46,0.40);margin-bottom:24px;">'
         f'你选择了 {len(cart)} 个社团，一次填写全搞定</div>',
         unsafe_allow_html=True
     )
 
     col_l, col_r = st.columns([1.2, 1], gap="large")
+
     with col_l:
-        st.markdown('<div class="form-section"><div class="form-section-title">你的申请袋</div>',
-                    unsafe_allow_html=True)
+        st.markdown('<div class="form-section"><div class="form-title">你的申请袋</div>', unsafe_allow_html=True)
         for cid in list(cart):
             club = club_by_id(cid)
-            if club:
-                c_left, c_right = st.columns([3, 1])
-                with c_left:
-                    st.markdown(
-                        f'<div style="display:flex;align-items:center;gap:10px;padding:10px 0;'
-                        f'border-bottom:1px solid rgba(99,102,241,0.06);">'
-                        f'<span style="font-size:22px;">{club["emoji"]}</span>'
-                        f'<div><div style="font-size:14px;font-weight:700;color:#1a1a2e;">{_html.escape(club["name"])}</div>'
-                        f'<div style="font-size:11px;color:rgba(26,26,46,0.38);">{_html.escape(club["type"])} · {_html.escape(club["freq"])}</div>'
-                        f'</div></div>',
-                        unsafe_allow_html=True
-                    )
-                with c_right:
-                    if st.button("移除", key=f"apply_rm_{cid}", use_container_width=True):
-                        toggle_cart(cid); st.rerun()
+            if not club:
+                continue
+            c_l, c_r = st.columns([3, 1])
+            with c_l:
+                st.markdown(
+                    f'<div style="display:flex;align-items:center;gap:10px;padding:10px 0;'
+                    f'border-bottom:1px solid rgba(99,102,241,0.06);">'
+                    f'<span style="font-size:22px;">{club["emoji"]}</span>'
+                    f'<div><div style="font-size:14px;font-weight:700;color:#1a1a2e;">{club["name"]}</div>'
+                    f'<div style="font-size:11px;color:rgba(26,26,46,0.38);">'
+                    f'{club["type"]} · {club["freq"]}</div></div></div>',
+                    unsafe_allow_html=True
+                )
+            with c_r:
+                if st.button("移除", key=f"apply_rm_{cid}", use_container_width=True):
+                    toggle_cart(cid)
+                    st.rerun()
         st.markdown('</div>', unsafe_allow_html=True)
-        if st.button("+ 继续添加社团", key="apply_more", use_container_width=True): go("browse")
+
+        if st.button("+ 继续添加社团", key="apply_more", use_container_width=True):
+            go("browse")
 
         st.markdown("""
         <div class="form-section" style="margin-top:14px;">
-            <div class="form-section-title">提交后，然后呢？</div>
+            <div class="form-title">提交后，然后呢？</div>
             <div style="display:flex;flex-direction:column;gap:14px;">
                 <div style="display:flex;align-items:flex-start;gap:12px;">
-                    <div style="width:28px;height:28px;border-radius:50%;background:rgba(99,102,241,0.1);color:#6366F1;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">1</div>
-                    <div><div style="font-size:13px;font-weight:700;color:#1a1a2e;margin-bottom:2px;">社团负责人主动联系你</div>
-                    <div style="font-size:12px;color:rgba(26,26,46,0.45);line-height:1.5;">3 个工作日内，通过你填写的手机号或微信联系，说明面试或见面安排。</div></div>
+                    <div style="width:28px;height:28px;border-radius:50%;background:rgba(99,102,241,0.10);
+                        color:#6366F1;font-size:12px;font-weight:700;display:flex;align-items:center;
+                        justify-content:center;flex-shrink:0;">1</div>
+                    <div>
+                        <div style="font-size:13px;font-weight:700;color:#1a1a2e;margin-bottom:2px;">社团负责人主动联系你</div>
+                        <div style="font-size:12px;color:rgba(26,26,46,0.45);line-height:1.5;">3 个工作日内，通过你填写的手机号或微信联系，说明面试或见面安排。</div>
+                    </div>
                 </div>
                 <div style="display:flex;align-items:flex-start;gap:12px;">
-                    <div style="width:28px;height:28px;border-radius:50%;background:rgba(99,102,241,0.1);color:#6366F1;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">2</div>
-                    <div><div style="font-size:13px;font-weight:700;color:#1a1a2e;margin-bottom:2px;">参加社团见面或体验活动</div>
-                    <div style="font-size:12px;color:rgba(26,26,46,0.45);line-height:1.5;">大部分社团会邀请你来体验一次活动，感受真实氛围再决定要不要加入。</div></div>
+                    <div style="width:28px;height:28px;border-radius:50%;background:rgba(99,102,241,0.10);
+                        color:#6366F1;font-size:12px;font-weight:700;display:flex;align-items:center;
+                        justify-content:center;flex-shrink:0;">2</div>
+                    <div>
+                        <div style="font-size:13px;font-weight:700;color:#1a1a2e;margin-bottom:2px;">参加社团见面或体验活动</div>
+                        <div style="font-size:12px;color:rgba(26,26,46,0.45);line-height:1.5;">大部分社团会邀请你来体验一次活动，感受真实氛围再决定要不要加入。</div>
+                    </div>
                 </div>
                 <div style="display:flex;align-items:flex-start;gap:12px;">
-                    <div style="width:28px;height:28px;border-radius:50%;background:rgba(99,102,241,0.1);color:#6366F1;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">3</div>
-                    <div><div style="font-size:13px;font-weight:700;color:#1a1a2e;margin-bottom:2px;">被拉入社团群，正式加入</div>
-                    <div style="font-size:12px;color:rgba(26,26,46,0.45);line-height:1.5;">确认加入后，负责人会把你拉进官方微信群。群里有活动通知、资源共享和日常闲聊。</div></div>
-                </div>
-                <div style="display:flex;align-items:flex-start;gap:12px;">
-                    <div style="width:28px;height:28px;border-radius:50%;background:rgba(245,197,24,0.15);color:#b45309;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">✦</div>
-                    <div><div style="font-size:13px;font-weight:700;color:#1a1a2e;margin-bottom:2px;">进群后建议做的事</div>
-                    <div style="font-size:12px;color:rgba(26,26,46,0.45);line-height:1.5;">自我介绍时说说你为什么感兴趣；主动问新人任务；跟着参加前两次活动，陌生感会很快消失。</div></div>
+                    <div style="width:28px;height:28px;border-radius:50%;background:rgba(99,102,241,0.10);
+                        color:#6366F1;font-size:12px;font-weight:700;display:flex;align-items:center;
+                        justify-content:center;flex-shrink:0;">3</div>
+                    <div>
+                        <div style="font-size:13px;font-weight:700;color:#1a1a2e;margin-bottom:2px;">被拉入社团群，正式加入</div>
+                        <div style="font-size:12px;color:rgba(26,26,46,0.45);line-height:1.5;">确认加入后，负责人会把你拉进官方微信群，开始你的社团生活。</div>
+                    </div>
                 </div>
             </div>
         </div>
         """, unsafe_allow_html=True)
 
     with col_r:
-        st.markdown('<div class="form-section"><div class="form-section-title">个人信息</div>',
-                    unsafe_allow_html=True)
-        name       = st.text_input("姓名 *", placeholder="请输入真实姓名", key="form_name")
-        student_id = st.text_input("学号 *", placeholder="例：2024XXXXXXXX", key="form_sid")
-        major      = st.text_input("专业 *", placeholder="例：国际经济与贸易", key="form_major")
+        st.markdown('<div class="form-section"><div class="form-title">个人信息</div>', unsafe_allow_html=True)
+        name       = st.text_input("姓名 *", placeholder="请输入真实姓名", key="f_name")
+        student_id = st.text_input("学号 *", placeholder="例：2024XXXXXXXX", key="f_sid")
+        major      = st.text_input("专业 *", placeholder="例：国际经济与贸易", key="f_major")
         grade      = st.selectbox("年级 *", ["请选择", "大一", "大二", "大三", "大四", "研究生"],
-                                  key="form_grade")
-        phone      = st.text_input("手机号 *", placeholder="社团负责人会通过此号联系你", key="form_phone")
-        wechat     = st.text_input("微信号（选填）", placeholder="方便拉你进群", key="form_wechat")
+                                  key="f_grade")
+        phone      = st.text_input("手机号 *", placeholder="社团负责人会通过此号联系你", key="f_phone")
+        wechat     = st.text_input("微信号（选填）", placeholder="方便拉你进群", key="f_wechat")
         st.markdown('</div>', unsafe_allow_html=True)
 
-        st.markdown(
-            '<div class="form-section" style="margin-top:10px;">'
-            '<div class="form-section-title">补充信息</div>',
-            unsafe_allow_html=True
-        )
+        st.markdown('<div class="form-section" style="margin-top:10px;"><div class="form-title">补充信息</div>',
+                    unsafe_allow_html=True)
         intro      = st.text_area("自我介绍 *",
                                    placeholder="简单介绍一下自己，为什么对这些社团感兴趣？（100字以内）",
-                                   height=100, key="form_intro")
+                                   height=100, key="f_intro")
         time_avail = st.multiselect("你通常空闲的时间段",
                                     ["周一至周五 白天", "周一至周五 晚上", "周末全天", "周末上午", "周末下午"],
-                                    key="form_time")
-        skill      = st.text_input("你有哪些特长或技能？（选填）",
-                                    placeholder="例：会摄影、会吉他、做过社区服务...", key="form_skill")
+                                    key="f_time")
+        skill      = st.text_input("特长或技能（选填）",
+                                    placeholder="例：摄影、吉他、编程、英语……", key="f_skill")
         st.markdown('</div>', unsafe_allow_html=True)
 
-        all_filled = all([name.strip(), student_id.strip(), major.strip(),
-                          grade != "请选择", phone.strip(), intro.strip()])
+        all_filled = all([
+            name.strip(), student_id.strip(), major.strip(),
+            grade != "请选择", phone.strip(), intro.strip()
+        ])
         if st.button("🎉  提交所有申请", key="apply_submit", type="primary",
                      use_container_width=True, disabled=not all_filled):
             record = {
@@ -1308,40 +1291,43 @@ def page_apply():
             go("success")
         if not all_filled:
             st.markdown(
-                '<div style="font-size:12px;color:rgba(26,26,46,0.3);text-align:center;margin-top:6px;">'
-                '请填写所有必填项后提交</div>',
+                '<div style="font-size:12px;color:rgba(26,26,46,0.30);'
+                'text-align:center;margin-top:6px;">请填写所有必填项后提交</div>',
                 unsafe_allow_html=True
             )
 
 
 # ══════════════════════════════════════════════════════════════
-# 成功页
+#  成功页
 # ══════════════════════════════════════════════════════════════
 def page_success():
     render_nav()
-    if not st.session_state.applications: go("home"); return
+    if not st.session_state.applications:
+        go("home")
+        return
     last = st.session_state.applications[-1]
     club_names = [club_by_id(cid)["name"] for cid in last["clubs"] if club_by_id(cid)]
-    club_list_html = "".join([
+    club_list = "".join(
         f'<div style="display:flex;align-items:center;gap:8px;font-size:14px;'
         f'color:rgba(26,26,46,0.75);margin-bottom:8px;">'
-        f'<span style="color:#15803d;">✓</span>{_html.escape(n)}</div>'
+        f'<span style="color:#15803d;">✓</span>{n}</div>'
         for n in club_names
-    ])
+    )
 
     _, col, _ = st.columns([0.5, 3, 0.5])
     with col:
         st.markdown(
             f'<div class="success-glass">'
             f'<div style="font-size:56px;margin-bottom:16px;">🎉</div>'
-            f'<div style="font-size:28px;font-weight:900;letter-spacing:-1px;margin-bottom:10px;color:#1a1a2e;">申请已成功提交！</div>'
+            f'<div style="font-size:28px;font-weight:900;letter-spacing:-1px;'
+            f'margin-bottom:10px;color:#1a1a2e;">申请已成功提交！</div>'
             f'<div style="font-size:15px;color:rgba(26,26,46,0.55);line-height:1.75;margin-bottom:24px;">'
-            f'{_html.escape(last["name"])}，欢迎你迈出这一步。<br>接下来，静静等着被发现吧。</div>'
-            f'<div style="background:rgba(255,255,255,0.7);border:1px solid rgba(99,102,241,0.1);'
+            f'{last["name"]}，欢迎你迈出这一步。<br>接下来，静静等着被发现吧。</div>'
+            f'<div style="background:rgba(255,255,255,0.70);border:1px solid rgba(99,102,241,0.10);'
             f'border-radius:14px;padding:18px;text-align:left;margin-bottom:20px;">'
             f'<div style="font-size:11px;color:rgba(26,26,46,0.35);font-weight:700;'
             f'letter-spacing:0.8px;text-transform:uppercase;margin-bottom:12px;">你申请的社团</div>'
-            f'{club_list_html}</div></div>',
+            f'{club_list}</div></div>',
             unsafe_allow_html=True
         )
 
@@ -1351,49 +1337,42 @@ def page_success():
             '加入社团后，怎么快速融入？</div>',
             unsafe_allow_html=True
         )
-        tips_cols = st.columns(3, gap="small")
         tips = [
             ("💬", "第一次活动前", "主动在群里自我介绍，说说你为什么加入。比你想象的更有用。"),
-            ("🤝", "第一个月", "每次活动尽量不缺席。陌生感主要来自不熟悉，前几次见面之后会好很多。"),
-            ("🌱", "稳定下来之后", "尝试承担一个具体的小任务。有责任感的成员更容易获得真实的成长。"),
+            ("🤝", "第一个月", "每次活动尽量不缺席。前几次见面之后，陌生感会自然消失。"),
+            ("🌱", "稳定下来之后", "尝试承担一个具体的小任务。有责任感的成员更容易获得真实成长。"),
         ]
+        tips_cols = st.columns(3, gap="small")
         for col_t, (icon, title, desc) in zip(tips_cols, tips):
             with col_t:
                 st.markdown(
                     f'<div class="step-card">'
                     f'<div style="font-size:26px;margin-bottom:10px;">{icon}</div>'
                     f'<div style="font-size:14px;font-weight:700;color:#1a1a2e;margin-bottom:6px;">{title}</div>'
-                    f'<div style="font-size:12px;color:rgba(26,26,46,0.5);line-height:1.6;">{desc}</div>'
+                    f'<div style="font-size:12px;color:rgba(26,26,46,0.50);line-height:1.6;">{desc}</div>'
                     f'</div>',
                     unsafe_allow_html=True
                 )
 
         st.markdown("<br>", unsafe_allow_html=True)
-        st.markdown("""
-        <div style="background:rgba(99,102,241,0.05);border:1px solid rgba(99,102,241,0.12);
-            border-radius:14px;padding:16px 20px;margin-bottom:16px;">
-            <div style="font-size:12px;font-weight:700;color:#6366F1;letter-spacing:0.6px;margin-bottom:8px;">关于社团群的小提示</div>
-            <div style="font-size:13px;color:rgba(26,26,46,0.6);line-height:1.65;">
-                进群后不要设置消息免打扰（至少前一个月）。群里通常有：活动通知、资源分享、作品交流、日常闲聊。不要只是「潜水」，哪怕发个表情包也比完全沉默好。
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-
         b1, b2 = st.columns(2)
         with b1:
-            if st.button("继续发现社团", key="s_browse", use_container_width=True): go("browse")
+            if st.button("继续发现社团", key="s_browse", use_container_width=True):
+                go("browse")
         with b2:
-            if st.button("回到首页", key="s_home", type="primary", use_container_width=True): go("home")
+            if st.button("回到首页", key="s_home", type="primary", use_container_width=True):
+                go("home")
 
 
 # ══════════════════════════════════════════════════════════════
-# 申请创建社团页
+#  申请创建社团页
 # ══════════════════════════════════════════════════════════════
 def page_create():
     render_nav()
     st.markdown('<div class="eyebrow">✦ 找不到合适的？自己创一个</div>', unsafe_allow_html=True)
     st.markdown(
-        '<div style="font-size:28px;font-weight:900;letter-spacing:-0.8px;margin-bottom:8px;color:#1a1a2e;">申请创建新社团</div>',
+        '<div style="font-size:28px;font-weight:900;letter-spacing:-0.8px;'
+        'margin-bottom:8px;color:#1a1a2e;">申请创建新社团</div>',
         unsafe_allow_html=True
     )
     st.markdown(
@@ -1404,28 +1383,29 @@ def page_create():
     )
 
     col_l, col_r = st.columns([1, 1], gap="large")
+
     with col_l:
-        st.markdown('<div class="form-section"><div class="form-section-title">社团基本信息</div>',
-                    unsafe_allow_html=True)
-        club_name = st.text_input("你想创建的社团叫什么？*", placeholder="例：城市骑行与街拍社", key="c_name")
-        club_type = st.selectbox("社团类型 *", [
+        st.markdown('<div class="form-section"><div class="form-title">社团基本信息</div>', unsafe_allow_html=True)
+        club_name     = st.text_input("你想创建的社团叫什么？*", placeholder="例：城市骑行与街拍社", key="c_name")
+        club_type     = st.selectbox("社团类型 *", [
             "请选择", "艺术创作", "音乐表演", "舞台表演", "科技创新",
             "商业创新", "户外运动", "人文学术", "公益服务", "体育竞技",
             "跨文化交流", "科学探索", "其他"
         ], key="c_type")
-        club_desc = st.text_area("用一两句话，说说这个社团是做什么的 *",
-                                  placeholder="让别人在 5 秒内听懂这个社团，别用太多形容词，说具体的事。",
-                                  height=80, key="c_desc")
-        club_why  = st.text_area("为什么这个社团值得存在？你发现了什么需求？*",
-                                  placeholder="比如：我发现学校没有专注城市骑行的社团，但身边有很多同学想要这个……",
-                                  height=100, key="c_why")
+        club_desc     = st.text_area(
+            "用一两句话，说说这个社团是做什么的 *",
+            placeholder="让别人在 5 秒内听懂这个社团，说具体的事，别用太多形容词。",
+            height=80, key="c_desc"
+        )
+        club_why      = st.text_area(
+            "为什么这个社团值得存在？你发现了什么需求？*",
+            placeholder="比如：我发现学校没有专注城市骑行的社团，但身边有很多同学想要这个……",
+            height=100, key="c_why"
+        )
         st.markdown('</div>', unsafe_allow_html=True)
 
-        st.markdown(
-            '<div class="form-section" style="margin-top:10px;">'
-            '<div class="form-section-title">你的构想</div>',
-            unsafe_allow_html=True
-        )
+        st.markdown('<div class="form-section" style="margin-top:10px;"><div class="form-title">你的构想</div>',
+                    unsafe_allow_html=True)
         activity_plan = st.text_area("你打算做哪些活动或项目？",
                                       placeholder="大概说说你的活动构想，哪怕很初期的想法也可以",
                                       height=90, key="c_plan")
@@ -1436,66 +1416,68 @@ def page_create():
         st.markdown('</div>', unsafe_allow_html=True)
 
     with col_r:
-        st.markdown('<div class="form-section"><div class="form-section-title">发起人信息</div>',
-                    unsafe_allow_html=True)
+        st.markdown('<div class="form-section"><div class="form-title">发起人信息</div>', unsafe_allow_html=True)
         f_name  = st.text_input("你的姓名 *", key="c_fname")
         f_sid   = st.text_input("学号 *", key="c_fsid")
         f_major = st.text_input("专业 *", key="c_fmajor")
-        f_grade = st.selectbox("年级 *", ["请选择", "大一", "大二", "大三", "大四", "研究生"],
-                                key="c_fgrade")
+        f_grade = st.selectbox("年级 *", ["请选择", "大一", "大二", "大三", "大四", "研究生"], key="c_fgrade")
         f_phone = st.text_input("联系方式 *", key="c_fphone")
         st.text_area("你有哪些相关经历或能力？（选填）",
-                     placeholder="比如：你本身就是这个领域的爱好者？做过类似的组织工作？",
+                     placeholder="比如：你是这个领域的爱好者？做过类似的组织工作？",
                      height=80, key="c_fexp")
         st.markdown('</div>', unsafe_allow_html=True)
 
-        st.markdown(
-            '<div class="form-section" style="margin-top:10px;">'
-            '<div class="form-section-title">AI 帮你完善方案</div>',
-            unsafe_allow_html=True
-        )
+        # AI 建议区
+        st.markdown('<div class="form-section" style="margin-top:10px;"><div class="form-title">Claude AI 帮你完善方案</div>',
+                    unsafe_allow_html=True)
         st.markdown(
             '<div style="font-size:13px;color:rgba(26,26,46,0.45);line-height:1.6;margin-bottom:14px;">'
-            '填完基本信息后，让 AI 给你的创建方案提几条建议——对写申请书很有帮助。</div>',
+            '填完基本信息后，让 Claude 给你的创建方案提几条建议——对写申请书很有帮助。</div>',
             unsafe_allow_html=True
         )
-        if st.button("🤖  让 AI 给我点建议", key="c_ai_suggest", use_container_width=True):
+        if st.button("🤖  让 Claude 给我点建议", key="c_ai_suggest", use_container_width=True):
             if club_name and club_desc and club_why:
-                with st.spinner("AI 思考中..."):
+                with st.spinner("Claude 思考中..."):
                     try:
                         api_key = st.secrets.get("ANTHROPIC_API_KEY", "")
                         if api_key:
                             client = anthropic.Anthropic(api_key=api_key)
                             msg = client.messages.create(
                                 model="claude-opus-4-5", max_tokens=500,
+                                system=CLAUDE_SELF_INTRO,
                                 messages=[{"role": "user", "content": (
-                                    f"一位大学生想创建社团：<br />名称：{club_name}<br />类型：{club_type}<br />"
-                                    f"描述：{club_desc}<br />创建原因：{club_why}<br />活动计划：{activity_plan}<br /><br />"
+                                    f"一位大学生想创建社团：\n"
+                                    f"名称：{club_name}\n类型：{club_type}\n"
+                                    f"描述：{club_desc}\n创建原因：{club_why}\n"
+                                    f"活动计划：{activity_plan}\n\n"
                                     f"请给出3条简短、具体、有用的建议，帮助他完善社团方案。"
-                                    f"风格温暖鼓励，直接分点，不用markdown标题。"
+                                    f"风格温暖鼓励，直接分点，不用 markdown 标题。"
                                 )}]
                             )
-                            suggestion = msg.content[0].text
+                            st.session_state.ai_suggestion = msg.content[0].text
                         else:
-                            suggestion = (
-                                "1. 把你的核心活动再具体化——「每月一次骑行」比「定期活动」更有说服力。<br />"
-                                "2. 考虑一下如何区分于现有社团，你的独特价值是什么？<br />"
+                            st.session_state.ai_suggestion = (
+                                "1. 把你的核心活动再具体化——「每月一次骑行」比「定期活动」更有说服力。\n"
+                                "2. 考虑一下如何区分于现有社团，你的独特价值是什么？\n"
                                 "3. 找 2-3 个有同样想法的人一起发起，审核委员会会看得更认真。"
                             )
-                        st.markdown(
-                            f'<div class="bubble-ai">✦ AI 建议：<br /><br />{_html.escape(suggestion)}</div>',
-                            unsafe_allow_html=True
-                        )
                     except Exception:
-                        st.info("AI 暂时不可用，但你的想法很棒，继续填写吧！")
+                        st.session_state.ai_suggestion = "AI 暂时不可用，但你的想法很棒，继续填写吧！"
             else:
-                st.warning("先填写社团名称、描述和创建原因，AI 才能给出有用的建议～")
+                st.warning("先填写社团名称、描述和创建原因，Claude 才能给出有用的建议～")
+
+        if st.session_state.ai_suggestion:
+            st.markdown(
+                f'<div class="bubble-ai">✦ Claude 建议：\n\n{st.session_state.ai_suggestion}</div>',
+                unsafe_allow_html=True
+            )
         st.markdown('</div>', unsafe_allow_html=True)
 
+        # 审核流程说明
         st.markdown("""
         <div class="form-section" style="margin-top:10px;">
-            <div class="form-section-title">提交后的审核流程</div>
-            <div style="font-size:13px;color:rgba(26,26,46,0.6);line-height:1.8;">
+            <div class="form-title">提交后的审核流程</div>
+            <div style="font-size:13px;color:rgba(26,26,46,0.60);line-height:1.8;">
                 <div style="margin-bottom:4px;"><span style="color:#6366F1;font-weight:700;">① 初步审核</span>（1-2 个工作日）</div>
                 <div style="margin-bottom:10px;color:rgba(26,26,46,0.45);font-size:12px;padding-left:14px;">学生活动部确认材料完整，通过后进入答辩环节</div>
                 <div style="margin-bottom:4px;"><span style="color:#6366F1;font-weight:700;">② 创建人答辩</span>（约 15 分钟）</div>
@@ -1506,8 +1488,10 @@ def page_create():
         </div>
         """, unsafe_allow_html=True)
 
-        all_ok = all([club_name, club_type != "请选择", club_desc, club_why,
-                      f_name, f_sid, f_major, f_grade != "请选择", f_phone])
+        all_ok = all([
+            club_name, club_type != "请选择", club_desc, club_why,
+            f_name, f_sid, f_major, f_grade != "请选择", f_phone
+        ])
         if st.button("🚀  提交创建申请", key="c_submit", type="primary",
                      use_container_width=True, disabled=not all_ok):
             st.session_state.create_submitted = True
@@ -1515,40 +1499,39 @@ def page_create():
 
         if st.session_state.get("create_submitted"):
             st.markdown(
-                f'<div style="margin-top:14px;background:rgba(240,253,244,0.9);'
+                f'<div style="margin-top:14px;background:rgba(240,253,244,0.90);'
                 f'border:1px solid rgba(74,222,128,0.25);border-radius:14px;padding:16px;text-align:center;">'
                 f'<div style="font-size:22px;margin-bottom:8px;">🌱</div>'
                 f'<div style="font-size:15px;font-weight:700;margin-bottom:6px;color:#1a1a2e;">申请已提交！</div>'
-                f'<div style="font-size:13px;color:rgba(26,26,46,0.5);line-height:1.6;">'
+                f'<div style="font-size:13px;color:rgba(26,26,46,0.50);line-height:1.6;">'
                 f'学生活动部将在 5 个工作日内审核你的申请。<br>'
-                f'{_html.escape(f_name)}，期待看到「{_html.escape(club_name)}」出现在 ClubMatch 上。'
-                f'</div></div>',
+                f'{f_name}，期待看到「{club_name}」出现在 ClubMatch 上。</div></div>',
                 unsafe_allow_html=True
             )
             if st.button("回到首页", key="c_home", type="primary"):
                 st.session_state.create_submitted = False
+                st.session_state.ai_suggestion = ""
                 go("home")
 
         if not all_ok and not st.session_state.get("create_submitted"):
             st.markdown(
-                '<div style="font-size:12px;color:rgba(26,26,46,0.28);text-align:center;margin-top:6px;">'
-                '请填写所有必填项（*）</div>',
+                '<div style="font-size:12px;color:rgba(26,26,46,0.28);'
+                'text-align:center;margin-top:6px;">请填写所有必填项（*）</div>',
                 unsafe_allow_html=True
             )
 
 
 # ══════════════════════════════════════════════════════════════
-# 路由
+#  路由
 # ══════════════════════════════════════════════════════════════
-page = st.session_state.page
 dispatch = {
-    "home": page_home,
-    "quiz": page_quiz,
+    "home":    page_home,
+    "quiz":    page_quiz,
     "results": page_results,
-    "browse": page_browse,
-    "chat": page_chat,
-    "apply": page_apply,
+    "browse":  page_browse,
+    "chat":    page_chat,
+    "apply":   page_apply,
     "success": page_success,
-    "create": page_create,
+    "create":  page_create,
 }
-dispatch.get(page, page_home)()
+dispatch.get(st.session_state.page, page_home)()
