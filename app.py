@@ -13,7 +13,7 @@ st.set_page_config(
 )
 
 # ═══════════════════════════════════════════════════════════════
-#  GLOBAL CSS  —  Apple-level liquid glass, dark mode
+#  GLOBAL CSS  —  Gold + Glass Theme
 # ═══════════════════════════════════════════════════════════════
 st.markdown("""
 <style>
@@ -35,23 +35,23 @@ html, body, [class*="css"], .stApp {
     max-width: 1180px !important;
 }
 
-/* ── BACKGROUND: deep space with aurora ── */
+/* ── BACKGROUND: deep gold aurora ── */
 .stApp {
     background:
-        radial-gradient(ellipse 80% 60% at 10% 5%,  rgba(120,80,255,0.22) 0%, transparent 55%),
-        radial-gradient(ellipse 60% 50% at 90% 90%,  rgba(60,180,255,0.18) 0%, transparent 55%),
-        radial-gradient(ellipse 50% 40% at 50% 50%,  rgba(80,200,180,0.10) 0%, transparent 60%),
-        linear-gradient(170deg, #06040f 0%, #0d0a1e 45%, #050d14 100%);
-    color: #f0f0ff;
+        radial-gradient(ellipse 80% 60% at 10% 5%,  rgba(212,160,20,0.22) 0%, transparent 55%),
+        radial-gradient(ellipse 60% 50% at 90% 90%,  rgba(255,200,50,0.15) 0%, transparent 55%),
+        radial-gradient(ellipse 50% 40% at 50% 50%,  rgba(180,140,30,0.10) 0%, transparent 60%),
+        linear-gradient(170deg, #0f0c00 0%, #1a1500 45%, #0d0e00 100%);
+    color: #fff8e7;
     min-height: 100vh;
 }
 
 /* ── LIQUID GLASS CARD ── */
 .g {
-    background: rgba(255,255,255,0.07);
+    background: rgba(255,215,0,0.06);
     backdrop-filter: blur(28px) saturate(200%);
     -webkit-backdrop-filter: blur(28px) saturate(200%);
-    border: 1px solid rgba(255,255,255,0.13);
+    border: 1px solid rgba(255,215,0,0.18);
     border-radius: 22px;
     padding: 26px;
     margin-bottom: 16px;
@@ -66,25 +66,25 @@ html, body, [class*="css"], .stApp {
     position: absolute; inset: 0;
     border-radius: 22px;
     background: linear-gradient(135deg,
-        rgba(255,255,255,0.10) 0%,
-        rgba(255,255,255,0.02) 50%,
-        rgba(255,255,255,0.05) 100%);
+        rgba(255,215,0,0.10) 0%,
+        rgba(255,215,0,0.02) 50%,
+        rgba(255,215,0,0.05) 100%);
     pointer-events: none;
 }
 .g::after {
     content: '';
     position: absolute; top: 0; left: 0; right: 0; height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.30), transparent);
+    background: linear-gradient(90deg, transparent, rgba(255,215,0,0.40), transparent);
 }
 .g:hover {
     transform: translateY(-4px);
-    border-color: rgba(255,255,255,0.22);
-    box-shadow: 0 24px 60px rgba(0,0,0,0.40), 0 0 40px rgba(120,80,255,0.08);
+    border-color: rgba(255,215,0,0.32);
+    box-shadow: 0 24px 60px rgba(0,0,0,0.40), 0 0 40px rgba(212,160,20,0.12);
 }
 .g.pin {
-    border-color: rgba(120,80,255,0.45);
-    background: rgba(120,80,255,0.09);
-    box-shadow: 0 0 0 1px rgba(120,80,255,0.20), 0 8px 32px rgba(120,80,255,0.15);
+    border-color: rgba(255,200,50,0.55);
+    background: rgba(255,200,50,0.09);
+    box-shadow: 0 0 0 1px rgba(255,200,50,0.25), 0 8px 32px rgba(212,160,20,0.20);
 }
 
 /* ── NAV ── */
@@ -92,40 +92,40 @@ html, body, [class*="css"], .stApp {
     position: sticky; top: 0; z-index: 999;
     display: flex; align-items: center; justify-content: space-between;
     padding: 16px 0 16px;
-    border-bottom: 1px solid rgba(255,255,255,0.07);
+    border-bottom: 1px solid rgba(255,215,0,0.10);
     margin-bottom: 40px;
-    background: rgba(6,4,15,0.75);
+    background: rgba(15,12,0,0.80);
     backdrop-filter: blur(20px) saturate(180%);
     -webkit-backdrop-filter: blur(20px) saturate(180%);
 }
 .logo {
     display: flex; align-items: center; gap: 10px;
-    font-size: 20px; font-weight: 900; letter-spacing: -0.5px; color: #fff;
+    font-size: 20px; font-weight: 900; letter-spacing: -0.5px; color: #fff8e7;
 }
 .logo-badge {
-    background: linear-gradient(135deg, #7c3aed, #6366f1);
+    background: linear-gradient(135deg, #b8860b, #ffd700);
     border-radius: 10px; padding: 5px 10px;
-    font-size: 13px; font-weight: 900; color: #fff;
-    box-shadow: 0 0 20px rgba(120,80,255,0.5);
+    font-size: 13px; font-weight: 900; color: #1a1000;
+    box-shadow: 0 0 20px rgba(212,160,20,0.55);
 }
-.logo em { color: #a78bfa; font-style: normal; }
+.logo em { color: #ffd700; font-style: normal; }
 
 /* ── BADGE PILLS ── */
 .pill {
     display: inline-block; padding: 3px 10px; border-radius: 20px;
     font-size: 11px; font-weight: 600; margin: 2px 3px 2px 0;
 }
-.pill-v { background: rgba(120,80,255,0.18); color: #c4b5fd; border: 1px solid rgba(120,80,255,0.30); }
-.pill-o { background: rgba(251,146,60,0.18); color: #fdba74;  border: 1px solid rgba(251,146,60,0.30); }
-.pill-g { background: rgba(52,211,153,0.15); color: #6ee7b7;  border: 1px solid rgba(52,211,153,0.28); }
-.pill-b { background: rgba(99,102,241,0.18); color: #a5b4fc;  border: 1px solid rgba(99,102,241,0.30); }
+.pill-v { background: rgba(255,200,50,0.15); color: #ffd700; border: 1px solid rgba(255,200,50,0.35); }
+.pill-o { background: rgba(255,160,20,0.18); color: #ffbb33; border: 1px solid rgba(255,160,20,0.35); }
+.pill-g { background: rgba(100,200,100,0.15); color: #88e088; border: 1px solid rgba(100,200,100,0.30); }
+.pill-b { background: rgba(255,215,0,0.12); color: #ffe066; border: 1px solid rgba(255,215,0,0.28); }
 
 /* ── VIBE TAG ── */
 .vibe {
     display: inline-block;
-    background: rgba(120,80,255,0.12);
-    border: 1px solid rgba(120,80,255,0.22);
-    color: #c4b5fd; border-radius: 8px; padding: 3px 10px;
+    background: rgba(255,200,50,0.10);
+    border: 1px solid rgba(255,200,50,0.25);
+    color: #ffd700; border-radius: 8px; padding: 3px 10px;
     font-size: 11px; font-weight: 500; margin-bottom: 12px; font-style: italic;
 }
 
@@ -133,47 +133,47 @@ html, body, [class*="css"], .stApp {
 .h1 {
     font-size: clamp(40px,6vw,72px);
     font-weight: 900; line-height: 1.04; letter-spacing: -2.5px;
-    color: #fff; margin-bottom: 18px;
+    color: #fff8e7; margin-bottom: 18px;
 }
 .h1 .g1 {
-    background: linear-gradient(135deg, #a78bfa 0%, #818cf8 40%, #60a5fa 100%);
+    background: linear-gradient(135deg, #ffd700 0%, #ffaa00 40%, #ff8c00 100%);
     -webkit-background-clip: text; -webkit-text-fill-color: transparent;
     background-clip: text;
 }
 .sub {
-    font-size: 17px; color: rgba(255,255,255,0.48);
+    font-size: 17px; color: rgba(255,240,180,0.50);
     line-height: 1.75; margin-bottom: 32px; font-weight: 400;
 }
 .eyebrow {
     display: inline-block;
-    background: rgba(120,80,255,0.15);
-    border: 1px solid rgba(120,80,255,0.28);
-    color: #a78bfa; border-radius: 20px; padding: 5px 14px;
+    background: rgba(255,200,50,0.12);
+    border: 1px solid rgba(255,200,50,0.30);
+    color: #ffd700; border-radius: 20px; padding: 5px 14px;
     font-size: 11px; font-weight: 700; letter-spacing: 1px;
     text-transform: uppercase; margin-bottom: 20px;
 }
 
 /* ── SCORE BAR ── */
 .srow { display:flex; align-items:center; gap:10px; margin-bottom:10px; }
-.strk { flex:1; height:3px; background:rgba(255,255,255,0.08); border-radius:2px; overflow:hidden; }
-.sfil { height:100%; border-radius:2px; background:linear-gradient(90deg,#7c3aed,#a78bfa); }
-.spct { font-size:13px; font-weight:800; color:#a78bfa; min-width:38px; text-align:right; }
+.strk { flex:1; height:3px; background:rgba(255,215,0,0.10); border-radius:2px; overflow:hidden; }
+.sfil { height:100%; border-radius:2px; background:linear-gradient(90deg,#b8860b,#ffd700); }
+.spct { font-size:13px; font-weight:800; color:#ffd700; min-width:38px; text-align:right; }
 
 /* ── STATS ── */
-.snum { font-size:30px; font-weight:900; color:#a78bfa; letter-spacing:-1.5px; line-height:1; }
-.slbl { font-size:11px; color:rgba(255,255,255,0.32); margin-top:4px; font-weight:500; }
+.snum { font-size:30px; font-weight:900; color:#ffd700; letter-spacing:-1.5px; line-height:1; }
+.slbl { font-size:11px; color:rgba(255,240,180,0.35); margin-top:4px; font-weight:500; }
 
 /* ── PROGRESS BAR ── */
 .prog-wrap { margin-bottom:28px; }
 .prog-meta {
     display:flex; justify-content:space-between;
-    font-size:12px; color:rgba(255,255,255,0.32); margin-bottom:8px; font-weight:500;
+    font-size:12px; color:rgba(255,240,180,0.35); margin-bottom:8px; font-weight:500;
 }
-.prog-meta b { color:#a78bfa; font-weight:700; }
-.prog-track { height:3px; background:rgba(255,255,255,0.07); border-radius:2px; overflow:hidden; }
+.prog-meta b { color:#ffd700; font-weight:700; }
+.prog-track { height:3px; background:rgba(255,215,0,0.08); border-radius:2px; overflow:hidden; }
 .prog-fill {
     height:100%; border-radius:2px;
-    background:linear-gradient(90deg,#7c3aed,#818cf8,#60a5fa);
+    background:linear-gradient(90deg,#b8860b,#ffd700,#ffaa00);
     transition:width 0.5s cubic-bezier(.4,0,.2,1);
 }
 
@@ -182,27 +182,27 @@ html, body, [class*="css"], .stApp {
     border-radius: 50px !important;
     font-weight: 600 !important;
     font-size: 13px !important;
-    border: 1px solid rgba(255,255,255,0.14) !important;
-    background: rgba(255,255,255,0.07) !important;
-    color: rgba(255,255,255,0.80) !important;
+    border: 1px solid rgba(255,215,0,0.20) !important;
+    background: rgba(255,215,0,0.07) !important;
+    color: rgba(255,240,180,0.82) !important;
     transition: all 0.22s !important;
     padding: 0.45rem 1.1rem !important;
 }
 .stButton > button:hover {
-    background: rgba(255,255,255,0.12) !important;
-    border-color: rgba(255,255,255,0.26) !important;
-    color: #fff !important;
+    background: rgba(255,215,0,0.14) !important;
+    border-color: rgba(255,215,0,0.38) !important;
+    color: #ffd700 !important;
     transform: translateY(-1px) !important;
-    box-shadow: 0 0 20px rgba(120,80,255,0.20) !important;
+    box-shadow: 0 0 20px rgba(212,160,20,0.25) !important;
 }
 .stButton > button[kind="primary"] {
-    background: linear-gradient(135deg,#7c3aed,#6366f1) !important;
-    color: #fff !important; border: none !important;
-    box-shadow: 0 4px 20px rgba(120,80,255,0.40) !important;
+    background: linear-gradient(135deg,#b8860b,#d4a017) !important;
+    color: #fff8e7 !important; border: none !important;
+    box-shadow: 0 4px 20px rgba(212,160,20,0.45) !important;
 }
 .stButton > button[kind="primary"]:hover {
-    background: linear-gradient(135deg,#6d28d9,#4f46e5) !important;
-    box-shadow: 0 0 30px rgba(120,80,255,0.60), 0 8px 28px rgba(120,80,255,0.35) !important;
+    background: linear-gradient(135deg,#d4a017,#ffd700) !important;
+    box-shadow: 0 0 30px rgba(255,200,50,0.65), 0 8px 28px rgba(212,160,20,0.40) !important;
     transform: translateY(-2px) !important;
 }
 .stButton > button:disabled { opacity:0.28 !important; transform:none !important; cursor:not-allowed !important; }
@@ -211,65 +211,65 @@ html, body, [class*="css"], .stApp {
 .stTextInput > div > div > input,
 .stTextArea > div > div > textarea,
 .stSelectbox > div > div {
-    background: rgba(255,255,255,0.06) !important;
-    border: 1px solid rgba(255,255,255,0.12) !important;
+    background: rgba(255,215,0,0.05) !important;
+    border: 1px solid rgba(255,215,0,0.15) !important;
     border-radius: 14px !important;
-    color: #f0f0ff !important;
+    color: #fff8e7 !important;
     font-family: 'Inter','PingFang SC',sans-serif !important;
     font-size: 14px !important;
 }
 .stTextInput > div > div > input:focus,
 .stTextArea > div > div > textarea:focus {
-    border-color: #7c3aed !important;
-    box-shadow: 0 0 0 3px rgba(124,58,237,0.20), 0 0 16px rgba(124,58,237,0.15) !important;
+    border-color: #ffd700 !important;
+    box-shadow: 0 0 0 3px rgba(255,215,0,0.18), 0 0 16px rgba(212,160,20,0.18) !important;
 }
 .stTextInput > div > div > input::placeholder,
-.stTextArea > div > div > textarea::placeholder { color:rgba(255,255,255,0.25) !important; }
+.stTextArea > div > div > textarea::placeholder { color:rgba(255,240,180,0.28) !important; }
 label, .stTextInput label, .stTextArea label, .stSelectbox label, .stMultiSelect label {
-    color:rgba(255,255,255,0.50) !important; font-size:13px !important; font-weight:500 !important;
+    color:rgba(255,240,180,0.52) !important; font-size:13px !important; font-weight:500 !important;
 }
-.stSelectbox div[data-baseweb="select"] span { color:rgba(255,255,255,0.75) !important; }
-.stMultiSelect > div { background:rgba(255,255,255,0.06) !important; border-radius:14px !important; }
-.stMultiSelect span[data-baseweb="tag"] { background:rgba(124,58,237,0.25) !important; color:#c4b5fd !important; }
+.stSelectbox div[data-baseweb="select"] span { color:rgba(255,240,180,0.78) !important; }
+.stMultiSelect > div { background:rgba(255,215,0,0.05) !important; border-radius:14px !important; }
+.stMultiSelect span[data-baseweb="tag"] { background:rgba(212,160,20,0.22) !important; color:#ffd700 !important; }
 
 /* ── CHAT BUBBLES ── */
 .bai {
-    background: rgba(255,255,255,0.07);
-    border: 1px solid rgba(255,255,255,0.10);
+    background: rgba(255,215,0,0.06);
+    border: 1px solid rgba(255,215,0,0.12);
     border-radius: 18px 18px 18px 4px;
     padding: 13px 17px; font-size: 14px; line-height: 1.75;
-    margin: 6px 0 6px 44px; color: rgba(255,255,255,0.85);
+    margin: 6px 0 6px 44px; color: rgba(255,240,180,0.88);
     white-space: pre-wrap;
 }
 .buser {
-    background: linear-gradient(135deg,#7c3aed,#6366f1);
+    background: linear-gradient(135deg,#b8860b,#d4a017);
     border-radius: 18px 18px 4px 18px;
     padding: 13px 17px; font-size: 14px; line-height: 1.75;
-    margin: 6px 44px 6px 0; color: #fff; text-align: right;
-    box-shadow: 0 2px 16px rgba(124,58,237,0.30);
+    margin: 6px 44px 6px 0; color: #fff8e7; text-align: right;
+    box-shadow: 0 2px 16px rgba(212,160,20,0.35);
 }
-.clbl { font-size:11px; color:rgba(255,255,255,0.28); font-weight:600; margin-bottom:3px; }
+.clbl { font-size:11px; color:rgba(255,240,180,0.30); font-weight:600; margin-bottom:3px; }
 
 /* ── MISC ── */
-.divider { border:none; border-top:1px solid rgba(255,255,255,0.06); margin:32px 0; }
+.divider { border:none; border-top:1px solid rgba(255,215,0,0.08); margin:32px 0; }
 .det {
-    background:rgba(0,0,0,0.25); border:1px solid rgba(255,255,255,0.07);
+    background:rgba(0,0,0,0.30); border:1px solid rgba(255,215,0,0.10);
     border-radius:16px; padding:20px; margin-top:8px;
     backdrop-filter:blur(12px);
 }
 .dsec {
-    font-size:10px; font-weight:700; color:rgba(255,255,255,0.28);
+    font-size:10px; font-weight:700; color:rgba(255,215,0,0.40);
     letter-spacing:1px; text-transform:uppercase; margin-bottom:10px; margin-top:16px;
 }
 .dsec:first-child { margin-top:0; }
-.rr { display:flex; gap:8px; font-size:13px; color:rgba(255,255,255,0.60); margin-bottom:7px; line-height:1.5; }
-.ok-glass { background:rgba(52,211,153,0.08); border:1px solid rgba(52,211,153,0.22); border-radius:22px; padding:40px; text-align:center; }
-.fs { background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.09); border-radius:16px; padding:20px 22px; margin-bottom:14px; }
-.ft { font-size:11px; font-weight:700; color:rgba(255,255,255,0.28); letter-spacing:0.8px; text-transform:uppercase; margin-bottom:14px; }
-.sc { background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.07); border-radius:12px; padding:10px; text-align:center; }
+.rr { display:flex; gap:8px; font-size:13px; color:rgba(255,240,180,0.62); margin-bottom:7px; line-height:1.5; }
+.ok-glass { background:rgba(255,200,50,0.06); border:1px solid rgba(255,200,50,0.22); border-radius:22px; padding:40px; text-align:center; }
+.fs { background:rgba(255,215,0,0.04); border:1px solid rgba(255,215,0,0.10); border-radius:16px; padding:20px 22px; margin-bottom:14px; }
+.ft { font-size:11px; font-weight:700; color:rgba(255,215,0,0.38); letter-spacing:0.8px; text-transform:uppercase; margin-bottom:14px; }
+.sc { background:rgba(255,215,0,0.04); border:1px solid rgba(255,215,0,0.08); border-radius:12px; padding:10px; text-align:center; }
 
 ::-webkit-scrollbar { width:4px; }
-::-webkit-scrollbar-thumb { background:rgba(255,255,255,0.10); border-radius:2px; }
+::-webkit-scrollbar-thumb { background:rgba(255,215,0,0.15); border-radius:2px; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -284,6 +284,7 @@ def init():
         "cart": [], "applications": [], "chat_history": [],
         "create_submitted": False, "ai_suggestion": "",
         "quiz_msg": "",
+        "pending_quiz_choice": None,
     }.items():
         if k not in st.session_state:
             st.session_state[k] = v
@@ -305,13 +306,13 @@ def tags(club):
     return "".join(f'<span class="pill pill-b">{t}</span>' for t in club.get("tags", []))
 
 def scell(v, l):
-    return (f'<div class="sc"><div style="font-size:14px;font-weight:800;color:#f0f0ff;">{v}</div>'
-            f'<div style="font-size:10px;color:rgba(255,255,255,0.30);margin-top:2px;">{l}</div></div>')
+    return (f'<div class="sc"><div style="font-size:14px;font-weight:800;color:#fff8e7;">{v}</div>'
+            f'<div style="font-size:10px;color:rgba(255,240,180,0.32);margin-top:2px;">{l}</div></div>')
 
 def sbar(s):
     st.markdown(
         f'<div class="srow">'
-        f'<span style="font-size:11px;color:rgba(255,255,255,0.30);min-width:36px;">匹配</span>'
+        f'<span style="font-size:11px;color:rgba(255,240,180,0.32);min-width:36px;">匹配</span>'
         f'<div class="strk"><div class="sfil" style="width:{s}%;"></div></div>'
         f'<span class="spct">{s}%</span></div>', unsafe_allow_html=True)
 
@@ -367,13 +368,13 @@ def ai_match(ans):
         key = st.secrets.get("ANTHROPIC_API_KEY","")
         if not key: return local_score(ans), None
         cl = anthropic.Anthropic(api_key=key)
-        alines = "\n".join(
+        alines = "<br />".join(
             f"Q{i+1}「{QUESTIONS[i]['q']}」→ {QUESTIONS[i]['opts'][ans.get(i,0)]['title']}"
             for i in range(len(QUESTIONS)))
-        clines = "\n".join(f"{c['id']}. {c['name']}（{c['type']}）" for c in CLUBS)
+        clines = "<br />".join(f"{c['id']}. {c['name']}（{c['type']}）" for c in CLUBS)
         prompt = (f"根据用户测评，为{len(CLUBS)}个社团打匹配分（0-100整数），"
-                  f"给出最高匹配社团一句话原因（温暖，≤40字）。\n"
-                  f"测评：\n{alines}\n\n社团：\n{clines}\n\n"
+                  f"给出最高匹配社团一句话原因（温暖，≤40字）。<br />"
+                  f"测评：<br />{alines}<br /><br />社团：<br />{clines}<br /><br />"
                   f"只返回JSON：{{\"scores\":{{\"1\":85,...}},\"reason\":\"...\"}}")
         msg = cl.messages.create(model="claude-opus-4-5", max_tokens=600,
                                   system=SYS, messages=[{"role":"user","content":prompt}])
@@ -389,13 +390,13 @@ def chat_ai(msg):
     try:
         key = st.secrets.get("ANTHROPIC_API_KEY","")
         if not key:
-            return ("我是 ClubMatch AI 顾问，由 Claude（Anthropic）驱动。\n"
+            return ("我是 ClubMatch AI 顾问，由 Claude（Anthropic）驱动。<br />"
                     "API Key 未配置，暂时无法联网——但你可以去「发现社团」浏览，或完成测评获取推荐。")
         cl = anthropic.Anthropic(api_key=key)
-        info = "\n".join(
+        info = "<br />".join(
             f"- {c['name']}（{c['type']}）：{c['desc']} | 成员{c['members']}人，评分{c['rating']}，时间投入{c['time_cost']}"
             for c in CLUBS)
-        sys2 = f"{SYS}\n\n平台社团（共{len(CLUBS)}个）：\n{info}"
+        sys2 = f"{SYS}<br /><br />平台社团（共{len(CLUBS)}个）：<br />{info}"
         hist = []
         for t in st.session_state.chat_history:
             if t.get("user"): hist.append({"role":"user","content":t["user"]})
@@ -416,7 +417,7 @@ def nav():
     st.markdown(
         '<div class="nav">'
         '<div class="logo"><span class="logo-badge">CM</span>Club<em>Match</em></div>'
-        '<div style="font-size:12px;color:rgba(255,255,255,0.25);font-weight:500;">每个人都值得找到属于自己的圈子</div>'
+        '<div style="font-size:12px;color:rgba(255,240,180,0.28);font-weight:500;">每个人都值得找到属于自己的圈子</div>'
         '</div>', unsafe_allow_html=True)
     tabs = [("🏠","首页","home"),("🧠","匹配测评","quiz"),("🔍","发现社团","browse"),
             ("🤖","AI 顾问","chat"),("📋",f"我的申请{cs}","apply"),("✨","申请创建","create")]
@@ -430,170 +431,229 @@ def nav():
 
 
 # ═══════════════════════════════════════════════════════════════
-#  QUIZ  ← 核心修复：纯 HTML+JS 组件，真正可交互
+#  QUIZ  ← 纯 HTML 选项，无 Streamlit 备用按钮
+#          通过 URL query_params 传递选择结果
 # ═══════════════════════════════════════════════════════════════
-def quiz_component(step, question, current_answer):
-    """
-    渲染一道题的 4 个选项卡片，点击即选中（发光特效），
-    通过 query_params 把选择结果传回 Streamlit。
-    返回用户选择的 index（None 表示未选）。
-    """
-    opts = question["opts"]
-    # 已选中的 index（从 URL 参数读取，组件初始化用）
-    sel = current_answer if current_answer is not None else -1
+def page_quiz():
+    nav()
 
-    cards_html = ""
-    for i, o in enumerate(opts):
-        is_sel = "sel" if i == sel else ""
-        cards_html += f"""
-        <div class="opt {is_sel}" data-idx="{i}" onclick="pick(this, {i})">
-            <div class="opt-icon">{o['icon']}</div>
-            <div class="opt-body">
-                <div class="opt-title">{o['title']}</div>
-                <div class="opt-sub">{o['sub']}</div>
-            </div>
-            <div class="opt-check">✓</div>
-        </div>"""
+    # ── 读取 query_params 中是否有新选择 ──────────────────────
+    qp = st.query_params
+    raw_step   = qp.get("qstep",  None)
+    raw_choice = qp.get("qchoice", None)
 
-    html = f"""
-<!DOCTYPE html>
+    if raw_step is not None and raw_choice is not None:
+        try:
+            ps = int(raw_step)
+            pc = int(raw_choice)
+            if ps == st.session_state.quiz_step:
+                st.session_state.quiz_answers[ps] = pc
+                # 清掉 query_params，避免刷新时重复触发
+                st.query_params.clear()
+                st.rerun()
+        except Exception:
+            pass
+
+    step  = st.session_state.quiz_step
+    total = len(QUESTIONS)
+    q     = QUESTIONS[step]
+    pct   = int(step / total * 100)
+    cur   = st.session_state.quiz_answers.get(step)
+
+    # ── 进度条 ────────────────────────────────────────────────
+    st.markdown(
+        f'<div class="prog-wrap">'
+        f'<div class="prog-meta"><span>问题 {step+1} / {total}</span><b>{pct}%</b></div>'
+        f'<div class="prog-track"><div class="prog-fill" style="width:{pct}%;"></div></div>'
+        f'</div>', unsafe_allow_html=True)
+
+    # ── 题目文字 ──────────────────────────────────────────────
+    _,mid,_ = st.columns([0.3, 4, 0.3])
+    with mid:
+        st.markdown(
+            f'<div style="font-size:11px;font-weight:700;color:#ffd700;letter-spacing:1px;'
+            f'text-transform:uppercase;margin-bottom:10px;">第 {step+1} 题</div>'
+            f'<div style="font-size:clamp(20px,3vw,30px);font-weight:900;letter-spacing:-0.8px;'
+            f'line-height:1.2;margin-bottom:6px;color:#fff8e7;">{q["q"]}</div>',
+            unsafe_allow_html=True)
+        hint = q.get("hint","")
+        if hint:
+            st.markdown(
+                f'<div style="font-size:13px;color:rgba(255,240,180,0.30);'
+                f'margin-bottom:22px;font-style:italic;">{hint}</div>',
+                unsafe_allow_html=True)
+        else:
+            st.markdown("<div style='height:18px;'></div>", unsafe_allow_html=True)
+
+        # ── 纯 HTML 选项卡片（点击后通过 URL 参数回传） ──────
+        opts   = q["opts"]
+        sel    = cur if cur is not None else -1
+
+        cards_html = ""
+        for i, o in enumerate(opts):
+            is_sel = "sel" if i == sel else ""
+            cards_html += f"""
+            <div class="opt {is_sel}" data-idx="{i}" onclick="pick({i})">
+                <div class="opt-icon">{o['icon']}</div>
+                <div class="opt-body">
+                    <div class="opt-title">{o['title']}</div>
+                    <div class="opt-sub">{o['sub']}</div>
+                </div>
+                <div class="opt-check">✓</div>
+            </div>"""
+
+        html = f"""<!DOCTYPE html>
 <html>
 <head>
 <meta charset="utf-8">
 <style>
-* {{ box-sizing: border-box; margin:0; padding:0; }}
-body {{
-    background: transparent;
-    font-family: 'Inter','PingFang SC','Noto Sans SC',system-ui,sans-serif;
-    padding: 0;
+*{{box-sizing:border-box;margin:0;padding:0;}}
+body{{background:transparent;font-family:'Inter','PingFang SC',system-ui,sans-serif;padding:0;}}
+.grid{{display:grid;grid-template-columns:1fr 1fr;gap:14px;}}
+.opt{{
+    display:flex;align-items:center;gap:14px;
+    padding:18px 20px;border-radius:18px;
+    border:1.5px solid rgba(255,215,0,0.18);
+    background:rgba(255,215,0,0.05);
+    cursor:pointer;
+    transition:border-color .22s,background .22s,box-shadow .22s,transform .18s;
+    position:relative;user-select:none;-webkit-user-select:none;
 }}
-.grid {{
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
+.opt:hover{{
+    border-color:rgba(255,215,0,0.50);
+    background:rgba(255,215,0,0.10);
+    transform:translateY(-2px);
+    box-shadow:0 6px 24px rgba(212,160,20,0.22);
 }}
-.opt {{
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    padding: 18px 20px;
-    border-radius: 18px;
-    border: 1.5px solid rgba(255,255,255,0.12);
-    background: rgba(255,255,255,0.06);
-    cursor: pointer;
-    transition:
-        border-color 0.22s cubic-bezier(.4,0,.2,1),
-        background   0.22s cubic-bezier(.4,0,.2,1),
-        box-shadow   0.22s cubic-bezier(.4,0,.2,1),
-        transform    0.18s cubic-bezier(.4,0,.2,1);
-    position: relative;
-    user-select: none;
-    -webkit-user-select: none;
-}}
-.opt:hover {{
-    border-color: rgba(167,139,250,0.50);
-    background: rgba(124,58,237,0.10);
-    transform: translateY(-2px);
-    box-shadow: 0 6px 24px rgba(124,58,237,0.18);
-}}
-.opt.sel {{
-    border-color: #a78bfa;
-    background: rgba(124,58,237,0.16);
+.opt.sel{{
+    border-color:#ffd700;
+    background:rgba(255,215,0,0.14);
     box-shadow:
-        0 0 0 3px rgba(124,58,237,0.22),
-        0 0 24px rgba(124,58,237,0.45),
-        0 0 48px rgba(124,58,237,0.20),
-        0 8px 28px rgba(124,58,237,0.28);
-    transform: translateY(-2px);
+        0 0 0 3px rgba(255,215,0,0.20),
+        0 0 24px rgba(255,200,50,0.50),
+        0 0 48px rgba(212,160,20,0.22),
+        0 8px 28px rgba(212,160,20,0.30);
+    transform:translateY(-2px);
 }}
-
-/* 点击波纹 */
-.opt::after {{
-    content: '';
-    position: absolute; inset: 0; border-radius: 18px;
-    background: radial-gradient(circle at center, rgba(167,139,250,0.35) 0%, transparent 70%);
-    opacity: 0;
-    transform: scale(0.6);
-    transition: opacity 0.4s, transform 0.4s;
-    pointer-events: none;
+.opt::after{{
+    content:'';position:absolute;inset:0;border-radius:18px;
+    background:radial-gradient(circle at center,rgba(255,215,0,0.30) 0%,transparent 70%);
+    opacity:0;transform:scale(0.6);
+    transition:opacity .4s,transform .4s;pointer-events:none;
 }}
-.opt.ripple::after {{
-    opacity: 1; transform: scale(1.2);
+.opt.ripple::after{{opacity:1;transform:scale(1.2);}}
+.opt-icon{{
+    font-size:28px;flex-shrink:0;
+    filter:drop-shadow(0 0 8px rgba(255,200,50,0.35));
+    transition:filter .22s,transform .22s;
 }}
-
-.opt-icon {{
-    font-size: 28px;
-    flex-shrink: 0;
-    filter: drop-shadow(0 0 8px rgba(167,139,250,0.40));
-    transition: filter 0.22s, transform 0.22s;
+.opt.sel .opt-icon{{
+    filter:drop-shadow(0 0 14px rgba(255,200,50,0.72));
+    transform:scale(1.08);
 }}
-.opt.sel .opt-icon {{
-    filter: drop-shadow(0 0 14px rgba(167,139,250,0.70));
-    transform: scale(1.08);
+.opt-body{{flex:1;}}
+.opt-title{{
+    font-size:15px;font-weight:700;
+    color:rgba(255,248,231,0.90);margin-bottom:4px;transition:color .22s;
 }}
-.opt-body {{ flex: 1; }}
-.opt-title {{
-    font-size: 15px; font-weight: 700;
-    color: rgba(255,255,255,0.88);
-    margin-bottom: 4px;
-    transition: color 0.22s;
+.opt.sel .opt-title{{color:#fff8e7;}}
+.opt-sub{{
+    font-size:12px;color:rgba(255,240,180,0.40);
+    line-height:1.45;transition:color .22s;
 }}
-.opt.sel .opt-title {{ color: #e9d5ff; }}
-.opt-sub {{
-    font-size: 12px;
-    color: rgba(255,255,255,0.38);
-    line-height: 1.45;
-    transition: color 0.22s;
+.opt.sel .opt-sub{{color:rgba(255,230,130,0.70);}}
+.opt-check{{
+    width:22px;height:22px;border-radius:50%;
+    border:1.5px solid rgba(255,215,0,0.25);
+    color:transparent;font-size:11px;font-weight:700;
+    display:flex;align-items:center;justify-content:center;
+    flex-shrink:0;transition:all .22s;
 }}
-.opt.sel .opt-sub {{ color: rgba(196,181,253,0.70); }}
-.opt-check {{
-    width: 22px; height: 22px;
-    border-radius: 50%;
-    border: 1.5px solid rgba(255,255,255,0.18);
-    color: transparent;
-    font-size: 11px; font-weight: 700;
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
-    transition: all 0.22s;
+.opt.sel .opt-check{{
+    background:linear-gradient(135deg,#b8860b,#ffd700);
+    border-color:transparent;color:#1a1000;
+    box-shadow:0 0 12px rgba(255,200,50,0.65);
 }}
-.opt.sel .opt-check {{
-    background: linear-gradient(135deg,#7c3aed,#6366f1);
-    border-color: transparent;
-    color: #fff;
-    box-shadow: 0 0 12px rgba(124,58,237,0.60);
-}}
-
-@media (max-width: 560px) {{
-    .grid {{ grid-template-columns: 1fr; }}
-}}
+@media(max-width:560px){{.grid{{grid-template-columns:1fr;}}}}
 </style>
 </head>
 <body>
 <div class="grid" id="g">{cards_html}</div>
 <script>
-var chosen = {sel};
-
-function pick(el, idx) {{
-    // 移除所有 sel
-    document.querySelectorAll('.opt').forEach(function(o){{
-        o.classList.remove('sel');
-    }});
+function pick(idx){{
+    document.querySelectorAll('.opt').forEach(function(o){{o.classList.remove('sel');}});
+    var el=document.querySelectorAll('.opt')[idx];
     el.classList.add('sel');
-
-    // 波纹效果
     el.classList.add('ripple');
-    setTimeout(function(){{ el.classList.remove('ripple'); }}, 420);
-
-    chosen = idx;
-    // 把选择结果写到父窗口 URL，Streamlit 会感知到
-    window.parent.postMessage({{type:'quiz_pick', step:{step}, choice: idx}}, '*');
+    setTimeout(function(){{el.classList.remove('ripple');}},420);
+    // 通过修改父窗口 URL query 参数回传选择
+    var url=new URL(window.parent.location.href);
+    url.searchParams.set('qstep','{step}');
+    url.searchParams.set('qchoice',idx);
+    window.parent.history.replaceState(null,'',url.toString());
+    // 用 postMessage 通知 Streamlit 重新运行
+    window.parent.postMessage({{isStreamlitMessage:true,type:'streamlit:setComponentValue',value:idx}}, '*');
+    // 备用：延迟后触发隐藏按钮点击（最可靠方案）
+    setTimeout(function(){{
+        var btn=window.parent.document.querySelector('[data-quiz-confirm="true"] button');
+        if(btn)btn.click();
+    }},120);
 }}
 </script>
 </body>
 </html>"""
 
-    # 用 components.html 渲染，高度 = 2行卡片
-    components.html(html, height=220, scrolling=False)
+        components.html(html, height=230, scrolling=False)
+
+        # ── 隐藏的"确认"按钮，由 JS 触发 ───────────────────
+        st.markdown(
+            '<div data-quiz-confirm="true" style="position:absolute;opacity:0;pointer-events:none;height:0;overflow:hidden;">',
+            unsafe_allow_html=True)
+        confirm_clicked = st.button("confirm", key=f"qconfirm_{step}")
+        st.markdown('</div>', unsafe_allow_html=True)
+
+        if confirm_clicked:
+            # 从 query_params 读取选择
+            qp2 = st.query_params
+            raw_c = qp2.get("qchoice", None)
+            raw_s = qp2.get("qstep",   None)
+            if raw_c is not None and raw_s is not None:
+                try:
+                    if int(raw_s) == step:
+                        st.session_state.quiz_answers[step] = int(raw_c)
+                        st.query_params.clear()
+                        st.rerun()
+                except Exception:
+                    pass
+
+        st.markdown("<br>", unsafe_allow_html=True)
+
+        # ── 导航按钮（上一题 / 下一题） ────────────────────
+        done = step in st.session_state.quiz_answers
+        nl, nr = st.columns(2, gap="small")
+
+        with nl:
+            if st.button("← 返回" if step == 0 else "← 上一题",
+                         key="qbk", use_container_width=True):
+                if step == 0:
+                    go("home")
+                else:
+                    st.session_state.quiz_step -= 1
+                    st.rerun()
+
+        with nr:
+            lbl = "查看匹配结果 →" if step == total - 1 else "下一题 →"
+            if st.button(lbl, key="qnx", type="primary",
+                         use_container_width=True, disabled=not done):
+                if step == total - 1:
+                    with st.spinner("🤖 Claude AI 分析中..."):
+                        res, reason = ai_match(st.session_state.quiz_answers)
+                        st.session_state.results  = res
+                        st.session_state.ai_reason = reason
+                    go("results")
+                else:
+                    st.session_state.quiz_step += 1
+                    st.rerun()
 
 
 # ═══════════════════════════════════════════════════════════════
@@ -609,7 +669,7 @@ def page_home():
             '<div class="sub">不知道加哪个？害怕加了发现不合适？<br>'
             '8 道情景题，Claude AI 分析你的真实性格，<br>从 16 个社团里找到最适合你的那个。</div>',
             unsafe_allow_html=True)
-        b1,b2 = st.columns(2)
+        b1, b2 = st.columns(2)
         with b1:
             if st.button("🎯  开始匹配测评", key="hs", type="primary", use_container_width=True):
                 st.session_state.quiz_step=0; st.session_state.quiz_answers={}; go("quiz")
@@ -620,36 +680,40 @@ def page_home():
         c1,c2,c3,c4 = st.columns(4)
         for col,(n,l) in zip([c1,c2,c3,c4],[("16","入驻社团"),("3,800+","在校成员"),("94%","匹配满意度"),("8题","完成测评")]):
             with col:
-                st.markdown(f'<div style="text-align:center;"><div class="snum">{n}</div><div class="slbl">{l}</div></div>', unsafe_allow_html=True)
+                st.markdown(
+                    f'<div style="text-align:center;">'
+                    f'<div class="snum">{n}</div>'
+                    f'<div class="slbl">{l}</div></div>',
+                    unsafe_allow_html=True)
 
     with cr:
         top = CLUBS[0]
         st.markdown(
             f'<div class="g pin" style="margin-top:4px;">'
             f'<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px;">'
-            f'<div style="font-size:44px;filter:drop-shadow(0 0 16px rgba(167,139,250,0.5));">{top["emoji"]}</div>'
+            f'<div style="font-size:44px;filter:drop-shadow(0 0 16px rgba(255,200,50,0.55));">{top["emoji"]}</div>'
             f'<div style="text-align:right;">'
-            f'<div style="font-size:42px;font-weight:900;background:linear-gradient(135deg,#a78bfa,#818cf8);'
+            f'<div style="font-size:42px;font-weight:900;background:linear-gradient(135deg,#ffd700,#ffaa00);'
             f'-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;'
             f'letter-spacing:-2px;line-height:1;">92%</div>'
-            f'<div style="font-size:10px;color:rgba(255,255,255,0.30);margin-top:2px;">AI 示例匹配度</div>'
+            f'<div style="font-size:10px;color:rgba(255,240,180,0.32);margin-top:2px;">AI 示例匹配度</div>'
             f'</div></div>'
-            f'<div style="font-size:18px;font-weight:800;margin-bottom:4px;color:#f0f0ff;">{top["name"]}</div>'
+            f'<div style="font-size:18px;font-weight:800;margin-bottom:4px;color:#fff8e7;">{top["name"]}</div>'
             f'<div class="vibe">{top.get("vibe","")}</div>'
-            f'<div style="font-size:13px;color:rgba(255,255,255,0.45);line-height:1.65;margin-bottom:14px;">{top["desc"]}</div>'
+            f'<div style="font-size:13px;color:rgba(255,240,180,0.47);line-height:1.65;margin-bottom:14px;">{top["desc"]}</div>'
             f'<div style="margin-bottom:14px;">{tags(top)}<span class="pill pill-o">热门</span></div>'
             f'<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;">'
             + scell(top["members"],"成员") + scell(f"⭐{top['rating']}","评分") + scell(f"{top['awards']}项","获奖") +
             f'</div></div>'
-            f'<div style="text-align:center;font-size:12px;color:rgba(255,255,255,0.18);margin-top:8px;">'
-            f'🟢  本周已有 102 位新生完成匹配</div>', unsafe_allow_html=True)
+            f'<div style="text-align:center;font-size:12px;color:rgba(255,240,180,0.20);margin-top:8px;">'
+            f'🟡  本周已有 102 位新生完成匹配</div>', unsafe_allow_html=True)
 
     st.markdown('<hr class="divider">', unsafe_allow_html=True)
     st.markdown(
         '<div style="text-align:center;margin-bottom:28px;">'
-        '<div style="font-size:11px;font-weight:700;letter-spacing:1.2px;color:#a78bfa;'
+        '<div style="font-size:11px;font-weight:700;letter-spacing:1.2px;color:#ffd700;'
         'text-transform:uppercase;margin-bottom:10px;">为什么选 ClubMatch</div>'
-        '<div style="font-size:26px;font-weight:900;letter-spacing:-0.8px;color:#f0f0ff;">'
+        '<div style="font-size:26px;font-weight:900;letter-spacing:-0.8px;color:#fff8e7;">'
         '不是随机推荐，是真正了解你</div></div>', unsafe_allow_html=True)
     feats = [
         ("🧬","情景化测评，读懂真实的你","不问「有什么爱好」，问「你周末真的会做什么」——8 道题挖掘你的性格底色，Claude AI 实时分析。"),
@@ -662,16 +726,16 @@ def page_home():
             st.markdown(
                 f'<div class="g" style="min-height:165px;">'
                 f'<div style="font-size:28px;margin-bottom:14px;">{icon}</div>'
-                f'<div style="font-size:15px;font-weight:800;margin-bottom:8px;color:#f0f0ff;">{title}</div>'
-                f'<div style="font-size:13px;color:rgba(255,255,255,0.42);line-height:1.65;">{desc}</div>'
+                f'<div style="font-size:15px;font-weight:800;margin-bottom:8px;color:#fff8e7;">{title}</div>'
+                f'<div style="font-size:13px;color:rgba(255,240,180,0.44);line-height:1.65;">{desc}</div>'
                 f'</div>', unsafe_allow_html=True)
 
     st.markdown('<hr class="divider">', unsafe_allow_html=True)
     picks = random.sample(CLUBS, 3)
     st.markdown(
-        '<div style="font-size:11px;font-weight:700;letter-spacing:1.2px;color:#a78bfa;'
+        '<div style="font-size:11px;font-weight:700;letter-spacing:1.2px;color:#ffd700;'
         'text-transform:uppercase;margin-bottom:10px;">✦ 今日精选</div>'
-        '<div style="font-size:22px;font-weight:900;letter-spacing:-0.6px;margin-bottom:20px;color:#f0f0ff;">'
+        '<div style="font-size:22px;font-weight:900;letter-spacing:-0.6px;margin-bottom:20px;color:#fff8e7;">'
         '随便逛逛，说不定就遇上了</div>', unsafe_allow_html=True)
     cols = st.columns(3, gap="small")
     for col,club in zip(cols,picks):
@@ -679,9 +743,9 @@ def page_home():
             st.markdown(
                 f'<div class="g">'
                 f'<div style="font-size:36px;margin-bottom:10px;">{club["emoji"]}</div>'
-                f'<div style="font-size:16px;font-weight:800;margin-bottom:3px;color:#f0f0ff;">{club["name"]}</div>'
+                f'<div style="font-size:16px;font-weight:800;margin-bottom:3px;color:#fff8e7;">{club["name"]}</div>'
                 f'<div class="vibe">{club.get("vibe","")}</div>'
-                f'<div style="font-size:13px;color:rgba(255,255,255,0.42);line-height:1.55;margin-bottom:12px;">'
+                f'<div style="font-size:13px;color:rgba(255,240,180,0.44);line-height:1.55;margin-bottom:12px;">'
                 f'{club["desc"][:55]}...</div><div>{tags(club)}</div></div>', unsafe_allow_html=True)
             if st.button("了解更多", key=f"hc_{club['id']}", use_container_width=True):
                 st.session_state.expand_club = club["id"]; go("browse")
@@ -694,85 +758,6 @@ def page_home():
 
 
 # ═══════════════════════════════════════════════════════════════
-#  PAGE: QUIZ  ← 关键重写
-# ═══════════════════════════════════════════════════════════════
-def page_quiz():
-    nav()
-    step  = st.session_state.quiz_step
-    total = len(QUESTIONS)
-    q     = QUESTIONS[step]
-    pct   = int(step / total * 100)
-    cur   = st.session_state.quiz_answers.get(step)
-
-    # 进度
-    st.markdown(
-        f'<div class="prog-wrap">'
-        f'<div class="prog-meta"><span>问题 {step+1} / {total}</span><b>{pct}%</b></div>'
-        f'<div class="prog-track"><div class="prog-fill" style="width:{pct}%;"></div></div>'
-        f'</div>', unsafe_allow_html=True)
-
-    # 题目
-    _,mid,_ = st.columns([0.3,4,0.3])
-    with mid:
-        st.markdown(
-            f'<div style="font-size:11px;font-weight:700;color:#a78bfa;letter-spacing:1px;'
-            f'text-transform:uppercase;margin-bottom:10px;">第 {step+1} 题</div>'
-            f'<div style="font-size:clamp(20px,3vw,30px);font-weight:900;letter-spacing:-0.8px;'
-            f'line-height:1.2;margin-bottom:6px;color:#f0f0ff;">{q["q"]}</div>', unsafe_allow_html=True)
-        hint = q.get("hint","")
-        if hint:
-            st.markdown(f'<div style="font-size:13px;color:rgba(255,255,255,0.28);'
-                        f'margin-bottom:22px;font-style:italic;">{hint}</div>', unsafe_allow_html=True)
-        else:
-            st.markdown("<div style='height:18px;'></div>", unsafe_allow_html=True)
-
-        # ── HTML 交互选项组件 ──
-        quiz_component(step, q, cur)
-
-        # ── 选项说明：用户点了 HTML 里的选项之后，我们通过 st.query_params 接收 ──
-        # 因为 postMessage 在 iframe 环境不能直接修改 Streamlit state，
-        # 改用 4 个隐藏 st.button 接收点击（按钮文字不可见，靠 JS 触发点击）
-        # 最简可靠方案：直接渲染 4 个透明覆盖按钮
-        st.markdown("<div style='height:8px;'></div>", unsafe_allow_html=True)
-
-        # 实际可点击的选项行（作为备用 & 显示选中状态的文字确认）
-        st.markdown(
-            '<div style="font-size:12px;color:rgba(255,255,255,0.22);'
-            'text-align:center;margin-bottom:16px;">↑ 点击上方卡片选择，或用下方按钮选择</div>',
-            unsafe_allow_html=True)
-
-        r1,r2 = st.columns(2,gap="small"), st.columns(2,gap="small")
-        all_cols = list(r1)+list(r2)
-        for i,(col,opt) in enumerate(zip(all_cols,q["opts"])):
-            with col:
-                is_sel = (cur==i)
-                label = f"{'✓ ' if is_sel else ''}{opt['icon']} {opt['title']}"
-                if st.button(label, key=f"qb{step}_{i}",
-                             type="primary" if is_sel else "secondary",
-                             use_container_width=True):
-                    st.session_state.quiz_answers[step] = i
-                    st.rerun()
-
-        st.markdown("<br>", unsafe_allow_html=True)
-        nl,nr = st.columns(2,gap="small")
-        with nl:
-            if st.button("← 返回" if step==0 else "← 上一题", key="qbk", use_container_width=True):
-                if step==0: go("home")
-                else: st.session_state.quiz_step-=1; st.rerun()
-        with nr:
-            done = step in st.session_state.quiz_answers
-            lbl = "查看匹配结果 →" if step==total-1 else "下一题 →"
-            if st.button(lbl, key="qnx", type="primary", use_container_width=True, disabled=not done):
-                if step==total-1:
-                    with st.spinner("🤖 Claude AI 分析中..."):
-                        res,reason = ai_match(st.session_state.quiz_answers)
-                        st.session_state.results=res; st.session_state.ai_reason=reason
-                    go("results")
-                else:
-                    st.session_state.quiz_step+=1; st.rerun()
-
-
-# ═══════════════════════════════════════════════════════════════
 #  PAGE: RESULTS
 # ═══════════════════════════════════════════════════════════════
 def page_results():
@@ -780,21 +765,21 @@ def page_results():
     res = st.session_state.results
     if not res:
         st.warning("还没有结果，先完成测评吧～")
-        if st.button("去测评",type="primary"): go("quiz")
+        if st.button("去测评", type="primary"): go("quiz")
         return
     reason = st.session_state.get("ai_reason")
     st.markdown(
-        '<div style="font-size:11px;font-weight:700;letter-spacing:1.2px;color:#a78bfa;'
+        '<div style="font-size:11px;font-weight:700;letter-spacing:1.2px;color:#ffd700;'
         'text-transform:uppercase;margin-bottom:10px;">✦ 你的专属匹配报告</div>'
         f'<div style="font-size:clamp(22px,4vw,36px);font-weight:900;letter-spacing:-1.2px;'
-        f'margin-bottom:10px;color:#f0f0ff;">Claude 从 {len(CLUBS)} 个社团里，为你找到了这些</div>',
+        f'margin-bottom:10px;color:#fff8e7;">Claude 从 {len(CLUBS)} 个社团里，为你找到了这些</div>',
         unsafe_allow_html=True)
     if reason:
         st.markdown(
-            f'<div style="background:rgba(124,58,237,0.08);border:1px solid rgba(124,58,237,0.20);'
-            f'border-radius:14px;padding:14px 18px;font-size:14px;color:rgba(255,255,255,0.70);'
+            f'<div style="background:rgba(255,200,50,0.07);border:1px solid rgba(255,200,50,0.22);'
+            f'border-radius:14px;padding:14px 18px;font-size:14px;color:rgba(255,240,180,0.72);'
             f'line-height:1.65;margin-bottom:24px;">'
-            f'<span style="color:#a78bfa;font-weight:700;">✦ Claude 分析：</span>{reason}</div>',
+            f'<span style="color:#ffd700;font-weight:700;">✦ Claude 分析：</span>{reason}</div>',
             unsafe_allow_html=True)
 
     bnames=["🥇 最佳匹配","🥈 强烈推荐","🥉 推荐"]; bcls=["pill-o","pill-v","pill-b"]
@@ -808,15 +793,15 @@ def page_results():
             st.markdown(
                 f'<div class="g {feat}">'
                 f'<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;">'
-                f'<div style="font-size:36px;filter:drop-shadow(0 0 10px rgba(167,139,250,0.4));">{club["emoji"]}</div>'
+                f'<div style="font-size:36px;filter:drop-shadow(0 0 10px rgba(255,200,50,0.45));">{club["emoji"]}</div>'
                 f'<span class="pill {bc}">{bl}</span></div>'
-                f'<div style="font-size:16px;font-weight:800;margin-bottom:2px;color:#f0f0ff;">{club["name"]}</div>'
-                f'<div style="font-size:11px;color:rgba(255,255,255,0.30);margin-bottom:10px;">{club["type"]} · {club["freq"]}</div>',
+                f'<div style="font-size:16px;font-weight:800;margin-bottom:2px;color:#fff8e7;">{club["name"]}</div>'
+                f'<div style="font-size:11px;color:rgba(255,240,180,0.32);margin-bottom:10px;">{club["type"]} · {club["freq"]}</div>',
                 unsafe_allow_html=True)
             sbar(club["match_score"])
             st.markdown(
                 f'<div class="vibe">{club.get("vibe","")}</div>'
-                f'<div style="font-size:13px;color:rgba(255,255,255,0.45);line-height:1.55;margin-bottom:12px;">{club["desc"][:58]}...</div>'
+                f'<div style="font-size:13px;color:rgba(255,240,180,0.47);line-height:1.55;margin-bottom:12px;">{club["desc"][:58]}...</div>'
                 f'<div style="margin-bottom:14px;">{tags(club)}{ab}</div></div>',
                 unsafe_allow_html=True)
             b1,b2=st.columns(2,gap="small")
@@ -854,14 +839,18 @@ def page_results():
 
 def club_detail(club):
     app=applied(club["id"])
-    rr="".join(f'<div class="rr"><span style="color:#a78bfa;flex-shrink:0;">·</span><span>{r}</span></div>' for r in club.get("requirements",[]))
-    ar="".join(f'<div class="rr"><span style="color:#fb923c;flex-shrink:0;">·</span><span>{a}</span></div>' for a in club.get("activities",[]))
+    rr="".join(f'<div class="rr"><span style="color:#ffd700;flex-shrink:0;">·</span><span>{r}</span></div>' for r in club.get("requirements",[]))
+    ar="".join(f'<div class="rr"><span style="color:#ffaa00;flex-shrink:0;">·</span><span>{a}</span></div>' for a in club.get("activities",[]))
     st4="".join(scell(v,l) for v,l in [(str(club["members"]),"成员"),(f"⭐{club['rating']}","评分"),(f"{club['awards']}项","获奖"),(club["time_cost"],"时间")])
-    an='<div style="margin-top:12px;padding:10px 14px;background:rgba(52,211,153,0.08);border:1px solid rgba(52,211,153,0.20);border-radius:10px;font-size:12px;color:#6ee7b7;text-align:center;">✓ 你已报名这个社团</div>' if app else ""
+    an=('<div style="margin-top:12px;padding:10px 14px;background:rgba(100,200,100,0.08);'
+        'border:1px solid rgba(100,200,100,0.22);border-radius:10px;font-size:12px;'
+        'color:#88e088;text-align:center;">✓ 你已报名这个社团</div>') if app else ""
     st.markdown(
         f'<div class="det">'
-        f'<div class="dsec">关于我们</div><div style="font-size:13px;color:rgba(255,255,255,0.60);line-height:1.7;">{club.get("detail","")}</div>'
-        f'<div class="dsec">最适合谁</div><div style="font-size:13px;color:rgba(255,255,255,0.60);">→ {club.get("best_for","")}</div>'
+        f'<div class="dsec">关于我们</div>'
+        f'<div style="font-size:13px;color:rgba(255,240,180,0.62);line-height:1.7;">{club.get("detail","")}</div>'
+        f'<div class="dsec">最适合谁</div>'
+        f'<div style="font-size:13px;color:rgba(255,240,180,0.62);">→ {club.get("best_for","")}</div>'
         f'<div class="dsec">招新要求</div>{rr}'
         f'<div class="dsec">主要活动</div>{ar}'
         f'<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:14px;">{st4}</div>'
@@ -873,9 +862,13 @@ def club_detail(club):
 # ═══════════════════════════════════════════════════════════════
 def page_browse():
     nav()
-    st.markdown('<div style="font-size:26px;font-weight:900;letter-spacing:-0.8px;margin-bottom:4px;color:#f0f0ff;">发现社团</div>', unsafe_allow_html=True)
-    st.markdown(f'<div style="font-size:14px;color:rgba(255,255,255,0.32);margin-bottom:20px;">{len(CLUBS)} 个社团，总有一个在等你</div>', unsafe_allow_html=True)
-    cs,cf=st.columns([2,1])
+    st.markdown(
+        '<div style="font-size:26px;font-weight:900;letter-spacing:-0.8px;margin-bottom:4px;color:#fff8e7;">发现社团</div>',
+        unsafe_allow_html=True)
+    st.markdown(
+        f'<div style="font-size:14px;color:rgba(255,240,180,0.34);margin-bottom:20px;">{len(CLUBS)} 个社团，总有一个在等你</div>',
+        unsafe_allow_html=True)
+    cs,cf = st.columns([2,1])
     with cs: search=st.text_input("",placeholder="🔍  搜索名称、类型、标签...",label_visibility="collapsed",key="bs")
     with cf:
         types=["全部类型"]+sorted({c["type"] for c in CLUBS})
@@ -885,22 +878,29 @@ def page_browse():
                    or any(search in t for t in c.get("tags",[])) or search in c.get("desc",""))
                and (selt=="全部类型" or c["type"]==selt)]
     if not filtered:
-        st.markdown('<div style="text-align:center;padding:60px;color:rgba(255,255,255,0.20);">没找到……换个关键词？</div>',unsafe_allow_html=True); return
+        st.markdown(
+            '<div style="text-align:center;padding:60px;color:rgba(255,240,180,0.22);">没找到……换个关键词？</div>',
+            unsafe_allow_html=True); return
     cols=st.columns(3,gap="small")
     for idx,club in enumerate(filtered):
         with cols[idx%3]:
             app=applied(club["id"]); inc=incart(club["id"])
-            ex='<span class="pill pill-g">✓ 已报名</span>' if app else ('<span class="pill pill-v">已加入申请袋</span>' if inc else "")
-            sr="".join(f'<div style="text-align:center;"><div style="font-size:13px;font-weight:800;color:#f0f0ff;">{v}</div><div style="font-size:10px;color:rgba(255,255,255,0.28);margin-top:2px;">{l}</div></div>' for v,l in [(str(club["members"]),"成员"),(f"⭐{club['rating']}","评分"),(f"{club['awards']}项","获奖")])
+            ex=('<span class="pill pill-g">✓ 已报名</span>' if app
+                else ('<span class="pill pill-v">已加入申请袋</span>' if inc else ""))
+            sr="".join(
+                f'<div style="text-align:center;">'
+                f'<div style="font-size:13px;font-weight:800;color:#fff8e7;">{v}</div>'
+                f'<div style="font-size:10px;color:rgba(255,240,180,0.30);margin-top:2px;">{l}</div></div>'
+                for v,l in [(str(club["members"]),"成员"),(f"⭐{club['rating']}","评分"),(f"{club['awards']}项","获奖")])
             st.markdown(
                 f'<div class="g">'
                 f'<div style="font-size:36px;margin-bottom:10px;">{club["emoji"]}</div>'
-                f'<div style="font-size:16px;font-weight:800;margin-bottom:2px;color:#f0f0ff;">{club["name"]}</div>'
-                f'<div style="font-size:11px;color:rgba(255,255,255,0.28);margin-bottom:8px;">{club["type"]} · 成立 {club["founded"]}</div>'
+                f'<div style="font-size:16px;font-weight:800;margin-bottom:2px;color:#fff8e7;">{club["name"]}</div>'
+                f'<div style="font-size:11px;color:rgba(255,240,180,0.30);margin-bottom:8px;">{club["type"]} · 成立 {club["founded"]}</div>'
                 f'<div class="vibe">{club.get("vibe","")}</div>'
-                f'<div style="font-size:13px;color:rgba(255,255,255,0.42);line-height:1.55;margin-bottom:12px;">{club["desc"][:62]}...</div>'
+                f'<div style="font-size:13px;color:rgba(255,240,180,0.44);line-height:1.55;margin-bottom:12px;">{club["desc"][:62]}...</div>'
                 f'<div style="margin-bottom:12px;">{tags(club)}{ex}</div>'
-                f'<div style="display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid rgba(255,255,255,0.06);padding-top:12px;">{sr}</div>'
+                f'<div style="display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid rgba(255,215,0,0.08);padding-top:12px;">{sr}</div>'
                 f'</div>', unsafe_allow_html=True)
             b1,b2=st.columns(2,gap="small")
             with b1:
@@ -931,24 +931,32 @@ def page_browse():
 # ═══════════════════════════════════════════════════════════════
 def page_chat():
     nav()
-    st.markdown('<div style="font-size:24px;font-weight:900;letter-spacing:-0.6px;margin-bottom:4px;color:#f0f0ff;">AI 社团顾问</div>', unsafe_allow_html=True)
-    st.markdown('<div style="font-size:13px;color:rgba(255,255,255,0.30);margin-bottom:24px;">由 Claude (Anthropic) 驱动 · 随时回答关于社团的任何问题</div>', unsafe_allow_html=True)
+    st.markdown(
+        '<div style="font-size:24px;font-weight:900;letter-spacing:-0.6px;margin-bottom:4px;color:#fff8e7;">AI 社团顾问</div>',
+        unsafe_allow_html=True)
+    st.markdown(
+        '<div style="font-size:13px;color:rgba(255,240,180,0.32);margin-bottom:24px;">由 Claude (Anthropic) 驱动 · 随时回答关于社团的任何问题</div>',
+        unsafe_allow_html=True)
     if not st.session_state.chat_history:
         st.session_state.chat_history=[{"user":None,"ai":(
-            f"嗨！我是 ClubMatch AI 顾问，底层由 Claude（Anthropic）驱动 👋\n\n"
-            f"我对平台上全部 {len(CLUBS)} 个社团都了如指掌。你可以问我：\n"
-            f"· 某个社团的具体情况和氛围\n· 根据你的情况给个性化推荐\n"
-            f"· 「内向的人适合哪个」「我时间不多怎么选」……\n\n随便问，没有奇怪的问题。")}]
+            f"嗨！我是 ClubMatch AI 顾问，底层由 Claude（Anthropic）驱动 👋<br /><br />"
+            f"我对平台上全部 {len(CLUBS)} 个社团都了如指掌。你可以问我：<br />"
+            f"· 某个社团的具体情况和氛围<br />· 根据你的情况给个性化推荐<br />"
+            f"· 「内向的人适合哪个」「我时间不多怎么选」……<br /><br />随便问，没有奇怪的问题。")}]
     for t in st.session_state.chat_history:
         if t.get("user"):
-            st.markdown('<div style="text-align:right;font-size:11px;color:rgba(255,255,255,0.28);font-weight:600;margin-bottom:3px;">你</div>',unsafe_allow_html=True)
+            st.markdown(
+                '<div style="text-align:right;font-size:11px;color:rgba(255,240,180,0.30);font-weight:600;margin-bottom:3px;">你</div>',
+                unsafe_allow_html=True)
             st.markdown(f'<div class="buser">{t["user"]}</div>',unsafe_allow_html=True)
         if t.get("ai"):
             st.markdown('<div class="clbl">🤖  Claude AI 顾问</div>',unsafe_allow_html=True)
             st.markdown(f'<div class="bai">{t["ai"]}</div>',unsafe_allow_html=True)
     st.markdown("<br>",unsafe_allow_html=True)
     if len(st.session_state.chat_history)<=1:
-        st.markdown('<div style="font-size:12px;color:rgba(255,255,255,0.22);margin-bottom:8px;">快捷问题</div>',unsafe_allow_html=True)
+        st.markdown(
+            '<div style="font-size:12px;color:rgba(255,240,180,0.24);margin-bottom:8px;">快捷问题</div>',
+            unsafe_allow_html=True)
         sugg=["内向的人适合哪个？","时间不多选哪个？","摄影社和微电影社区别？","创业社真的有用吗？","不知道自己喜欢什么？","哪个最容易交朋友？"]
         cols=st.columns(3,gap="small")
         for i,s in enumerate(sugg):
@@ -973,12 +981,20 @@ def page_apply():
     nav()
     cart=st.session_state.cart
     if not cart:
-        st.markdown('<div style="font-size:22px;font-weight:800;color:#f0f0ff;margin-bottom:8px;">申请袋是空的</div>',unsafe_allow_html=True)
-        st.markdown('<div style="color:rgba(255,255,255,0.38);margin-bottom:24px;font-size:14px;">先去发现社团，把感兴趣的加进来～</div>',unsafe_allow_html=True)
+        st.markdown(
+            '<div style="font-size:22px;font-weight:800;color:#fff8e7;margin-bottom:8px;">申请袋是空的</div>',
+            unsafe_allow_html=True)
+        st.markdown(
+            '<div style="color:rgba(255,240,180,0.40);margin-bottom:24px;font-size:14px;">先去发现社团，把感兴趣的加进来～</div>',
+            unsafe_allow_html=True)
         if st.button("去发现社团",type="primary"): go("browse")
         return
-    st.markdown(f'<div style="font-size:26px;font-weight:900;letter-spacing:-0.8px;margin-bottom:4px;color:#f0f0ff;">提交申请</div>',unsafe_allow_html=True)
-    st.markdown(f'<div style="font-size:14px;color:rgba(255,255,255,0.35);margin-bottom:24px;">你选择了 {len(cart)} 个社团，一次填写全搞定</div>',unsafe_allow_html=True)
+    st.markdown(
+        f'<div style="font-size:26px;font-weight:900;letter-spacing:-0.8px;margin-bottom:4px;color:#fff8e7;">提交申请</div>',
+        unsafe_allow_html=True)
+    st.markdown(
+        f'<div style="font-size:14px;color:rgba(255,240,180,0.37);margin-bottom:24px;">你选择了 {len(cart)} 个社团，一次填写全搞定</div>',
+        unsafe_allow_html=True)
     cl,cr=st.columns([1.2,1],gap="large")
     with cl:
         st.markdown('<div class="fs"><div class="ft">你的申请袋</div>',unsafe_allow_html=True)
@@ -987,7 +1003,13 @@ def page_apply():
             if not club: continue
             cL,cR=st.columns([3,1])
             with cL:
-                st.markdown(f'<div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.05);"><span style="font-size:22px;">{club["emoji"]}</span><div><div style="font-size:14px;font-weight:700;color:#f0f0ff;">{club["name"]}</div><div style="font-size:11px;color:rgba(255,255,255,0.30);">{club["type"]} · {club["freq"]}</div></div></div>',unsafe_allow_html=True)
+                st.markdown(
+                    f'<div style="display:flex;align-items:center;gap:10px;padding:10px 0;'
+                    f'border-bottom:1px solid rgba(255,215,0,0.07);">'
+                    f'<span style="font-size:22px;">{club["emoji"]}</span>'
+                    f'<div><div style="font-size:14px;font-weight:700;color:#fff8e7;">{club["name"]}</div>'
+                    f'<div style="font-size:11px;color:rgba(255,240,180,0.32);">{club["type"]} · {club["freq"]}</div>'
+                    f'</div></div>', unsafe_allow_html=True)
             with cR:
                 if st.button("移除",key=f"arm_{cid}",use_container_width=True): toggle(cid); st.rerun()
         st.markdown('</div>',unsafe_allow_html=True)
@@ -997,16 +1019,16 @@ def page_apply():
             <div class="ft">提交后会发生什么</div>
             <div style="display:flex;flex-direction:column;gap:14px;">
                 <div style="display:flex;gap:12px;">
-                    <div style="width:26px;height:26px;border-radius:50%;background:rgba(124,58,237,0.20);color:#a78bfa;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">1</div>
-                    <div><div style="font-size:13px;font-weight:700;color:#f0f0ff;margin-bottom:2px;">社团负责人主动联系你</div><div style="font-size:12px;color:rgba(255,255,255,0.38);line-height:1.5;">3 个工作日内通过手机号或微信联系，说明面试安排。</div></div>
+                    <div style="width:26px;height:26px;border-radius:50%;background:rgba(212,160,20,0.18);color:#ffd700;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">1</div>
+                    <div><div style="font-size:13px;font-weight:700;color:#fff8e7;margin-bottom:2px;">社团负责人主动联系你</div><div style="font-size:12px;color:rgba(255,240,180,0.40);line-height:1.5;">3 个工作日内通过手机号或微信联系，说明面试安排。</div></div>
                 </div>
                 <div style="display:flex;gap:12px;">
-                    <div style="width:26px;height:26px;border-radius:50%;background:rgba(124,58,237,0.20);color:#a78bfa;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">2</div>
-                    <div><div style="font-size:13px;font-weight:700;color:#f0f0ff;margin-bottom:2px;">体验一次活动，再决定</div><div style="font-size:12px;color:rgba(255,255,255,0.38);line-height:1.5;">大部分社团会邀请你先来体验，感受真实氛围后再确认加入。</div></div>
+                    <div style="width:26px;height:26px;border-radius:50%;background:rgba(212,160,20,0.18);color:#ffd700;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">2</div>
+                    <div><div style="font-size:13px;font-weight:700;color:#fff8e7;margin-bottom:2px;">体验一次活动，再决定</div><div style="font-size:12px;color:rgba(255,240,180,0.40);line-height:1.5;">大部分社团会邀请你先来体验，感受真实氛围后再确认加入。</div></div>
                 </div>
                 <div style="display:flex;gap:12px;">
-                    <div style="width:26px;height:26px;border-radius:50%;background:rgba(124,58,237,0.20);color:#a78bfa;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">3</div>
-                    <div><div style="font-size:13px;font-weight:700;color:#f0f0ff;margin-bottom:2px;">进群，正式开始</div><div style="font-size:12px;color:rgba(255,255,255,0.38);line-height:1.5;">确认加入后被拉进官方微信群，社团生活从这里开始。</div></div>
+                    <div style="width:26px;height:26px;border-radius:50%;background:rgba(212,160,20,0.18);color:#ffd700;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">3</div>
+                    <div><div style="font-size:13px;font-weight:700;color:#fff8e7;margin-bottom:2px;">进群，正式开始</div><div style="font-size:12px;color:rgba(255,240,180,0.40);line-height:1.5;">确认加入后被拉进官方微信群，社团生活从这里开始。</div></div>
                 </div>
             </div>
         </div>""", unsafe_allow_html=True)
@@ -1026,10 +1048,15 @@ def page_apply():
         st.markdown('</div>',unsafe_allow_html=True)
         ok=all([name.strip(),sid.strip(),major.strip(),grade!="请选择",phone.strip(),intro.strip()])
         if st.button("🎉  提交所有申请",key="asub",type="primary",use_container_width=True,disabled=not ok):
-            st.session_state.applications.append({"clubs":list(cart),"name":name,"student_id":sid,"major":major,"grade":grade,"phone":phone,"wechat":wechat,"intro":intro,"time_avail":ta,"skill":sk})
+            st.session_state.applications.append({
+                "clubs":list(cart),"name":name,"student_id":sid,"major":major,
+                "grade":grade,"phone":phone,"wechat":wechat,"intro":intro,
+                "time_avail":ta,"skill":sk})
             st.session_state.cart=[]; go("success")
         if not ok:
-            st.markdown('<div style="font-size:12px;color:rgba(255,255,255,0.25);text-align:center;margin-top:6px;">请填写所有必填项后提交</div>',unsafe_allow_html=True)
+            st.markdown(
+                '<div style="font-size:12px;color:rgba(255,240,180,0.27);text-align:center;margin-top:6px;">请填写所有必填项后提交</div>',
+                unsafe_allow_html=True)
 
 
 # ═══════════════════════════════════════════════════════════════
@@ -1040,17 +1067,23 @@ def page_success():
     if not st.session_state.applications: go("home"); return
     last=st.session_state.applications[-1]
     cnames=[cbyid(cid)["name"] for cid in last["clubs"] if cbyid(cid)]
-    cl="".join(f'<div style="display:flex;align-items:center;gap:8px;font-size:14px;color:rgba(255,255,255,0.70);margin-bottom:8px;"><span style="color:#6ee7b7;">✓</span>{n}</div>' for n in cnames)
+    cl="".join(
+        f'<div style="display:flex;align-items:center;gap:8px;font-size:14px;'
+        f'color:rgba(255,240,180,0.72);margin-bottom:8px;">'
+        f'<span style="color:#88e088;">✓</span>{n}</div>'
+        for n in cnames)
     _,col,_=st.columns([0.5,3,0.5])
     with col:
         st.markdown(
             f'<div class="ok-glass">'
             f'<div style="font-size:56px;margin-bottom:16px;">🎉</div>'
-            f'<div style="font-size:28px;font-weight:900;letter-spacing:-1px;margin-bottom:10px;color:#f0f0ff;">申请已成功提交！</div>'
-            f'<div style="font-size:15px;color:rgba(255,255,255,0.50);line-height:1.75;margin-bottom:24px;">'
+            f'<div style="font-size:28px;font-weight:900;letter-spacing:-1px;margin-bottom:10px;color:#fff8e7;">申请已成功提交！</div>'
+            f'<div style="font-size:15px;color:rgba(255,240,180,0.52);line-height:1.75;margin-bottom:24px;">'
             f'{last["name"]}，欢迎你迈出这一步。<br>接下来，静静等着被发现吧。</div>'
-            f'<div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.09);border-radius:14px;padding:18px;text-align:left;margin-bottom:20px;">'
-            f'<div style="font-size:11px;color:rgba(255,255,255,0.28);font-weight:700;letter-spacing:0.8px;text-transform:uppercase;margin-bottom:12px;">你申请的社团</div>'
+            f'<div style="background:rgba(255,215,0,0.04);border:1px solid rgba(255,215,0,0.10);'
+            f'border-radius:14px;padding:18px;text-align:left;margin-bottom:20px;">'
+            f'<div style="font-size:11px;color:rgba(255,215,0,0.35);font-weight:700;'
+            f'letter-spacing:0.8px;text-transform:uppercase;margin-bottom:12px;">你申请的社团</div>'
             f'{cl}</div></div>', unsafe_allow_html=True)
         st.markdown("<br>",unsafe_allow_html=True)
         b1,b2=st.columns(2)
@@ -1066,8 +1099,14 @@ def page_success():
 def page_create():
     nav()
     st.markdown('<div class="eyebrow">✦ 找不到合适的？自己创一个</div>',unsafe_allow_html=True)
-    st.markdown('<div style="font-size:28px;font-weight:900;letter-spacing:-0.8px;margin-bottom:8px;color:#f0f0ff;">申请创建新社团</div>',unsafe_allow_html=True)
-    st.markdown('<div style="font-size:15px;color:rgba(255,255,255,0.40);line-height:1.7;margin-bottom:28px;">每一个存在的社团，都是某个人第一次说「我想做这件事」。<br>如果你有个想法，这里是它开始的地方。</div>',unsafe_allow_html=True)
+    st.markdown(
+        '<div style="font-size:28px;font-weight:900;letter-spacing:-0.8px;margin-bottom:8px;color:#fff8e7;">申请创建新社团</div>',
+        unsafe_allow_html=True)
+    st.markdown(
+        '<div style="font-size:15px;color:rgba(255,240,180,0.42);line-height:1.7;margin-bottom:28px;">'
+        '每一个存在的社团，都是某个人第一次说「我想做这件事」。<br>'
+        '如果你有个想法，这里是它开始的地方。</div>',
+        unsafe_allow_html=True)
     cl,cr=st.columns([1,1],gap="large")
     with cl:
         st.markdown('<div class="fs"><div class="ft">社团基本信息</div>',unsafe_allow_html=True)
@@ -1084,11 +1123,16 @@ def page_create():
     with cr:
         st.markdown('<div class="fs"><div class="ft">发起人信息</div>',unsafe_allow_html=True)
         fn=st.text_input("姓名 *",key="cfn"); fs=st.text_input("学号 *",key="cfs")
-        fm=st.text_input("专业 *",key="cfm"); fg=st.selectbox("年级 *",["请选择","大一","大二","大三","大四","研究生"],key="cfg")
-        fp=st.text_input("联系方式 *",key="cfp"); st.text_area("相关经历（选填）",placeholder="做过类似的组织工作？是这个领域的爱好者？",height=80,key="cfe")
+        fm=st.text_input("专业 *",key="cfm")
+        fg=st.selectbox("年级 *",["请选择","大一","大二","大三","大四","研究生"],key="cfg")
+        fp=st.text_input("联系方式 *",key="cfp")
+        st.text_area("相关经历（选填）",placeholder="做过类似的组织工作？是这个领域的爱好者？",height=80,key="cfe")
         st.markdown('</div>',unsafe_allow_html=True)
         st.markdown('<div class="fs" style="margin-top:10px;"><div class="ft">Claude AI 帮你完善方案</div>',unsafe_allow_html=True)
-        st.markdown('<div style="font-size:13px;color:rgba(255,255,255,0.38);line-height:1.6;margin-bottom:14px;">填完基本信息后，让 Claude 给你的方案提几条建议。</div>',unsafe_allow_html=True)
+        st.markdown(
+            '<div style="font-size:13px;color:rgba(255,240,180,0.40);line-height:1.6;margin-bottom:14px;">'
+            '填完基本信息后，让 Claude 给你的方案提几条建议。</div>',
+            unsafe_allow_html=True)
         if st.button("🤖  让 Claude 给我建议",key="cai",use_container_width=True):
             if cn and cd and cw:
                 with st.spinner("Claude 思考中..."):
@@ -1096,27 +1140,46 @@ def page_create():
                         key=st.secrets.get("ANTHROPIC_API_KEY","")
                         if key:
                             cl2=anthropic.Anthropic(api_key=key)
-                            msg=cl2.messages.create(model="claude-opus-4-5",max_tokens=500,system=SYS,
-                                messages=[{"role":"user","content":f"一位大学生想创建社团：\n名称：{cn}\n类型：{ct}\n描述：{cd}\n原因：{cw}\n活动：{cap}\n\n给出3条简短具体有用的建议，帮助完善方案。风格温暖鼓励，直接分点。"}])
+                            msg=cl2.messages.create(
+                                model="claude-opus-4-5",max_tokens=500,system=SYS,
+                                messages=[{"role":"user","content":
+                                    f"一位大学生想创建社团：<br />名称：{cn}<br />类型：{ct}<br />描述：{cd}<br />原因：{cw}<br />活动：{cap}<br /><br />"
+                                    f"给出3条简短具体有用的建议，帮助完善方案。风格温暖鼓励，直接分点。"}])
                             st.session_state.ai_suggestion=msg.content[0].text
                         else:
-                            st.session_state.ai_suggestion="1. 把核心活动具体化——「每月一次骑行」比「定期活动」更有说服力。\n2. 说清楚你如何区别于现有社团。\n3. 找 2-3 个志同道合的人一起联署发起。"
+                            st.session_state.ai_suggestion=(
+                                "1. 把核心活动具体化——「每月一次骑行」比「定期活动」更有说服力。<br />"
+                                "2. 说清楚你如何区别于现有社团。<br />"
+                                "3. 找 2-3 个志同道合的人一起联署发起。")
                     except Exception:
                         st.session_state.ai_suggestion="AI 暂时不可用，但你的想法很棒，继续填写吧！"
             else:
                 st.warning("先填写名称、描述和创建原因～")
         if st.session_state.ai_suggestion:
-            st.markdown(f'<div class="bai">✦ Claude 建议：\n\n{st.session_state.ai_suggestion}</div>',unsafe_allow_html=True)
+            st.markdown(
+                f'<div class="bai">✦ Claude 建议：<br /><br />{st.session_state.ai_suggestion}</div>',
+                unsafe_allow_html=True)
         st.markdown('</div>',unsafe_allow_html=True)
         aok=all([cn,ct!="请选择",cd,cw,fn,fs,fm,fg!="请选择",fp])
         if st.button("🚀  提交创建申请",key="csub",type="primary",use_container_width=True,disabled=not aok):
             st.session_state.create_submitted=True; st.rerun()
         if st.session_state.get("create_submitted"):
-            st.markdown(f'<div style="margin-top:14px;background:rgba(52,211,153,0.08);border:1px solid rgba(52,211,153,0.22);border-radius:14px;padding:16px;text-align:center;"><div style="font-size:22px;margin-bottom:8px;">🌱</div><div style="font-size:15px;font-weight:700;margin-bottom:6px;color:#f0f0ff;">申请已提交！</div><div style="font-size:13px;color:rgba(255,255,255,0.45);line-height:1.6;">学生活动部将在 5 个工作日内审核。<br>{fn}，期待看到「{cn}」出现在 ClubMatch 上。</div></div>',unsafe_allow_html=True)
+            st.markdown(
+                f'<div style="margin-top:14px;background:rgba(100,200,100,0.07);'
+                f'border:1px solid rgba(100,200,100,0.22);border-radius:14px;padding:16px;text-align:center;">'
+                f'<div style="font-size:22px;margin-bottom:8px;">🌱</div>'
+                f'<div style="font-size:15px;font-weight:700;margin-bottom:6px;color:#fff8e7;">申请已提交！</div>'
+                f'<div style="font-size:13px;color:rgba(255,240,180,0.47);line-height:1.6;">'
+                f'学生活动部将在 5 个工作日内审核。<br>{fn}，期待看到「{cn}」出现在 ClubMatch 上。</div></div>',
+                unsafe_allow_html=True)
             if st.button("回到首页",key="ch",type="primary"):
-                st.session_state.create_submitted=False; st.session_state.ai_suggestion=""; go("home")
+                st.session_state.create_submitted=False
+                st.session_state.ai_suggestion=""
+                go("home")
         if not aok and not st.session_state.get("create_submitted"):
-            st.markdown('<div style="font-size:12px;color:rgba(255,255,255,0.22);text-align:center;margin-top:6px;">请填写所有必填项（*）</div>',unsafe_allow_html=True)
+            st.markdown(
+                '<div style="font-size:12px;color:rgba(255,240,180,0.24);text-align:center;margin-top:6px;">请填写所有必填项（*）</div>',
+                unsafe_allow_html=True)
 
 
 # ═══════════════════════════════════════════════════════════════
