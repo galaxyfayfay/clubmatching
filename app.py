@@ -639,7 +639,7 @@ def page_home():
     with cl:
         st.markdown('<div class="eyebrow">✦ AI 驱动的社团匹配平台</div>', unsafe_allow_html=True)
         st.markdown(
-            '<div class="h1">大学四年<br>你值得遇见<span class="g1">真正的同类</span></div>'
+            '<div class="h1">大学四年<br>你值得遇见<span class="g1">志同道合的伙伴</span></div>'
             '<div class="sub">不知道加哪个？害怕加了发现不合适？<br>'
             '8 道情景题，Claude AI 分析你的真实性格，<br>从 16 个社团里找到最适合你的那个。</div>',
             unsafe_allow_html=True)
