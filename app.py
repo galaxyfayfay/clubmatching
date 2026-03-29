@@ -144,38 +144,6 @@ div[data-testid="stButton"] > button[kind="primary"] {
     border-radius: 12px !important;
     font-weight: 700 !important;
 }
-
-/* ── 选项卡片按钮样式 ── */
-.opt-card-unsel {
-    background: #ffffff;
-    border: 2px solid #e0e0f0;
-    border-radius: 18px;
-    padding: 18px 16px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    margin-bottom: 2px;
-    width: 100%;
-    text-align: left;
-}
-.opt-card-sel {
-    background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 60%, #A78BFA 100%);
-    border: 2px solid transparent;
-    border-radius: 18px;
-    padding: 18px 16px;
-    cursor: pointer;
-    box-shadow: 0 0 0 3px rgba(99,102,241,0.35), 0 12px 35px rgba(99,102,241,0.40);
-    margin-bottom: 2px;
-    width: 100%;
-    text-align: left;
-}
-/* 让选项按钮本身透明，靠上层 HTML 卡片显示样式 */
-div[data-testid="stButton"].opt-btn > button {
-    background: transparent !important;
-    border: none !important;
-    padding: 0 !important;
-    width: 100% !important;
-    box-shadow: none !important;
-}
 </style>
 """, unsafe_allow_html=True)
 
@@ -561,7 +529,7 @@ def page_home():
             go("quiz")
 
 # ══════════════════════════════════════════════════════════════
-# 测评页 ── 完全使用原生 Streamlit 按钮，彻底移除 iframe 方案
+# 测评页 ── 纯原生 Streamlit，无 iframe，选项即按钮
 # ══════════════════════════════════════════════════════════════
 def page_quiz():
     render_nav()
@@ -597,80 +565,135 @@ def page_quiz():
         else:
             st.markdown('<div style="height:14px;"></div>', unsafe_allow_html=True)
 
-        # ── 选项：用原生 Streamlit 按钮 + HTML 卡片视觉 ──────────
+        # ── 注入选项卡片样式 ──────────────────────────────
+        # 为每个选项按钮单独注入样式，selected 用紫色渐变，unselected 用白色边框
         opts = q["opts"]
+        style_blocks = ""
+        for i in range(len(opts)):
+            is_sel = (cur == i)
+            key = f"opt_{step}_{i}"
+            if is_sel:
+                style_blocks += f"""
+                div[data-testid="stButton"]:has(> button[data-testid="baseButton-secondary"][aria-label="{key}"]) > button,
+                div[data-testid="stButton"] > button[key="{key}"] {{
+                    background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 60%, #A78BFA 100%) !important;
+                    border: 2px solid transparent !important;
+                    box-shadow: 0 0 0 3px rgba(99,102,241,0.35), 0 8px 24px rgba(99,102,241,0.35) !important;
+                    color: #ffffff !important;
+                    border-radius: 18px !important;
+                }}
+                """
+        # 通用选项按钮样式（全部先设为未选中基础样式）
+        st.markdown(
+            f"""
+            <style>
+            {''.join(
+                f'''
+                div[data-testid="stButton"]:has(> button[kind="secondary"]) > button {{
+                    border-radius: 18px !important;
+                    padding: 18px 16px !important;
+                    height: auto !important;
+                    min-height: 80px !important;
+                    text-align: left !important;
+                    white-space: pre-wrap !important;
+                    font-size: 0.95rem !important;
+                    font-weight: 600 !important;
+                    transition: all 0.2s ease !important;
+                }}
+                '''
+            )}
+            </style>
+            """,
+            unsafe_allow_html=True
+        )
+
+        # ── 渲染 2×2 选项按钮网格 ──────────────────────────
         col_a, col_b = st.columns(2, gap="small")
-        opt_cols = [col_a, col_b, col_a, col_b]   # 2×2 网格
+        grid = [col_a, col_b, col_a, col_b]
 
         for i, opt in enumerate(opts):
             is_sel = (cur == i)
 
-            # 卡片背景色与文字色随选中状态变化
+            # 用 HTML 构建按钮内容（富文本标签）
             if is_sel:
-                card_bg     = "linear-gradient(135deg,#6366F1 0%,#8B5CF6 60%,#A78BFA 100%)"
-                border      = "2px solid transparent"
-                shadow      = "0 0 0 3px rgba(99,102,241,0.35),0 8px 24px rgba(99,102,241,0.35)"
-                icon_color  = "#ffffff"
-                title_color = "#ffffff"
-                sub_color   = "rgba(255,255,255,0.82)"
-                check_html  = (
-                    '<div style="position:absolute;top:10px;right:12px;'
-                    'width:22px;height:22px;background:rgba(255,255,255,0.28);'
-                    'border-radius:50%;display:flex;align-items:center;'
-                    'justify-content:center;font-size:0.75rem;color:#fff;'
-                    'font-weight:800;">✓</div>'
+                btn_html = (
+                    f'<div style="display:flex;align-items:flex-start;gap:12px;">'
+                    f'<span style="font-size:1.8rem;line-height:1;flex-shrink:0;">{opt["icon"]}</span>'
+                    f'<div><div style="font-size:0.97rem;font-weight:700;margin-bottom:3px;">{opt["title"]}</div>'
+                    f'<div style="font-size:0.80rem;opacity:0.88;line-height:1.4;">{opt["sub"]}</div></div>'
+                    f'<span style="margin-left:auto;font-size:0.85rem;">✓</span>'
+                    f'</div>'
                 )
             else:
-                card_bg     = "#ffffff"
-                border      = "2px solid #e0e0f0"
-                shadow      = "0 2px 8px rgba(99,102,241,0.06)"
-                icon_color  = "#6366F1"
-                title_color = "#1a1a2e"
-                sub_color   = "#6b7280"
-                check_html  = ""
+                btn_html = (
+                    f'<div style="display:flex;align-items:flex-start;gap:12px;">'
+                    f'<span style="font-size:1.8rem;line-height:1;flex-shrink:0;">{opt["icon"]}</span>'
+                    f'<div><div style="font-size:0.97rem;font-weight:700;color:#1a1a2e;margin-bottom:3px;">{opt["title"]}</div>'
+                    f'<div style="font-size:0.80rem;color:#6b7280;line-height:1.4;">{opt["sub"]}</div></div>'
+                    f'</div>'
+                )
 
-            card_html = (
-                f'<div style="position:relative;background:{card_bg};border:{border};'
-                f'border-radius:18px;padding:18px 16px;box-shadow:{shadow};'
-                f'margin-bottom:4px;cursor:pointer;">'
-                f'<div style="display:flex;align-items:flex-start;gap:12px;">'
-                f'<div style="font-size:1.9rem;line-height:1;flex-shrink:0;color:{icon_color};">'
-                f'{opt["icon"]}</div>'
-                f'<div style="flex:1;">'
-                f'<div style="font-size:0.98rem;font-weight:700;color:{title_color};'
-                f'margin-bottom:3px;line-height:1.3;">{opt["title"]}</div>'
-                f'<div style="font-size:0.80rem;color:{sub_color};line-height:1.4;">'
-                f'{opt["sub"]}</div>'
-                f'</div></div>'
-                f'{check_html}'
-                f'</div>'
-            )
+            # 用 st.markdown 渲染卡片，紧接着用一个透明度为0高度压缩的按钮触发交互
+            # ── 正确做法：直接用 st.button，label 用纯文本，卡片用 markdown 紧贴在上方 ──
+            with grid[i]:
+                # 卡片视觉层
+                if is_sel:
+                    card_style = (
+                        "background:linear-gradient(135deg,#6366F1 0%,#8B5CF6 60%,#A78BFA 100%);"
+                        "border:2px solid transparent;"
+                        "box-shadow:0 0 0 3px rgba(99,102,241,0.35),0 8px 24px rgba(99,102,241,0.35);"
+                        "color:#fff;"
+                    )
+                    icon_color  = "#fff"
+                    title_color = "#fff"
+                    sub_color   = "rgba(255,255,255,0.85)"
+                    check       = '<span style="margin-left:auto;font-size:0.9rem;font-weight:800;color:#fff;">✓</span>'
+                else:
+                    card_style  = "background:#fff;border:2px solid #e0e0f0;box-shadow:0 2px 8px rgba(99,102,241,0.06);"
+                    icon_color  = "#6366F1"
+                    title_color = "#1a1a2e"
+                    sub_color   = "#6b7280"
+                    check       = ""
 
-            with opt_cols[i]:
-                # 先渲染卡片 HTML（纯视觉）
-                st.markdown(card_html, unsafe_allow_html=True)
-                # 再渲染一个透明覆盖按钮来捕捉点击
-                # 用负 margin-top 让按钮覆盖在卡片上方
                 st.markdown(
-                    '<style>'
-                    f'div[data-testid="stButton"]:has(> button#opt_btn_{step}_{i}) button {{'
-                    '  margin-top: -58px !important;'
-                    '  height: 80px !important;'
-                    '  opacity: 0 !important;'
-                    '  cursor: pointer !important;'
-                    '}}'
-                    '</style>',
+                    f'<div style="{card_style}border-radius:18px;padding:18px 16px;'
+                    f'margin-bottom:2px;cursor:pointer;">'
+                    f'<div style="display:flex;align-items:flex-start;gap:12px;">'
+                    f'<span style="font-size:1.8rem;line-height:1;flex-shrink:0;color:{icon_color};">{opt["icon"]}</span>'
+                    f'<div style="flex:1;">'
+                    f'<div style="font-size:0.97rem;font-weight:700;color:{title_color};margin-bottom:3px;">{opt["title"]}</div>'
+                    f'<div style="font-size:0.80rem;color:{sub_color};line-height:1.4;">{opt["sub"]}</div>'
+                    f'</div>{check}'
+                    f'</div></div>',
+                    unsafe_allow_html=True
+                )
+
+                # 交互层：透明按钮紧贴卡片下方，通过负 margin 上移覆盖卡片
+                st.markdown(
+                    f"""
+                    <style>
+                    div[data-testid="stButton"]:has(button[kind="secondary"][data-key="opt_{step}_{i}"]) > button {{
+                        margin-top: -72px !important;
+                        height: 76px !important;
+                        opacity: 0 !important;
+                        width: 100% !important;
+                        cursor: pointer !important;
+                        position: relative !important;
+                        z-index: 10 !important;
+                    }}
+                    </style>
+                    """,
                     unsafe_allow_html=True
                 )
                 if st.button(
-                    f"{opt['title']}",
+                    opt["title"],
                     key=f"opt_{step}_{i}",
                     use_container_width=True,
                 ):
                     st.session_state.quiz_answers[step] = i
                     st.rerun()
 
-        st.markdown('<div style="height:16px;"></div>', unsafe_allow_html=True)
+        st.markdown('<div style="height:20px;"></div>', unsafe_allow_html=True)
 
         # ── 导航按钮 ──────────────────────────────────────
         nav_l, nav_r = st.columns(2, gap="small")
@@ -1364,7 +1387,6 @@ def page_create():
 # ══════════════════════════════════════════════════════════════
 dispatch = {
     "home":    page_home,
-    "quiz":    page_results,   # 保持原逻辑不变
     "quiz":    page_quiz,
     "results": page_results,
     "browse":  page_browse,
