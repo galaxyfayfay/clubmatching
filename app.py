@@ -31,23 +31,23 @@ html, body, [class*="css"], .stApp {
     max-width: 1180px !important;
 }
 
+/* ── BACKGROUND: warm white + gold ── */
 .stApp {
     background:
-        radial-gradient(ellipse 90% 70% at 0% 0%,   rgba(255,180,0,0.18) 0%, transparent 55%),
-        radial-gradient(ellipse 70% 60% at 100% 100%, rgba(255,120,0,0.14) 0%, transparent 55%),
-        radial-gradient(ellipse 60% 50% at 50% 40%,  rgba(255,210,80,0.08) 0%, transparent 60%),
-        radial-gradient(ellipse 80% 80% at 80% 10%,  rgba(255,160,30,0.10) 0%, transparent 50%),
-        linear-gradient(155deg, #0a0800 0%, #120f00 40%, #0e0c02 75%, #080600 100%);
-    color: #fff8e7;
+        radial-gradient(ellipse 90% 60% at 10% 0%,   rgba(255,200,50,0.18) 0%, transparent 55%),
+        radial-gradient(ellipse 70% 50% at 95% 95%,  rgba(255,160,20,0.14) 0%, transparent 55%),
+        radial-gradient(ellipse 60% 40% at 50% 50%,  rgba(255,220,100,0.10) 0%, transparent 60%),
+        linear-gradient(160deg, #fffdf5 0%, #fff9e6 40%, #fffcf0 75%, #fff8e0 100%);
+    color: #2d2000;
     min-height: 100vh;
 }
 
 /* ── GLASS CARD ── */
 .g {
-    background: rgba(255,210,60,0.055);
-    backdrop-filter: blur(32px) saturate(220%) brightness(1.05);
-    -webkit-backdrop-filter: blur(32px) saturate(220%) brightness(1.05);
-    border: 1px solid rgba(255,210,60,0.22);
+    background: rgba(255,255,255,0.65);
+    backdrop-filter: blur(28px) saturate(180%);
+    -webkit-backdrop-filter: blur(28px) saturate(180%);
+    border: 1px solid rgba(255,200,50,0.30);
     border-radius: 22px;
     padding: 26px;
     margin-bottom: 16px;
@@ -56,35 +56,35 @@ html, body, [class*="css"], .stApp {
     transition: transform 0.28s cubic-bezier(.4,0,.2,1),
                 box-shadow 0.28s cubic-bezier(.4,0,.2,1),
                 border-color 0.28s;
+    box-shadow: 0 4px 24px rgba(200,150,0,0.10), 0 1px 4px rgba(200,150,0,0.08);
 }
 .g::before {
     content: '';
     position: absolute; inset: 0;
     border-radius: 22px;
     background: linear-gradient(135deg,
-        rgba(255,220,80,0.10) 0%,
-        rgba(255,180,0,0.03) 50%,
-        rgba(255,140,0,0.06) 100%);
+        rgba(255,220,80,0.12) 0%,
+        rgba(255,255,255,0.40) 50%,
+        rgba(255,200,50,0.08) 100%);
     pointer-events: none;
 }
 .g::after {
     content: '';
     position: absolute; top: 0; left: 0; right: 0; height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(255,220,100,0.55), transparent);
+    background: linear-gradient(90deg, transparent, rgba(255,210,60,0.60), transparent);
 }
 .g:hover {
     transform: translateY(-5px);
-    border-color: rgba(255,210,60,0.40);
-    box-shadow: 0 28px 64px rgba(0,0,0,0.45),
-                0 0 0 1px rgba(255,200,50,0.12),
-                0 0 48px rgba(255,180,0,0.10);
+    border-color: rgba(245,158,11,0.50);
+    box-shadow: 0 20px 50px rgba(200,140,0,0.18),
+                0 0 0 1px rgba(245,158,11,0.15),
+                0 0 40px rgba(255,180,0,0.08);
 }
 .g.pin {
-    border-color: rgba(255,200,50,0.60);
-    background: rgba(255,200,50,0.08);
-    box-shadow: 0 0 0 1px rgba(255,200,50,0.28),
-                0 8px 40px rgba(255,160,0,0.22),
-                0 0 80px rgba(255,180,0,0.08);
+    border-color: rgba(245,158,11,0.65);
+    background: rgba(255,250,230,0.80);
+    box-shadow: 0 0 0 2px rgba(245,158,11,0.25),
+                0 8px 40px rgba(200,140,0,0.20);
 }
 
 /* ── NAV ── */
@@ -92,40 +92,40 @@ html, body, [class*="css"], .stApp {
     position: sticky; top: 0; z-index: 999;
     display: flex; align-items: center; justify-content: space-between;
     padding: 16px 0;
-    border-bottom: 1px solid rgba(255,200,50,0.12);
+    border-bottom: 1px solid rgba(200,150,0,0.15);
     margin-bottom: 40px;
-    background: rgba(10,8,0,0.72);
-    backdrop-filter: blur(24px) saturate(200%);
-    -webkit-backdrop-filter: blur(24px) saturate(200%);
+    background: rgba(255,253,245,0.82);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
 }
 .logo {
     display: flex; align-items: center; gap: 10px;
-    font-size: 20px; font-weight: 900; letter-spacing: -0.5px; color: #fff8e7;
+    font-size: 20px; font-weight: 900; letter-spacing: -0.5px; color: #1a1000;
 }
 .logo-badge {
     background: linear-gradient(135deg, #f59e0b, #fbbf24, #f97316);
     border-radius: 10px; padding: 5px 10px;
-    font-size: 13px; font-weight: 900; color: #1a0a00;
-    box-shadow: 0 0 24px rgba(251,191,36,0.55), 0 2px 8px rgba(249,115,22,0.40);
+    font-size: 13px; font-weight: 900; color: #fff;
+    box-shadow: 0 0 20px rgba(245,158,11,0.45), 0 2px 8px rgba(249,115,22,0.30);
 }
-.logo em { color: #fbbf24; font-style: normal; }
+.logo em { color: #d97706; font-style: normal; }
 
 /* ── PILLS ── */
 .pill {
     display: inline-block; padding: 3px 10px; border-radius: 20px;
     font-size: 11px; font-weight: 600; margin: 2px 3px 2px 0;
 }
-.pill-v { background: rgba(251,191,36,0.15); color: #fbbf24; border: 1px solid rgba(251,191,36,0.35); }
-.pill-o { background: rgba(249,115,22,0.18); color: #fb923c; border: 1px solid rgba(249,115,22,0.38); }
-.pill-g { background: rgba(52,211,153,0.15); color: #6ee7b7; border: 1px solid rgba(52,211,153,0.30); }
-.pill-b { background: rgba(255,200,50,0.12); color: #fde68a; border: 1px solid rgba(255,200,50,0.28); }
+.pill-v { background: rgba(245,158,11,0.12); color: #b45309; border: 1px solid rgba(245,158,11,0.35); }
+.pill-o { background: rgba(249,115,22,0.12); color: #c2410c; border: 1px solid rgba(249,115,22,0.35); }
+.pill-g { background: rgba(16,185,129,0.10); color: #047857; border: 1px solid rgba(16,185,129,0.28); }
+.pill-b { background: rgba(245,158,11,0.10); color: #92400e; border: 1px solid rgba(245,158,11,0.25); }
 
 /* ── VIBE ── */
 .vibe {
     display: inline-block;
-    background: rgba(251,191,36,0.10);
-    border: 1px solid rgba(251,191,36,0.28);
-    color: #fbbf24; border-radius: 8px; padding: 3px 10px;
+    background: rgba(245,158,11,0.10);
+    border: 1px solid rgba(245,158,11,0.28);
+    color: #b45309; border-radius: 8px; padding: 3px 10px;
     font-size: 11px; font-weight: 500; margin-bottom: 12px; font-style: italic;
 }
 
@@ -133,53 +133,82 @@ html, body, [class*="css"], .stApp {
 .h1 {
     font-size: clamp(40px,6vw,72px);
     font-weight: 900; line-height: 1.04; letter-spacing: -2.5px;
-    color: #fff8e7; margin-bottom: 18px;
+    color: #1a1000; margin-bottom: 18px;
 }
 .h1 .g1 {
-    background: linear-gradient(135deg, #fbbf24 0%, #f97316 55%, #ef4444 100%);
+    background: linear-gradient(135deg, #f59e0b 0%, #f97316 55%, #ef4444 100%);
     -webkit-background-clip: text; -webkit-text-fill-color: transparent;
     background-clip: text;
 }
 .sub {
-    font-size: 17px; color: rgba(255,240,180,0.52);
+    font-size: 17px; color: rgba(80,50,0,0.55);
     line-height: 1.75; margin-bottom: 32px; font-weight: 400;
 }
 .eyebrow {
     display: inline-block;
-    background: rgba(251,191,36,0.14);
-    border: 1px solid rgba(251,191,36,0.32);
-    color: #fbbf24; border-radius: 20px; padding: 5px 14px;
+    background: rgba(245,158,11,0.12);
+    border: 1px solid rgba(245,158,11,0.32);
+    color: #b45309; border-radius: 20px; padding: 5px 14px;
     font-size: 11px; font-weight: 700; letter-spacing: 1px;
     text-transform: uppercase; margin-bottom: 20px;
 }
 
 /* ── SCORE BAR ── */
 .srow { display:flex; align-items:center; gap:10px; margin-bottom:10px; }
-.strk { flex:1; height:4px; background:rgba(255,200,50,0.10); border-radius:2px; overflow:hidden; }
+.strk { flex:1; height:4px; background:rgba(200,150,0,0.12); border-radius:2px; overflow:hidden; }
 .sfil { height:100%; border-radius:2px;
         background: linear-gradient(90deg, #f59e0b, #fbbf24, #f97316); }
-.spct { font-size:13px; font-weight:800; color:#fbbf24; min-width:38px; text-align:right; }
+.spct { font-size:13px; font-weight:800; color:#d97706; min-width:38px; text-align:right; }
 
 /* ── STATS ── */
 .snum { font-size:30px; font-weight:900;
-        background: linear-gradient(135deg,#fbbf24,#f97316);
+        background: linear-gradient(135deg,#f59e0b,#f97316);
         -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
         letter-spacing:-1.5px; line-height:1; }
-.slbl { font-size:11px; color:rgba(255,240,180,0.35); margin-top:4px; font-weight:500; }
+.slbl { font-size:11px; color:rgba(80,50,0,0.40); margin-top:4px; font-weight:500; }
 
 /* ── PROGRESS ── */
 .prog-wrap { margin-bottom:28px; }
 .prog-meta {
     display:flex; justify-content:space-between;
-    font-size:12px; color:rgba(255,240,180,0.38); margin-bottom:8px; font-weight:500;
+    font-size:12px; color:rgba(80,50,0,0.45); margin-bottom:8px; font-weight:500;
 }
-.prog-meta b { color:#fbbf24; font-weight:700; }
-.prog-track { height:4px; background:rgba(255,200,50,0.10); border-radius:2px; overflow:hidden; }
+.prog-meta b { color:#d97706; font-weight:700; }
+.prog-track { height:4px; background:rgba(200,150,0,0.12); border-radius:2px; overflow:hidden; }
 .prog-fill {
     height:100%; border-radius:2px;
     background: linear-gradient(90deg, #f59e0b, #fbbf24, #f97316);
     transition: width 0.5s cubic-bezier(.4,0,.2,1);
-    box-shadow: 0 0 8px rgba(251,191,36,0.50);
+    box-shadow: 0 0 8px rgba(245,158,11,0.40);
+}
+
+/* ── QUIZ OPTION CARDS (HTML in st.markdown) ── */
+.opt-card {
+    display: flex; align-items: center; gap: 14px;
+    padding: 18px 20px; border-radius: 18px;
+    border: 2px solid rgba(200,150,0,0.18);
+    background: rgba(255,255,255,0.70);
+    margin-bottom: 12px;
+    box-shadow: 0 2px 12px rgba(200,140,0,0.08);
+    transition: all 0.2s;
+}
+.opt-card.selected {
+    border-color: #f59e0b;
+    background: rgba(255,248,220,0.90);
+    box-shadow: 0 0 0 3px rgba(245,158,11,0.20), 0 4px 20px rgba(200,140,0,0.18);
+}
+.opt-icon-lg { font-size: 28px; flex-shrink:0; }
+.opt-title-lg { font-size: 15px; font-weight: 700; color: #1a1000; margin-bottom: 3px; }
+.opt-sub-lg { font-size: 12px; color: rgba(80,50,0,0.50); line-height:1.4; }
+.opt-check-lg {
+    margin-left:auto; width:22px; height:22px; border-radius:50%;
+    border: 2px solid rgba(200,150,0,0.28);
+    display:flex; align-items:center; justify-content:center;
+    font-size:11px; color:transparent; flex-shrink:0;
+}
+.opt-card.selected .opt-check-lg {
+    background: linear-gradient(135deg,#f59e0b,#fbbf24);
+    border-color:transparent; color:#fff; font-weight:700;
 }
 
 /* ── BUTTONS ── */
@@ -187,126 +216,133 @@ html, body, [class*="css"], .stApp {
     border-radius: 50px !important;
     font-weight: 600 !important;
     font-size: 13px !important;
-    border: 1px solid rgba(255,200,50,0.22) !important;
-    background: rgba(255,200,50,0.07) !important;
-    color: rgba(255,240,180,0.82) !important;
+    border: 1.5px solid rgba(200,150,0,0.25) !important;
+    background: rgba(255,255,255,0.70) !important;
+    color: rgba(80,50,0,0.80) !important;
     transition: all 0.22s !important;
     padding: 0.45rem 1.1rem !important;
+    box-shadow: 0 2px 8px rgba(200,140,0,0.08) !important;
 }
 .stButton > button:hover {
-    background: rgba(255,200,50,0.14) !important;
-    border-color: rgba(255,200,50,0.42) !important;
-    color: #fbbf24 !important;
+    background: rgba(255,248,220,0.90) !important;
+    border-color: rgba(245,158,11,0.50) !important;
+    color: #92400e !important;
     transform: translateY(-1px) !important;
-    box-shadow: 0 0 20px rgba(251,191,36,0.28) !important;
+    box-shadow: 0 4px 16px rgba(200,140,0,0.18) !important;
 }
 .stButton > button[kind="primary"] {
     background: linear-gradient(135deg, #d97706, #f59e0b, #f97316) !important;
-    color: #fff8e7 !important; border: none !important;
-    box-shadow: 0 4px 20px rgba(245,158,11,0.45),
-                0 0 0 1px rgba(251,191,36,0.20) !important;
+    color: #fff !important; border: none !important;
+    box-shadow: 0 4px 20px rgba(217,119,6,0.40),
+                0 0 0 1px rgba(245,158,11,0.20) !important;
 }
 .stButton > button[kind="primary"]:hover {
     background: linear-gradient(135deg, #f59e0b, #fbbf24, #ef4444) !important;
-    box-shadow: 0 0 32px rgba(251,191,36,0.65),
-                0 8px 28px rgba(249,115,22,0.40) !important;
+    box-shadow: 0 8px 28px rgba(245,158,11,0.50),
+                0 0 40px rgba(249,115,22,0.25) !important;
     transform: translateY(-2px) !important;
 }
 .stButton > button:disabled {
-    opacity: 0.28 !important; transform: none !important; cursor: not-allowed !important;
+    opacity: 0.35 !important; transform: none !important; cursor: not-allowed !important;
 }
 
 /* ── INPUTS ── */
 .stTextInput > div > div > input,
 .stTextArea > div > div > textarea,
 .stSelectbox > div > div {
-    background: rgba(255,200,50,0.05) !important;
-    border: 1px solid rgba(255,200,50,0.18) !important;
+    background: rgba(255,255,255,0.80) !important;
+    border: 1.5px solid rgba(200,150,0,0.22) !important;
     border-radius: 14px !important;
-    color: #fff8e7 !important;
+    color: #1a1000 !important;
     font-family: 'Inter','PingFang SC',sans-serif !important;
     font-size: 14px !important;
 }
 .stTextInput > div > div > input:focus,
 .stTextArea > div > div > textarea:focus {
-    border-color: #fbbf24 !important;
-    box-shadow: 0 0 0 3px rgba(251,191,36,0.20),
-                0 0 20px rgba(245,158,11,0.18) !important;
+    border-color: #f59e0b !important;
+    box-shadow: 0 0 0 3px rgba(245,158,11,0.18) !important;
 }
 .stTextInput > div > div > input::placeholder,
 .stTextArea > div > div > textarea::placeholder {
-    color: rgba(255,240,180,0.28) !important;
+    color: rgba(80,50,0,0.35) !important;
 }
 label, .stTextInput label, .stTextArea label, .stSelectbox label, .stMultiSelect label {
-    color: rgba(255,240,180,0.52) !important;
+    color: rgba(80,50,0,0.60) !important;
     font-size: 13px !important; font-weight: 500 !important;
 }
-.stSelectbox div[data-baseweb="select"] span { color: rgba(255,240,180,0.80) !important; }
+.stSelectbox div[data-baseweb="select"] span { color: rgba(50,30,0,0.80) !important; }
 .stMultiSelect > div {
-    background: rgba(255,200,50,0.05) !important; border-radius: 14px !important;
+    background: rgba(255,255,255,0.80) !important; border-radius: 14px !important;
 }
 .stMultiSelect span[data-baseweb="tag"] {
-    background: rgba(245,158,11,0.24) !important; color: #fbbf24 !important;
+    background: rgba(245,158,11,0.20) !important; color: #92400e !important;
 }
 
 /* ── CHAT ── */
 .bai {
-    background: rgba(255,200,50,0.06);
-    border: 1px solid rgba(255,200,50,0.14);
+    background: rgba(255,255,255,0.70);
+    border: 1px solid rgba(200,150,0,0.18);
     border-radius: 18px 18px 18px 4px;
     padding: 13px 17px; font-size: 14px; line-height: 1.75;
-    margin: 6px 0 6px 44px; color: rgba(255,240,180,0.90);
+    margin: 6px 0 6px 44px; color: rgba(50,30,0,0.85);
     white-space: pre-wrap;
+    box-shadow: 0 2px 12px rgba(200,140,0,0.08);
 }
 .buser {
     background: linear-gradient(135deg, #d97706, #f59e0b, #f97316);
     border-radius: 18px 18px 4px 18px;
     padding: 13px 17px; font-size: 14px; line-height: 1.75;
-    margin: 6px 44px 6px 0; color: #fff8e7; text-align: right;
-    box-shadow: 0 2px 16px rgba(245,158,11,0.38);
+    margin: 6px 44px 6px 0; color: #fff; text-align: right;
+    box-shadow: 0 4px 16px rgba(217,119,6,0.35);
 }
-.clbl { font-size:11px; color:rgba(255,240,180,0.32); font-weight:600; margin-bottom:3px; }
+.clbl { font-size:11px; color:rgba(80,50,0,0.38); font-weight:600; margin-bottom:3px; }
 
 /* ── MISC ── */
-.divider { border:none; border-top:1px solid rgba(255,200,50,0.08); margin:32px 0; }
+.divider { border:none; border-top:1px solid rgba(200,150,0,0.14); margin:32px 0; }
 .det {
-    background: rgba(0,0,0,0.28);
-    border: 1px solid rgba(255,200,50,0.12);
+    background: rgba(255,253,240,0.85);
+    border: 1px solid rgba(200,150,0,0.18);
     border-radius: 16px; padding: 20px; margin-top: 8px;
-    backdrop-filter: blur(16px);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 4px 20px rgba(200,140,0,0.08);
 }
 .dsec {
-    font-size:10px; font-weight:700; color:rgba(255,200,50,0.45);
+    font-size:10px; font-weight:700; color:rgba(180,120,0,0.55);
     letter-spacing:1px; text-transform:uppercase;
     margin-bottom:10px; margin-top:16px;
 }
 .dsec:first-child { margin-top:0; }
-.rr { display:flex; gap:8px; font-size:13px; color:rgba(255,240,180,0.62);
+.rr { display:flex; gap:8px; font-size:13px; color:rgba(60,35,0,0.65);
       margin-bottom:7px; line-height:1.5; }
 .ok-glass {
-    background: rgba(255,200,50,0.06);
-    border: 1px solid rgba(255,200,50,0.24);
+    background: rgba(255,253,240,0.85);
+    border: 1.5px solid rgba(245,158,11,0.35);
     border-radius: 22px; padding: 40px; text-align: center;
+    box-shadow: 0 8px 40px rgba(200,140,0,0.12);
 }
 .fs {
-    background: rgba(255,200,50,0.04);
-    border: 1px solid rgba(255,200,50,0.12);
+    background: rgba(255,255,255,0.60);
+    border: 1px solid rgba(200,150,0,0.18);
     border-radius: 16px; padding: 20px 22px; margin-bottom: 14px;
+    box-shadow: 0 2px 12px rgba(200,140,0,0.06);
 }
 .ft {
-    font-size:11px; font-weight:700; color:rgba(255,200,50,0.42);
+    font-size:11px; font-weight:700; color:rgba(180,120,0,0.55);
     letter-spacing:0.8px; text-transform:uppercase; margin-bottom:14px;
 }
 .sc {
-    background: rgba(255,200,50,0.05);
-    border: 1px solid rgba(255,200,50,0.10);
+    background: rgba(255,248,220,0.70);
+    border: 1px solid rgba(200,150,0,0.15);
     border-radius: 12px; padding: 10px; text-align: center;
 }
 
 ::-webkit-scrollbar { width:4px; }
 ::-webkit-scrollbar-thumb {
-    background: rgba(255,200,50,0.20); border-radius:2px;
+    background: rgba(200,150,0,0.22); border-radius:2px;
 }
+
+/* warning/info 覆盖 */
+.stAlert { background: rgba(255,248,220,0.80) !important; border-color: rgba(245,158,11,0.30) !important; color: #92400e !important; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -320,7 +356,6 @@ def init():
         "results": None, "ai_reason": None, "expand_club": None,
         "cart": [], "applications": [], "chat_history": [],
         "create_submitted": False, "ai_suggestion": "",
-        "quiz_msg": "",
     }.items():
         if k not in st.session_state:
             st.session_state[k] = v
@@ -343,14 +378,14 @@ def tags(club):
 
 def scell(v, l):
     return (f'<div class="sc">'
-            f'<div style="font-size:14px;font-weight:800;color:#fff8e7;">{v}</div>'
-            f'<div style="font-size:10px;color:rgba(255,240,180,0.32);margin-top:2px;">{l}</div>'
+            f'<div style="font-size:14px;font-weight:800;color:#1a1000;">{v}</div>'
+            f'<div style="font-size:10px;color:rgba(80,50,0,0.40);margin-top:2px;">{l}</div>'
             f'</div>')
 
 def sbar(s):
     st.markdown(
         f'<div class="srow">'
-        f'<span style="font-size:11px;color:rgba(255,240,180,0.32);min-width:36px;">匹配</span>'
+        f'<span style="font-size:11px;color:rgba(80,50,0,0.38);min-width:36px;">匹配</span>'
         f'<div class="strk"><div class="sfil" style="width:{s}%;"></div></div>'
         f'<span class="spct">{s}%</span></div>',
         unsafe_allow_html=True)
@@ -456,7 +491,7 @@ def nav():
     st.markdown(
         '<div class="nav">'
         '<div class="logo"><span class="logo-badge">CM</span>Club<em>Match</em></div>'
-        '<div style="font-size:12px;color:rgba(255,230,120,0.30);font-weight:500;">每个人都值得找到属于自己的圈子</div>'
+        '<div style="font-size:12px;color:rgba(80,50,0,0.40);font-weight:500;">每个人都值得找到属于自己的圈子</div>'
         '</div>', unsafe_allow_html=True)
     tabs = [("🏠","首页","home"),("🧠","匹配测评","quiz"),("🔍","发现社团","browse"),
             ("🤖","AI 顾问","chat"),("📋",f"我的申请{cs}","apply"),("✨","申请创建","create")]
@@ -470,27 +505,10 @@ def nav():
 
 
 # ═══════════════════════════════════════════════════════════════
-#  PAGE: QUIZ  — 点击 HTML 卡片直接触发，无任何隐藏按钮
+#  PAGE: QUIZ  — 纯 Streamlit 按钮，保证可交互
 # ═══════════════════════════════════════════════════════════════
 def page_quiz():
     nav()
-
-    # ── 读取 query_params，有新选择就写入 state 并 rerun ──
-    qp = st.query_params
-    raw_step   = qp.get("qstep",   None)
-    raw_choice = qp.get("qchoice", None)
-
-    if raw_step is not None and raw_choice is not None:
-        try:
-            ps = int(raw_step)
-            pc = int(raw_choice)
-            # 只在当前题时处理，防止串题
-            if ps == st.session_state.quiz_step:
-                st.session_state.quiz_answers[ps] = pc
-                st.query_params.clear()
-                st.rerun()
-        except Exception:
-            pass
 
     step  = st.session_state.quiz_step
     total = len(QUESTIONS)
@@ -509,163 +527,81 @@ def page_quiz():
     _, mid, _ = st.columns([0.3, 4, 0.3])
     with mid:
         st.markdown(
-            f'<div style="font-size:11px;font-weight:700;color:#fbbf24;letter-spacing:1px;'
+            f'<div style="font-size:11px;font-weight:700;color:#d97706;letter-spacing:1px;'
             f'text-transform:uppercase;margin-bottom:10px;">第 {step+1} 题</div>'
-            f'<div style="font-size:clamp(20px,3vw,30px);font-weight:900;letter-spacing:-0.8px;'
-            f'line-height:1.2;margin-bottom:6px;color:#fff8e7;">{q["q"]}</div>',
+            f'<div style="font-size:clamp(20px,3vw,28px);font-weight:900;letter-spacing:-0.8px;'
+            f'line-height:1.25;margin-bottom:6px;color:#1a1000;">{q["q"]}</div>',
             unsafe_allow_html=True)
         hint = q.get("hint", "")
         if hint:
             st.markdown(
-                f'<div style="font-size:13px;color:rgba(255,240,180,0.32);'
-                f'margin-bottom:22px;font-style:italic;">{hint}</div>',
+                f'<div style="font-size:13px;color:rgba(80,50,0,0.40);'
+                f'margin-bottom:18px;font-style:italic;">{hint}</div>',
                 unsafe_allow_html=True)
         else:
-            st.markdown("<div style='height:18px;'></div>", unsafe_allow_html=True)
+            st.markdown("<div style='height:14px;'></div>", unsafe_allow_html=True)
 
-        # ── 纯 HTML 选项卡片 ──
+        # ── 4 个选项：显示为精美卡片样式的 st.button ──
         opts = q["opts"]
-        sel  = cur if cur is not None else -1
+        col1, col2 = st.columns(2, gap="medium")
 
-        cards_html = ""
         for i, o in enumerate(opts):
-            is_sel = "sel" if i == sel else ""
-            cards_html += f"""
-            <div class="opt {is_sel}" onclick="pick({i}, {step})">
-                <div class="opt-icon">{o['icon']}</div>
-                <div class="opt-body">
-                    <div class="opt-title">{o['title']}</div>
-                    <div class="opt-sub">{o['sub']}</div>
+            col = col1 if i < 2 else col2
+            with col:
+                is_sel = (cur == i)
+                # 卡片式外观通过 markdown 展示，按钮叠加其上
+                sel_style = (
+                    "background:rgba(255,248,220,0.95)!important;"
+                    "border-color:rgba(245,158,11,0.70)!important;"
+                    "color:#92400e!important;"
+                    "box-shadow:0 0 0 3px rgba(245,158,11,0.20),0 4px 20px rgba(200,140,0,0.18)!important;"
+                ) if is_sel else ""
+
+                # 用 markdown 渲染卡片背景
+                check = "✓" if is_sel else "○"
+                check_style = (
+                    "background:linear-gradient(135deg,#f59e0b,#fbbf24);color:#fff;border-color:transparent;"
+                ) if is_sel else "color:rgba(150,100,0,0.30);"
+
+                st.markdown(f"""
+                <div style="
+                    display:flex;align-items:center;gap:12px;
+                    padding:16px 18px;border-radius:16px;
+                    border:2px solid {'rgba(245,158,11,0.60)' if is_sel else 'rgba(200,150,0,0.20)'};
+                    background:{'rgba(255,248,220,0.92)' if is_sel else 'rgba(255,255,255,0.72)'};
+                    margin-bottom:4px;
+                    box-shadow:{'0 0 0 3px rgba(245,158,11,0.18),0 4px 16px rgba(200,140,0,0.15)' if is_sel else '0 2px 10px rgba(200,140,0,0.08)'};
+                    transition:all 0.2s;
+                ">
+                    <div style="font-size:26px;flex-shrink:0;">{o['icon']}</div>
+                    <div style="flex:1;">
+                        <div style="font-size:14px;font-weight:700;color:#1a1000;margin-bottom:2px;">{o['title']}</div>
+                        <div style="font-size:12px;color:rgba(80,50,0,0.48);line-height:1.4;">{o['sub']}</div>
+                    </div>
+                    <div style="width:20px;height:20px;border-radius:50%;border:2px solid rgba(200,150,0,0.30);
+                        display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;
+                        flex-shrink:0;{check_style}">{check if is_sel else ''}</div>
                 </div>
-                <div class="opt-check">✓</div>
-            </div>"""
+                """, unsafe_allow_html=True)
 
-        # 高度自适应：约 2 行 × 110px + 间距
-        component_html = f"""<!DOCTYPE html>
-<html>
-<head>
-<meta charset="utf-8">
-<style>
-* {{ box-sizing:border-box; margin:0; padding:0; }}
-body {{
-    background: transparent;
-    font-family: 'Inter','PingFang SC','Noto Sans SC',system-ui,sans-serif;
-}}
-.grid {{
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 14px;
-}}
-.opt {{
-    display: flex; align-items: center; gap: 14px;
-    padding: 18px 20px; border-radius: 18px;
-    border: 1.5px solid rgba(255,200,50,0.20);
-    background: rgba(255,200,50,0.05);
-    cursor: pointer;
-    transition: border-color .22s, background .22s, box-shadow .22s, transform .18s;
-    position: relative; user-select: none; -webkit-user-select: none;
-}}
-.opt:hover {{
-    border-color: rgba(251,191,36,0.55);
-    background: rgba(255,200,50,0.10);
-    transform: translateY(-3px);
-    box-shadow: 0 8px 28px rgba(245,158,11,0.22);
-}}
-.opt.sel {{
-    border-color: #fbbf24;
-    background: rgba(251,191,36,0.13);
-    box-shadow:
-        0 0 0 3px rgba(251,191,36,0.22),
-        0 0 28px rgba(251,191,36,0.50),
-        0 0 56px rgba(245,158,11,0.22),
-        0 10px 30px rgba(249,115,22,0.25);
-    transform: translateY(-3px);
-}}
-.opt::after {{
-    content: ''; position: absolute; inset: 0; border-radius: 18px;
-    background: radial-gradient(circle at center,
-        rgba(251,191,36,0.32) 0%, transparent 70%);
-    opacity: 0; transform: scale(0.5);
-    transition: opacity .45s, transform .45s;
-    pointer-events: none;
-}}
-.opt.ripple::after {{ opacity: 1; transform: scale(1.3); }}
-
-.opt-icon {{
-    font-size: 28px; flex-shrink: 0;
-    filter: drop-shadow(0 0 6px rgba(251,191,36,0.30));
-    transition: filter .22s, transform .22s;
-}}
-.opt.sel .opt-icon {{
-    filter: drop-shadow(0 0 16px rgba(251,191,36,0.80));
-    transform: scale(1.10);
-}}
-.opt-body {{ flex: 1; }}
-.opt-title {{
-    font-size: 15px; font-weight: 700;
-    color: rgba(255,248,231,0.90); margin-bottom: 4px;
-    transition: color .22s;
-}}
-.opt.sel .opt-title {{ color: #fff8e7; }}
-.opt-sub {{
-    font-size: 12px; color: rgba(255,230,130,0.42);
-    line-height: 1.45; transition: color .22s;
-}}
-.opt.sel .opt-sub {{ color: rgba(255,230,130,0.72); }}
-.opt-check {{
-    width: 22px; height: 22px; border-radius: 50%;
-    border: 1.5px solid rgba(255,200,50,0.28);
-    color: transparent; font-size: 11px; font-weight: 700;
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0; transition: all .22s;
-}}
-.opt.sel .opt-check {{
-    background: linear-gradient(135deg, #d97706, #fbbf24);
-    border-color: transparent; color: #1a0a00;
-    box-shadow: 0 0 14px rgba(251,191,36,0.70);
-}}
-@media (max-width: 560px) {{ .grid {{ grid-template-columns: 1fr; }} }}
-</style>
-</head>
-<body>
-<div class="grid">{cards_html}</div>
-<script>
-function pick(idx, step) {{
-    // 视觉更新
-    var opts = document.querySelectorAll('.opt');
-    opts.forEach(function(o) {{ o.classList.remove('sel'); }});
-    opts[idx].classList.add('sel');
-    opts[idx].classList.add('ripple');
-    setTimeout(function() {{ opts[idx].classList.remove('ripple'); }}, 450);
-
-    // 写入父窗口 URL query params，Streamlit 会在下次 interaction 时读取
-    try {{
-        var url = new URL(window.parent.location.href);
-        url.searchParams.set('qstep', step);
-        url.searchParams.set('qchoice', idx);
-        window.parent.history.replaceState(null, '', url.toString());
-    }} catch(e) {{}}
-
-    // 触发父窗口点击一个不可见区域，让 Streamlit 感知到交互并 rerun
-    // 最可靠：直接调用 Streamlit 的 rerun 钩子（通过 postMessage）
-    window.parent.postMessage({{
-        type: 'streamlit:forceRerun'
-    }}, '*');
-}}
-</script>
-</body>
-</html>"""
-
-        components.html(component_html, height=240, scrolling=False)
+                btn_label = f"{'✓ ' if is_sel else ''}{o['title']}"
+                if st.button(
+                    btn_label,
+                    key=f"qopt_{step}_{i}",
+                    type="primary" if is_sel else "secondary",
+                    use_container_width=True
+                ):
+                    st.session_state.quiz_answers[step] = i
+                    st.rerun()
 
         st.markdown("<br>", unsafe_allow_html=True)
 
-        # ── 导航：上一题 / 下一题 ──
+        # ── 导航按钮 ──
         done = step in st.session_state.quiz_answers
         nl, nr = st.columns(2, gap="small")
 
         with nl:
-            label_back = "← 返回" if step == 0 else "← 上一题"
+            label_back = "← 返回首页" if step == 0 else "← 上一题"
             if st.button(label_back, key="qbk", use_container_width=True):
                 if step == 0:
                     go("home")
@@ -674,7 +610,7 @@ function pick(idx, step) {{
                     st.rerun()
 
         with nr:
-            lbl = "查看匹配结果 →" if step == total - 1 else "下一题 →"
+            lbl = "查看匹配结果 🎯" if step == total - 1 else "下一题 →"
             if st.button(lbl, key="qnx", type="primary",
                          use_container_width=True, disabled=not done):
                 if step == total - 1:
@@ -686,6 +622,12 @@ function pick(idx, step) {{
                 else:
                     st.session_state.quiz_step += 1
                     st.rerun()
+
+        if not done:
+            st.markdown(
+                '<div style="text-align:center;font-size:12px;color:rgba(150,100,0,0.45);margin-top:10px;">'
+                '请先选择一个选项，再继续下一题</div>',
+                unsafe_allow_html=True)
 
 
 # ═══════════════════════════════════════════════════════════════
@@ -723,30 +665,30 @@ def page_home():
         st.markdown(
             f'<div class="g pin" style="margin-top:4px;">'
             f'<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px;">'
-            f'<div style="font-size:44px;filter:drop-shadow(0 0 18px rgba(251,191,36,0.60));">{top["emoji"]}</div>'
+            f'<div style="font-size:44px;filter:drop-shadow(0 0 12px rgba(245,158,11,0.40));">{top["emoji"]}</div>'
             f'<div style="text-align:right;">'
             f'<div style="font-size:42px;font-weight:900;'
-            f'background:linear-gradient(135deg,#fbbf24,#f97316);'
+            f'background:linear-gradient(135deg,#f59e0b,#f97316);'
             f'-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;'
             f'letter-spacing:-2px;line-height:1;">92%</div>'
-            f'<div style="font-size:10px;color:rgba(255,240,180,0.34);margin-top:2px;">AI 示例匹配度</div>'
+            f'<div style="font-size:10px;color:rgba(80,50,0,0.38);margin-top:2px;">AI 示例匹配度</div>'
             f'</div></div>'
-            f'<div style="font-size:18px;font-weight:800;margin-bottom:4px;color:#fff8e7;">{top["name"]}</div>'
+            f'<div style="font-size:18px;font-weight:800;margin-bottom:4px;color:#1a1000;">{top["name"]}</div>'
             f'<div class="vibe">{top.get("vibe","")}</div>'
-            f'<div style="font-size:13px;color:rgba(255,240,180,0.50);line-height:1.65;margin-bottom:14px;">{top["desc"]}</div>'
+            f'<div style="font-size:13px;color:rgba(60,35,0,0.52);line-height:1.65;margin-bottom:14px;">{top["desc"]}</div>'
             f'<div style="margin-bottom:14px;">{tags(top)}<span class="pill pill-o">热门</span></div>'
             f'<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;">'
             + scell(top["members"],"成员") + scell(f"⭐{top['rating']}","评分") + scell(f"{top['awards']}项","获奖") +
             f'</div></div>'
-            f'<div style="text-align:center;font-size:12px;color:rgba(255,240,180,0.22);margin-top:8px;">'
+            f'<div style="text-align:center;font-size:12px;color:rgba(80,50,0,0.30);margin-top:8px;">'
             f'🟡  本周已有 102 位新生完成匹配</div>', unsafe_allow_html=True)
 
     st.markdown('<hr class="divider">', unsafe_allow_html=True)
     st.markdown(
         '<div style="text-align:center;margin-bottom:28px;">'
-        '<div style="font-size:11px;font-weight:700;letter-spacing:1.2px;color:#fbbf24;'
+        '<div style="font-size:11px;font-weight:700;letter-spacing:1.2px;color:#d97706;'
         'text-transform:uppercase;margin-bottom:10px;">为什么选 ClubMatch</div>'
-        '<div style="font-size:26px;font-weight:900;letter-spacing:-0.8px;color:#fff8e7;">'
+        '<div style="font-size:26px;font-weight:900;letter-spacing:-0.8px;color:#1a1000;">'
         '不是随机推荐，是真正了解你</div></div>', unsafe_allow_html=True)
     feats = [
         ("🧬","情景化测评，读懂真实的你",
@@ -762,16 +704,16 @@ def page_home():
             st.markdown(
                 f'<div class="g" style="min-height:165px;">'
                 f'<div style="font-size:28px;margin-bottom:14px;">{icon}</div>'
-                f'<div style="font-size:15px;font-weight:800;margin-bottom:8px;color:#fff8e7;">{title}</div>'
-                f'<div style="font-size:13px;color:rgba(255,240,180,0.46);line-height:1.65;">{desc}</div>'
+                f'<div style="font-size:15px;font-weight:800;margin-bottom:8px;color:#1a1000;">{title}</div>'
+                f'<div style="font-size:13px;color:rgba(60,35,0,0.50);line-height:1.65;">{desc}</div>'
                 f'</div>', unsafe_allow_html=True)
 
     st.markdown('<hr class="divider">', unsafe_allow_html=True)
     picks = random.sample(CLUBS, 3)
     st.markdown(
-        '<div style="font-size:11px;font-weight:700;letter-spacing:1.2px;color:#fbbf24;'
+        '<div style="font-size:11px;font-weight:700;letter-spacing:1.2px;color:#d97706;'
         'text-transform:uppercase;margin-bottom:10px;">✦ 今日精选</div>'
-        '<div style="font-size:22px;font-weight:900;letter-spacing:-0.6px;margin-bottom:20px;color:#fff8e7;">'
+        '<div style="font-size:22px;font-weight:900;letter-spacing:-0.6px;margin-bottom:20px;color:#1a1000;">'
         '随便逛逛，说不定就遇上了</div>', unsafe_allow_html=True)
     cols = st.columns(3, gap="small")
     for col,club in zip(cols,picks):
@@ -779,9 +721,9 @@ def page_home():
             st.markdown(
                 f'<div class="g">'
                 f'<div style="font-size:36px;margin-bottom:10px;">{club["emoji"]}</div>'
-                f'<div style="font-size:16px;font-weight:800;margin-bottom:3px;color:#fff8e7;">{club["name"]}</div>'
+                f'<div style="font-size:16px;font-weight:800;margin-bottom:3px;color:#1a1000;">{club["name"]}</div>'
                 f'<div class="vibe">{club.get("vibe","")}</div>'
-                f'<div style="font-size:13px;color:rgba(255,240,180,0.46);line-height:1.55;margin-bottom:12px;">'
+                f'<div style="font-size:13px;color:rgba(60,35,0,0.50);line-height:1.55;margin-bottom:12px;">'
                 f'{club["desc"][:55]}...</div><div>{tags(club)}</div></div>',
                 unsafe_allow_html=True)
             if st.button("了解更多", key=f"hc_{club['id']}", use_container_width=True):
@@ -806,17 +748,17 @@ def page_results():
         return
     reason = st.session_state.get("ai_reason")
     st.markdown(
-        '<div style="font-size:11px;font-weight:700;letter-spacing:1.2px;color:#fbbf24;'
+        '<div style="font-size:11px;font-weight:700;letter-spacing:1.2px;color:#d97706;'
         'text-transform:uppercase;margin-bottom:10px;">✦ 你的专属匹配报告</div>'
         f'<div style="font-size:clamp(22px,4vw,36px);font-weight:900;letter-spacing:-1.2px;'
-        f'margin-bottom:10px;color:#fff8e7;">Claude 从 {len(CLUBS)} 个社团里，为你找到了这些</div>',
+        f'margin-bottom:10px;color:#1a1000;">Claude 从 {len(CLUBS)} 个社团里，为你找到了这些</div>',
         unsafe_allow_html=True)
     if reason:
         st.markdown(
-            f'<div style="background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.22);'
-            f'border-radius:14px;padding:14px 18px;font-size:14px;color:rgba(255,240,180,0.75);'
+            f'<div style="background:rgba(255,248,220,0.85);border:1px solid rgba(245,158,11,0.28);'
+            f'border-radius:14px;padding:14px 18px;font-size:14px;color:rgba(60,35,0,0.75);'
             f'line-height:1.65;margin-bottom:24px;">'
-            f'<span style="color:#fbbf24;font-weight:700;">✦ Claude 分析：</span>{reason}</div>',
+            f'<span style="color:#d97706;font-weight:700;">✦ Claude 分析：</span>{reason}</div>',
             unsafe_allow_html=True)
 
     bnames=["🥇 最佳匹配","🥈 强烈推荐","🥉 推荐"]
@@ -832,15 +774,15 @@ def page_results():
             st.markdown(
                 f'<div class="g {feat}">'
                 f'<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;">'
-                f'<div style="font-size:36px;filter:drop-shadow(0 0 10px rgba(251,191,36,0.48));">{club["emoji"]}</div>'
+                f'<div style="font-size:36px;">{club["emoji"]}</div>'
                 f'<span class="pill {bc}">{bl}</span></div>'
-                f'<div style="font-size:16px;font-weight:800;margin-bottom:2px;color:#fff8e7;">{club["name"]}</div>'
-                f'<div style="font-size:11px;color:rgba(255,240,180,0.34);margin-bottom:10px;">{club["type"]} · {club["freq"]}</div>',
+                f'<div style="font-size:16px;font-weight:800;margin-bottom:2px;color:#1a1000;">{club["name"]}</div>'
+                f'<div style="font-size:11px;color:rgba(80,50,0,0.40);margin-bottom:10px;">{club["type"]} · {club["freq"]}</div>',
                 unsafe_allow_html=True)
             sbar(club["match_score"])
             st.markdown(
                 f'<div class="vibe">{club.get("vibe","")}</div>'
-                f'<div style="font-size:13px;color:rgba(255,240,180,0.50);line-height:1.55;margin-bottom:12px;">{club["desc"][:58]}...</div>'
+                f'<div style="font-size:13px;color:rgba(60,35,0,0.52);line-height:1.55;margin-bottom:12px;">{club["desc"][:58]}...</div>'
                 f'<div style="margin-bottom:14px;">{tags(club)}{ab}</div></div>',
                 unsafe_allow_html=True)
             b1,b2=st.columns(2,gap="small")
@@ -880,7 +822,7 @@ def page_results():
 def club_detail(club):
     app=applied(club["id"])
     rr="".join(
-        f'<div class="rr"><span style="color:#fbbf24;flex-shrink:0;">·</span><span>{r}</span></div>'
+        f'<div class="rr"><span style="color:#d97706;flex-shrink:0;">·</span><span>{r}</span></div>'
         for r in club.get("requirements",[]))
     ar="".join(
         f'<div class="rr"><span style="color:#f97316;flex-shrink:0;">·</span><span>{a}</span></div>'
@@ -890,15 +832,15 @@ def club_detail(club):
         (f"⭐{club['rating']}","评分"),
         (f"{club['awards']}项","获奖"),
         (club["time_cost"],"时间")])
-    an=('<div style="margin-top:12px;padding:10px 14px;background:rgba(52,211,153,0.08);'
-        'border:1px solid rgba(52,211,153,0.22);border-radius:10px;font-size:12px;'
-        'color:#6ee7b7;text-align:center;">✓ 你已报名这个社团</div>') if app else ""
+    an=('<div style="margin-top:12px;padding:10px 14px;background:rgba(16,185,129,0.08);'
+        'border:1px solid rgba(16,185,129,0.22);border-radius:10px;font-size:12px;'
+        'color:#047857;text-align:center;">✓ 你已报名这个社团</div>') if app else ""
     st.markdown(
         f'<div class="det">'
         f'<div class="dsec">关于我们</div>'
-        f'<div style="font-size:13px;color:rgba(255,240,180,0.64);line-height:1.7;">{club.get("detail","")}</div>'
+        f'<div style="font-size:13px;color:rgba(60,35,0,0.68);line-height:1.7;">{club.get("detail","")}</div>'
         f'<div class="dsec">最适合谁</div>'
-        f'<div style="font-size:13px;color:rgba(255,240,180,0.64);">→ {club.get("best_for","")}</div>'
+        f'<div style="font-size:13px;color:rgba(60,35,0,0.68);">→ {club.get("best_for","")}</div>'
         f'<div class="dsec">招新要求</div>{rr}'
         f'<div class="dsec">主要活动</div>{ar}'
         f'<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:14px;">{st4}</div>'
@@ -911,10 +853,10 @@ def club_detail(club):
 def page_browse():
     nav()
     st.markdown(
-        '<div style="font-size:26px;font-weight:900;letter-spacing:-0.8px;margin-bottom:4px;color:#fff8e7;">发现社团</div>',
+        '<div style="font-size:26px;font-weight:900;letter-spacing:-0.8px;margin-bottom:4px;color:#1a1000;">发现社团</div>',
         unsafe_allow_html=True)
     st.markdown(
-        f'<div style="font-size:14px;color:rgba(255,240,180,0.36);margin-bottom:20px;">{len(CLUBS)} 个社团，总有一个在等你</div>',
+        f'<div style="font-size:14px;color:rgba(80,50,0,0.42);margin-bottom:20px;">{len(CLUBS)} 个社团，总有一个在等你</div>',
         unsafe_allow_html=True)
     cs,cf=st.columns([2,1])
     with cs: search=st.text_input("",placeholder="🔍  搜索名称、类型、标签...",label_visibility="collapsed",key="bs")
@@ -927,7 +869,7 @@ def page_browse():
                and (selt=="全部类型" or c["type"]==selt)]
     if not filtered:
         st.markdown(
-            '<div style="text-align:center;padding:60px;color:rgba(255,240,180,0.24);">没找到……换个关键词？</div>',
+            '<div style="text-align:center;padding:60px;color:rgba(80,50,0,0.30);">没找到……换个关键词？</div>',
             unsafe_allow_html=True)
         return
     cols=st.columns(3,gap="small")
@@ -938,18 +880,18 @@ def page_browse():
                 else ('<span class="pill pill-v">已加入申请袋</span>' if inc else ""))
             sr="".join(
                 f'<div style="text-align:center;">'
-                f'<div style="font-size:13px;font-weight:800;color:#fff8e7;">{v}</div>'
-                f'<div style="font-size:10px;color:rgba(255,240,180,0.30);margin-top:2px;">{l}</div></div>'
+                f'<div style="font-size:13px;font-weight:800;color:#1a1000;">{v}</div>'
+                f'<div style="font-size:10px;color:rgba(80,50,0,0.35);margin-top:2px;">{l}</div></div>'
                 for v,l in [(str(club["members"]),"成员"),(f"⭐{club['rating']}","评分"),(f"{club['awards']}项","获奖")])
             st.markdown(
                 f'<div class="g">'
                 f'<div style="font-size:36px;margin-bottom:10px;">{club["emoji"]}</div>'
-                f'<div style="font-size:16px;font-weight:800;margin-bottom:2px;color:#fff8e7;">{club["name"]}</div>'
-                f'<div style="font-size:11px;color:rgba(255,240,180,0.30);margin-bottom:8px;">{club["type"]} · 成立 {club["founded"]}</div>'
+                f'<div style="font-size:16px;font-weight:800;margin-bottom:2px;color:#1a1000;">{club["name"]}</div>'
+                f'<div style="font-size:11px;color:rgba(80,50,0,0.35);margin-bottom:8px;">{club["type"]} · 成立 {club["founded"]}</div>'
                 f'<div class="vibe">{club.get("vibe","")}</div>'
-                f'<div style="font-size:13px;color:rgba(255,240,180,0.46);line-height:1.55;margin-bottom:12px;">{club["desc"][:62]}...</div>'
+                f'<div style="font-size:13px;color:rgba(60,35,0,0.52);line-height:1.55;margin-bottom:12px;">{club["desc"][:62]}...</div>'
                 f'<div style="margin-bottom:12px;">{tags(club)}{ex}</div>'
-                f'<div style="display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid rgba(255,200,50,0.08);padding-top:12px;">{sr}</div>'
+                f'<div style="display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid rgba(200,150,0,0.12);padding-top:12px;">{sr}</div>'
                 f'</div>', unsafe_allow_html=True)
             b1,b2=st.columns(2,gap="small")
             with b1:
@@ -984,10 +926,10 @@ def page_browse():
 def page_chat():
     nav()
     st.markdown(
-        '<div style="font-size:24px;font-weight:900;letter-spacing:-0.6px;margin-bottom:4px;color:#fff8e7;">AI 社团顾问</div>',
+        '<div style="font-size:24px;font-weight:900;letter-spacing:-0.6px;margin-bottom:4px;color:#1a1000;">AI 社团顾问</div>',
         unsafe_allow_html=True)
     st.markdown(
-        '<div style="font-size:13px;color:rgba(255,240,180,0.34);margin-bottom:24px;">'
+        '<div style="font-size:13px;color:rgba(80,50,0,0.40);margin-bottom:24px;">'
         '由 Claude (Anthropic) 驱动 · 随时回答关于社团的任何问题</div>',
         unsafe_allow_html=True)
     if not st.session_state.chat_history:
@@ -999,7 +941,7 @@ def page_chat():
     for t in st.session_state.chat_history:
         if t.get("user"):
             st.markdown(
-                '<div style="text-align:right;font-size:11px;color:rgba(255,240,180,0.30);'
+                '<div style="text-align:right;font-size:11px;color:rgba(80,50,0,0.38);'
                 'font-weight:600;margin-bottom:3px;">你</div>',
                 unsafe_allow_html=True)
             st.markdown(f'<div class="buser">{t["user"]}</div>', unsafe_allow_html=True)
@@ -1009,7 +951,7 @@ def page_chat():
     st.markdown("<br>", unsafe_allow_html=True)
     if len(st.session_state.chat_history)<=1:
         st.markdown(
-            '<div style="font-size:12px;color:rgba(255,240,180,0.26);margin-bottom:8px;">快捷问题</div>',
+            '<div style="font-size:12px;color:rgba(80,50,0,0.35);margin-bottom:8px;">快捷问题</div>',
             unsafe_allow_html=True)
         sugg=["内向的人适合哪个？","时间不多选哪个？","摄影社和微电影社区别？",
               "创业社真的有用吗？","不知道自己喜欢什么？","哪个最容易交朋友？"]
@@ -1040,19 +982,19 @@ def page_apply():
     cart=st.session_state.cart
     if not cart:
         st.markdown(
-            '<div style="font-size:22px;font-weight:800;color:#fff8e7;margin-bottom:8px;">申请袋是空的</div>',
+            '<div style="font-size:22px;font-weight:800;color:#1a1000;margin-bottom:8px;">申请袋是空的</div>',
             unsafe_allow_html=True)
         st.markdown(
-            '<div style="color:rgba(255,240,180,0.42);margin-bottom:24px;font-size:14px;">'
+            '<div style="color:rgba(80,50,0,0.45);margin-bottom:24px;font-size:14px;">'
             '先去发现社团，把感兴趣的加进来～</div>',
             unsafe_allow_html=True)
         if st.button("去发现社团",type="primary"): go("browse")
         return
     st.markdown(
-        '<div style="font-size:26px;font-weight:900;letter-spacing:-0.8px;margin-bottom:4px;color:#fff8e7;">提交申请</div>',
+        '<div style="font-size:26px;font-weight:900;letter-spacing:-0.8px;margin-bottom:4px;color:#1a1000;">提交申请</div>',
         unsafe_allow_html=True)
     st.markdown(
-        f'<div style="font-size:14px;color:rgba(255,240,180,0.38);margin-bottom:24px;">'
+        f'<div style="font-size:14px;color:rgba(80,50,0,0.42);margin-bottom:24px;">'
         f'你选择了 {len(cart)} 个社团，一次填写全搞定</div>',
         unsafe_allow_html=True)
     cl,cr=st.columns([1.2,1],gap="large")
@@ -1065,10 +1007,10 @@ def page_apply():
             with cL:
                 st.markdown(
                     f'<div style="display:flex;align-items:center;gap:10px;padding:10px 0;'
-                    f'border-bottom:1px solid rgba(255,200,50,0.07);">'
+                    f'border-bottom:1px solid rgba(200,150,0,0.10);">'
                     f'<span style="font-size:22px;">{club["emoji"]}</span>'
-                    f'<div><div style="font-size:14px;font-weight:700;color:#fff8e7;">{club["name"]}</div>'
-                    f'<div style="font-size:11px;color:rgba(255,240,180,0.32);">{club["type"]} · {club["freq"]}</div>'
+                    f'<div><div style="font-size:14px;font-weight:700;color:#1a1000;">{club["name"]}</div>'
+                    f'<div style="font-size:11px;color:rgba(80,50,0,0.38);">{club["type"]} · {club["freq"]}</div>'
                     f'</div></div>', unsafe_allow_html=True)
             with cR:
                 if st.button("移除",key=f"arm_{cid}",use_container_width=True):
@@ -1081,32 +1023,32 @@ def page_apply():
             <div style="display:flex;flex-direction:column;gap:14px;">
                 <div style="display:flex;gap:12px;">
                     <div style="width:26px;height:26px;border-radius:50%;
-                        background:rgba(245,158,11,0.18);color:#fbbf24;
+                        background:rgba(245,158,11,0.15);color:#d97706;
                         font-size:12px;font-weight:700;
                         display:flex;align-items:center;justify-content:center;flex-shrink:0;">1</div>
                     <div>
-                        <div style="font-size:13px;font-weight:700;color:#fff8e7;margin-bottom:2px;">社团负责人主动联系你</div>
-                        <div style="font-size:12px;color:rgba(255,240,180,0.42);line-height:1.5;">3 个工作日内通过手机号或微信联系，说明面试安排。</div>
+                        <div style="font-size:13px;font-weight:700;color:#1a1000;margin-bottom:2px;">社团负责人主动联系你</div>
+                        <div style="font-size:12px;color:rgba(80,50,0,0.48);line-height:1.5;">3 个工作日内通过手机号或微信联系，说明面试安排。</div>
                     </div>
                 </div>
                 <div style="display:flex;gap:12px;">
                     <div style="width:26px;height:26px;border-radius:50%;
-                        background:rgba(245,158,11,0.18);color:#fbbf24;
+                        background:rgba(245,158,11,0.15);color:#d97706;
                         font-size:12px;font-weight:700;
                         display:flex;align-items:center;justify-content:center;flex-shrink:0;">2</div>
                     <div>
-                        <div style="font-size:13px;font-weight:700;color:#fff8e7;margin-bottom:2px;">体验一次活动，再决定</div>
-                        <div style="font-size:12px;color:rgba(255,240,180,0.42);line-height:1.5;">大部分社团会邀请你先来体验，感受真实氛围后再确认加入。</div>
+                        <div style="font-size:13px;font-weight:700;color:#1a1000;margin-bottom:2px;">体验一次活动，再决定</div>
+                        <div style="font-size:12px;color:rgba(80,50,0,0.48);line-height:1.5;">大部分社团会邀请你先来体验，感受真实氛围后再确认加入。</div>
                     </div>
                 </div>
                 <div style="display:flex;gap:12px;">
                     <div style="width:26px;height:26px;border-radius:50%;
-                        background:rgba(245,158,11,0.18);color:#fbbf24;
+                        background:rgba(245,158,11,0.15);color:#d97706;
                         font-size:12px;font-weight:700;
                         display:flex;align-items:center;justify-content:center;flex-shrink:0;">3</div>
                     <div>
-                        <div style="font-size:13px;font-weight:700;color:#fff8e7;margin-bottom:2px;">进群，正式开始</div>
-                        <div style="font-size:12px;color:rgba(255,240,180,0.42);line-height:1.5;">确认加入后被拉进官方微信群，社团生活从这里开始。</div>
+                        <div style="font-size:13px;font-weight:700;color:#1a1000;margin-bottom:2px;">进群，正式开始</div>
+                        <div style="font-size:12px;color:rgba(80,50,0,0.48);line-height:1.5;">确认加入后被拉进官方微信群，社团生活从这里开始。</div>
                     </div>
                 </div>
             </div>
@@ -1134,7 +1076,7 @@ def page_apply():
             st.session_state.cart=[]; go("success")
         if not ok:
             st.markdown(
-                '<div style="font-size:12px;color:rgba(255,240,180,0.28);text-align:center;margin-top:6px;">'
+                '<div style="font-size:12px;color:rgba(150,100,0,0.50);text-align:center;margin-top:6px;">'
                 '请填写所有必填项后提交</div>',
                 unsafe_allow_html=True)
 
@@ -1147,24 +1089,24 @@ def page_success():
     if not st.session_state.applications: go("home"); return
     last=st.session_state.applications[-1]
     cnames=[cbyid(cid)["name"] for cid in last["clubs"] if cbyid(cid)]
-    cl="".join(
+    cl_html="".join(
         f'<div style="display:flex;align-items:center;gap:8px;font-size:14px;'
-        f'color:rgba(255,240,180,0.74);margin-bottom:8px;">'
-        f'<span style="color:#6ee7b7;">✓</span>{n}</div>'
+        f'color:rgba(60,35,0,0.72);margin-bottom:8px;">'
+        f'<span style="color:#047857;">✓</span>{n}</div>'
         for n in cnames)
     _,col,_=st.columns([0.5,3,0.5])
     with col:
         st.markdown(
             f'<div class="ok-glass">'
             f'<div style="font-size:56px;margin-bottom:16px;">🎉</div>'
-            f'<div style="font-size:28px;font-weight:900;letter-spacing:-1px;margin-bottom:10px;color:#fff8e7;">申请已成功提交！</div>'
-            f'<div style="font-size:15px;color:rgba(255,240,180,0.54);line-height:1.75;margin-bottom:24px;">'
+            f'<div style="font-size:28px;font-weight:900;letter-spacing:-1px;margin-bottom:10px;color:#1a1000;">申请已成功提交！</div>'
+            f'<div style="font-size:15px;color:rgba(80,50,0,0.55);line-height:1.75;margin-bottom:24px;">'
             f'{last["name"]}，欢迎你迈出这一步。<br>接下来，静静等着被发现吧。</div>'
-            f'<div style="background:rgba(255,200,50,0.04);border:1px solid rgba(255,200,50,0.12);'
+            f'<div style="background:rgba(255,248,220,0.70);border:1px solid rgba(200,150,0,0.18);'
             f'border-radius:14px;padding:18px;text-align:left;margin-bottom:20px;">'
-            f'<div style="font-size:11px;color:rgba(255,200,50,0.38);font-weight:700;'
+            f'<div style="font-size:11px;color:rgba(180,120,0,0.55);font-weight:700;'
             f'letter-spacing:0.8px;text-transform:uppercase;margin-bottom:12px;">你申请的社团</div>'
-            f'{cl}</div></div>', unsafe_allow_html=True)
+            f'{cl_html}</div></div>', unsafe_allow_html=True)
         st.markdown("<br>", unsafe_allow_html=True)
         b1,b2=st.columns(2)
         with b1:
@@ -1180,10 +1122,10 @@ def page_create():
     nav()
     st.markdown('<div class="eyebrow">✦ 找不到合适的？自己创一个</div>', unsafe_allow_html=True)
     st.markdown(
-        '<div style="font-size:28px;font-weight:900;letter-spacing:-0.8px;margin-bottom:8px;color:#fff8e7;">申请创建新社团</div>',
+        '<div style="font-size:28px;font-weight:900;letter-spacing:-0.8px;margin-bottom:8px;color:#1a1000;">申请创建新社团</div>',
         unsafe_allow_html=True)
     st.markdown(
-        '<div style="font-size:15px;color:rgba(255,240,180,0.44);line-height:1.7;margin-bottom:28px;">'
+        '<div style="font-size:15px;color:rgba(80,50,0,0.48);line-height:1.7;margin-bottom:28px;">'
         '每一个存在的社团，都是某个人第一次说「我想做这件事」。<br>'
         '如果你有个想法，这里是它开始的地方。</div>',
         unsafe_allow_html=True)
@@ -1214,7 +1156,7 @@ def page_create():
         st.markdown('</div>',unsafe_allow_html=True)
         st.markdown('<div class="fs" style="margin-top:10px;"><div class="ft">Claude AI 帮你完善方案</div>',unsafe_allow_html=True)
         st.markdown(
-            '<div style="font-size:13px;color:rgba(255,240,180,0.42);line-height:1.6;margin-bottom:14px;">'
+            '<div style="font-size:13px;color:rgba(80,50,0,0.46);line-height:1.6;margin-bottom:14px;">'
             '填完基本信息后，让 Claude 给你的方案提几条建议。</div>',
             unsafe_allow_html=True)
         if st.button("🤖  让 Claude 给我建议",key="cai",use_container_width=True):
@@ -1249,11 +1191,11 @@ def page_create():
             st.session_state.create_submitted=True; st.rerun()
         if st.session_state.get("create_submitted"):
             st.markdown(
-                f'<div style="margin-top:14px;background:rgba(52,211,153,0.07);'
-                f'border:1px solid rgba(52,211,153,0.22);border-radius:14px;padding:16px;text-align:center;">'
+                f'<div style="margin-top:14px;background:rgba(16,185,129,0.07);'
+                f'border:1px solid rgba(16,185,129,0.25);border-radius:14px;padding:16px;text-align:center;">'
                 f'<div style="font-size:22px;margin-bottom:8px;">🌱</div>'
-                f'<div style="font-size:15px;font-weight:700;margin-bottom:6px;color:#fff8e7;">申请已提交！</div>'
-                f'<div style="font-size:13px;color:rgba(255,240,180,0.50);line-height:1.6;">'
+                f'<div style="font-size:15px;font-weight:700;margin-bottom:6px;color:#1a1000;">申请已提交！</div>'
+                f'<div style="font-size:13px;color:rgba(60,35,0,0.55);line-height:1.6;">'
                 f'学生活动部将在 5 个工作日内审核。<br>{fn}，期待看到「{cn}」出现在 ClubMatch 上。</div></div>',
                 unsafe_allow_html=True)
             if st.button("回到首页",key="ch",type="primary"):
@@ -1262,7 +1204,7 @@ def page_create():
                 go("home")
         if not aok and not st.session_state.get("create_submitted"):
             st.markdown(
-                '<div style="font-size:12px;color:rgba(255,240,180,0.26);text-align:center;margin-top:6px;">'
+                '<div style="font-size:12px;color:rgba(150,100,0,0.50);text-align:center;margin-top:6px;">'
                 '请填写所有必填项（*）</div>',
                 unsafe_allow_html=True)
 
