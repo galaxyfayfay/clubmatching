@@ -144,6 +144,38 @@ div[data-testid="stButton"] > button[kind="primary"] {
     border-radius: 12px !important;
     font-weight: 700 !important;
 }
+
+/* ── 选项卡片按钮样式 ── */
+.opt-card-unsel {
+    background: #ffffff;
+    border: 2px solid #e0e0f0;
+    border-radius: 18px;
+    padding: 18px 16px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-bottom: 2px;
+    width: 100%;
+    text-align: left;
+}
+.opt-card-sel {
+    background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 60%, #A78BFA 100%);
+    border: 2px solid transparent;
+    border-radius: 18px;
+    padding: 18px 16px;
+    cursor: pointer;
+    box-shadow: 0 0 0 3px rgba(99,102,241,0.35), 0 12px 35px rgba(99,102,241,0.40);
+    margin-bottom: 2px;
+    width: 100%;
+    text-align: left;
+}
+/* 让选项按钮本身透明，靠上层 HTML 卡片显示样式 */
+div[data-testid="stButton"].opt-btn > button {
+    background: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+    width: 100% !important;
+    box-shadow: none !important;
+}
 </style>
 """, unsafe_allow_html=True)
 
@@ -529,7 +561,7 @@ def page_home():
             go("quiz")
 
 # ══════════════════════════════════════════════════════════════
-# 测评页 ── 用 st.components.v1.html 渲染选项，query_params 回传
+# 测评页 ── 完全使用原生 Streamlit 按钮，彻底移除 iframe 方案
 # ══════════════════════════════════════════════════════════════
 def page_quiz():
     render_nav()
@@ -539,21 +571,6 @@ def page_quiz():
     q     = QUESTIONS[step]
     pct   = int(step / total * 100)
     cur   = st.session_state.quiz_answers.get(step, -1)
-
-    # ── 检查 query_params 里是否有新的选择 ──────────────
-    qp = st.query_params
-    qp_key = f"q{step}_sel"
-    if qp_key in qp:
-        try:
-            val = int(qp[qp_key])
-            if val in range(len(q["opts"])):
-                st.session_state.quiz_answers[step] = val
-                st.query_params.clear()
-                st.rerun()
-        except Exception:
-            pass
-
-    cur = st.session_state.quiz_answers.get(step, -1)
 
     # ── 进度条 ────────────────────────────────────────────
     st.markdown(
@@ -580,119 +597,82 @@ def page_quiz():
         else:
             st.markdown('<div style="height:14px;"></div>', unsafe_allow_html=True)
 
-        # ── 构建选项 HTML（嵌入 iframe，通过 parent.window.location 回传）──
+        # ── 选项：用原生 Streamlit 按钮 + HTML 卡片视觉 ──────────
         opts = q["opts"]
-        cards_html = ""
+        col_a, col_b = st.columns(2, gap="small")
+        opt_cols = [col_a, col_b, col_a, col_b]   # 2×2 网格
+
         for i, opt in enumerate(opts):
             is_sel = (cur == i)
+
+            # 卡片背景色与文字色随选中状态变化
             if is_sel:
-                card_style = (
-                    "background:linear-gradient(135deg,#6366F1 0%,#8B5CF6 60%,#A78BFA 100%);"
-                    "border:2px solid transparent;"
-                    "box-shadow:0 0 0 3px rgba(99,102,241,0.35),"
-                    "0 12px 35px rgba(99,102,241,0.40),"
-                    "0 4px 15px rgba(139,92,246,0.30);"
-                    "transform:translateY(-2px) scale(1.03);"
+                card_bg     = "linear-gradient(135deg,#6366F1 0%,#8B5CF6 60%,#A78BFA 100%)"
+                border      = "2px solid transparent"
+                shadow      = "0 0 0 3px rgba(99,102,241,0.35),0 8px 24px rgba(99,102,241,0.35)"
+                icon_color  = "#ffffff"
+                title_color = "#ffffff"
+                sub_color   = "rgba(255,255,255,0.82)"
+                check_html  = (
+                    '<div style="position:absolute;top:10px;right:12px;'
+                    'width:22px;height:22px;background:rgba(255,255,255,0.28);'
+                    'border-radius:50%;display:flex;align-items:center;'
+                    'justify-content:center;font-size:0.75rem;color:#fff;'
+                    'font-weight:800;">✓</div>'
                 )
-                icon_color = "#fff"
-                title_color = "#fff"
-                sub_color = "rgba(255,255,255,0.85)"
-                check_op = "1"
             else:
-                card_style = (
-                    "background:#ffffff;"
-                    "border:2px solid #e0e0f0;"
-                    "box-shadow:0 2px 8px rgba(99,102,241,0.06);"
-                    "transform:none;"
-                )
-                icon_color = "#6366F1"
+                card_bg     = "#ffffff"
+                border      = "2px solid #e0e0f0"
+                shadow      = "0 2px 8px rgba(99,102,241,0.06)"
+                icon_color  = "#6366F1"
                 title_color = "#1a1a2e"
-                sub_color = "#6b7280"
-                check_op = "0"
+                sub_color   = "#6b7280"
+                check_html  = ""
 
-            cards_html += f"""
-            <div class="opt-card {'sel' if is_sel else ''}"
-                 onclick="selectOpt({i})"
-                 style="position:relative;border-radius:18px;padding:20px 18px;
-                        cursor:pointer;transition:all 0.25s cubic-bezier(0.34,1.56,0.64,1);
-                        user-select:none;{card_style}">
-              <div style="display:flex;align-items:flex-start;gap:14px;">
-                <div style="font-size:2rem;line-height:1;flex-shrink:0;
-                            color:{icon_color};transition:transform 0.3s ease;
-                            {'transform:scale(1.15);' if is_sel else ''}">
-                  {opt['icon']}
-                </div>
-                <div style="flex:1;">
-                  <div style="font-size:1.02rem;font-weight:700;color:{title_color};
-                              margin-bottom:4px;line-height:1.3;">
-                    {opt['title']}
-                  </div>
-                  <div style="font-size:0.82rem;color:{sub_color};line-height:1.4;">
-                    {opt['sub']}
-                  </div>
-                </div>
-              </div>
-              <div style="position:absolute;top:12px;right:14px;
-                          width:24px;height:24px;
-                          background:rgba(255,255,255,0.25);
-                          border-radius:50%;
-                          display:flex;align-items:center;justify-content:center;
-                          font-size:0.8rem;color:#fff;font-weight:800;
-                          opacity:{check_op};
-                          transition:all 0.3s cubic-bezier(0.34,1.56,0.64,1);">✓</div>
-            </div>
-            """
+            card_html = (
+                f'<div style="position:relative;background:{card_bg};border:{border};'
+                f'border-radius:18px;padding:18px 16px;box-shadow:{shadow};'
+                f'margin-bottom:4px;cursor:pointer;">'
+                f'<div style="display:flex;align-items:flex-start;gap:12px;">'
+                f'<div style="font-size:1.9rem;line-height:1;flex-shrink:0;color:{icon_color};">'
+                f'{opt["icon"]}</div>'
+                f'<div style="flex:1;">'
+                f'<div style="font-size:0.98rem;font-weight:700;color:{title_color};'
+                f'margin-bottom:3px;line-height:1.3;">{opt["title"]}</div>'
+                f'<div style="font-size:0.80rem;color:{sub_color};line-height:1.4;">'
+                f'{opt["sub"]}</div>'
+                f'</div></div>'
+                f'{check_html}'
+                f'</div>'
+            )
 
-        component_html = f"""
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="utf-8">
-<style>
-  * {{ box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }}
-  body {{ background: transparent; padding: 4px; }}
-  .grid {{
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 14px;
-  }}
-  .opt-card:hover:not(.sel) {{
-    border-color: #a5b4fc !important;
-    transform: translateY(-3px) scale(1.02) !important;
-    box-shadow: 0 8px 25px rgba(99,102,241,0.20) !important;
-    background: #fafaff !important;
-  }}
-  @keyframes selPop {{
-    0%   {{ transform: scale(1); }}
-    45%  {{ transform: translateY(-2px) scale(1.07); }}
-    75%  {{ transform: translateY(-2px) scale(1.01); }}
-    100% {{ transform: translateY(-2px) scale(1.03); }}
-  }}
-  .opt-card.sel {{
-    animation: selPop 0.35s cubic-bezier(0.34,1.56,0.64,1);
-  }}
-</style>
-</head>
-<body>
-  <div class="grid">
-    {cards_html}
-  </div>
-  <script>
-    function selectOpt(idx) {{
-      // 通过修改父页面 URL 的 query param 来传值
-      const url = new URL(window.parent.location.href);
-      url.searchParams.set('q{step}_sel', idx);
-      window.parent.location.href = url.toString();
-    }}
-  </script>
-</body>
-</html>
-"""
-        import streamlit.components.v1 as components
-        components.html(component_html, height=280, scrolling=False)
+            with opt_cols[i]:
+                # 先渲染卡片 HTML（纯视觉）
+                st.markdown(card_html, unsafe_allow_html=True)
+                # 再渲染一个透明覆盖按钮来捕捉点击
+                # 用负 margin-top 让按钮覆盖在卡片上方
+                st.markdown(
+                    '<style>'
+                    f'div[data-testid="stButton"]:has(> button#opt_btn_{step}_{i}) button {{'
+                    '  margin-top: -58px !important;'
+                    '  height: 80px !important;'
+                    '  opacity: 0 !important;'
+                    '  cursor: pointer !important;'
+                    '}}'
+                    '</style>',
+                    unsafe_allow_html=True
+                )
+                if st.button(
+                    f"{opt['title']}",
+                    key=f"opt_{step}_{i}",
+                    use_container_width=True,
+                ):
+                    st.session_state.quiz_answers[step] = i
+                    st.rerun()
 
         st.markdown('<div style="height:16px;"></div>', unsafe_allow_html=True)
 
+        # ── 导航按钮 ──────────────────────────────────────
         nav_l, nav_r = st.columns(2, gap="small")
         with nav_l:
             back_lbl = "← 返回首页" if step == 0 else "← 上一题"
@@ -705,8 +685,13 @@ def page_quiz():
         with nav_r:
             done     = step in st.session_state.quiz_answers
             next_lbl = "查看匹配结果 →" if step == total - 1 else "下一题 →"
-            if st.button(next_lbl, key="q_next", type="primary",
-                         use_container_width=True, disabled=not done):
+            if st.button(
+                next_lbl,
+                key="q_next",
+                type="primary",
+                use_container_width=True,
+                disabled=not done,
+            ):
                 if step == total - 1:
                     with st.spinner("🤖 AI 正在分析你的性格与偏好..."):
                         res, reason = ai_match(st.session_state.quiz_answers)
@@ -1379,6 +1364,7 @@ def page_create():
 # ══════════════════════════════════════════════════════════════
 dispatch = {
     "home":    page_home,
+    "quiz":    page_results,   # 保持原逻辑不变
     "quiz":    page_quiz,
     "results": page_results,
     "browse":  page_browse,
